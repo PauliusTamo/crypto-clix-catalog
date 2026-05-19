@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Plus, X } from "lucide-react";
 
 const FAQS = [
-  { q: "How does the ordering process work?", a: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Select your channels, review the auto-generated brief, and send it to us via Telegram for confirmation." },
-  { q: "What is included in a dedicated video?", a: "Lorem ipsum dolor sit amet. A full-length custom video covering your project, hosted on the channel's main feed, with title, description, and pinned-comment placement." },
-  { q: "How long until my campaign goes live?", a: "Lorem ipsum dolor sit amet. Most campaigns go live within 5–10 business days from confirmation, depending on channel availability." },
-  { q: "Can I pick specific channels for my niche?", a: "Lorem ipsum dolor sit amet. Yes — all 7 channels are crypto-native, and you choose exactly which ones run your campaign." },
-  { q: "Do you offer guarantees or performance metrics?", a: "Lorem ipsum dolor sit amet. We provide a post-campaign report with views, engagement metrics, and audience insights for every channel." },
+  { q: "How does the ordering process work?", a: "Pick the channels and exact service you need, then head to checkout — you'll get a message you can copy and send straight to our email or Telegram. From there we'll get back to you within a few hours to finalize the payment." },
+  { q: "What is included in a dedicated video?", a: "A dedicated video is a full sponsorship where the entire video is built around your brand or product. This includes a scripted walkthrough, on-screen demonstration, a call-to-action, and a pinned link in the description. You'll receive a preview before it goes live and a performance report afterward." },
+  { q: "How long until my campaign goes live?", a: "Your campaign goes live within 72 hours — guaranteed. If we miss that window, you get an extra video on us." },
+  { q: "Can I pick channels I like the most?", a: "Yes — since we work within the same niche, all our channels are already relevant to your audience. You're free to browse and handpick exactly which channels you want your campaign to run on." },
+  { q: "Do you offer guarantees or performance metrics?", a: "We provide post-campaign reports with views, click-through rates, and engagement data. While we don't guarantee specific view counts, we only place campaigns on channels with verified audience metrics and consistent performance history. Your account manager can share benchmark data before you commit." },
 ];
 
 export function Faq() {

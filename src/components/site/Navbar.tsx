@@ -9,11 +9,11 @@ export function Navbar() {
             C
           </span>
           <span className="font-black text-base tracking-tight">
-            Crypto<span className="text-primary">Clix</span>
+            Crypto<span className="text-primary">Clicks</span>
           </span>
         </a>
         <a
-          href="https://t.me/YOUR_HANDLE"
+          href="https://t.me/crypoclicksio"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 rounded-lg bg-primary hover:bg-primary-glow transition-colors px-3.5 h-9 text-sm font-semibold text-primary-foreground"

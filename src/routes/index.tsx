@@ -13,13 +13,13 @@ import { CheckoutFlow } from "@/components/site/CheckoutFlow";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CryptoClix — Crypto YouTube Influencer Campaigns" },
+      { title: "CryptoClicks — Crypto YouTube Influencer Campaigns" },
       {
         name: "description",
         content:
-          "Pick from crypto-native YouTube channels, bundle them for automatic discounts, and reach thousands of real investors with CryptoClix.",
+          "Pick from crypto-native YouTube channels, bundle them for automatic discounts, and reach thousands of real investors with CryptoClicks.",
       },
-      { property: "og:title", content: "CryptoClix — Crypto YouTube Influencer Campaigns" },
+      { property: "og:title", content: "CryptoClicks — Crypto YouTube Influencer Campaigns" },
       {
         property: "og:description",
         content: "Bundle crypto-native YouTube channels and launch campaigns that reach real investors.",

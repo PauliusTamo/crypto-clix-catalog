@@ -12,13 +12,13 @@ export type Channel = {
 };
 
 export const CHANNELS: Channel[] = [
-  { id: "cryptovault", name: "CryptoVault", subs: "85K", subsNum: 85000, price: 500, color: "#4a6cf7", link: "#", contentType: "Market Analysis" },
-  { id: "blocktalk", name: "BlockTalk", subs: "62K", subsNum: 62000, price: 450, color: "#e53e3e", link: "#", contentType: "News & Trends" },
-  { id: "web3wire", name: "Web3Wire", subs: "47K", subsNum: 47000, price: 400, color: "#10b981", link: "#", contentType: "Web3 Education" },
-  { id: "chainreview", name: "ChainReview", subs: "38K", subsNum: 38000, price: 380, color: "#f59e0b", link: "#", contentType: "Project Reviews" },
-  { id: "altsignals", name: "AltSignals", subs: "29K", subsNum: 29000, price: 350, color: "#8b5cf6", link: "#", contentType: "Trading Signals" },
-  { id: "tokenwatch", name: "TokenWatch", subs: "24K", subsNum: 24000, price: 320, color: "#06b6d4", link: "#", contentType: "Token Tracking" },
-  { id: "defidaily", name: "DefiDaily", subs: "19K", subsNum: 19000, price: 300, color: "#f97316", link: "#", contentType: "DeFi Coverage" },
+  { id: "cryptoocto", name: "Crypto Octo", subs: "86K", subsNum: 86000, price: 500, color: "#4a6cf7", link: "https://www.youtube.com/@CryptoOcto", contentType: "Market Analysis" },
+  { id: "cryptonautic", name: "Crypto Nautic", subs: "100K", subsNum: 100000, price: 550, color: "#e53e3e", link: "https://www.youtube.com/@CryptoNautic", contentType: "News & Trends" },
+  { id: "freddiefinance", name: "Freddie Finance", subs: "112K", subsNum: 112000, price: 600, color: "#10b981", link: "https://www.youtube.com/@FreddieInFinance", contentType: "Web3 Education" },
+  { id: "cypherdefi", name: "Cypher DeFi", subs: "114K", subsNum: 114000, price: 620, color: "#f59e0b", link: "https://www.youtube.com/@cypherdefi", contentType: "DeFi Coverage" },
+  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 700, color: "#8b5cf6", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews" },
+  { id: "lennycrypto", name: "Lenny Crypto", subs: "161K", subsNum: 161000, price: 800, color: "#06b6d4", link: "https://www.youtube.com/@LennyCrypto", contentType: "Trading Signals" },
+  { id: "cryptosphere", name: "Crypto Sphere", subs: "191K", subsNum: 191000, price: 900, color: "#f97316", link: "https://www.youtube.com/@CryptoSphereDaily", contentType: "Token Tracking" },
 ];
 
 export const BUNDLE_DISCOUNTS: Record<number, number> = {

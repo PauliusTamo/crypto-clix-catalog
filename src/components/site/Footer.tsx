@@ -9,13 +9,13 @@ export function Footer() {
         </p>
         <div className="flex items-center justify-between text-sm">
           <span className="font-black tracking-tight">
-            Crypto<span className="text-primary">Clix</span>
+            Crypto<span className="text-primary">Clicks</span>
           </span>
           <span className="text-muted-foreground hidden md:block">
-            © 2025 CryptoClix. All rights reserved.
+            © 2026 CryptoClicks. All rights reserved.
           </span>
           <a
-            href="https://t.me/YOUR_HANDLE"
+            href="https://t.me/crypoclicksio"
             target="_blank"
             rel="noreferrer"
             className="grid h-9 w-9 place-items-center rounded-lg border border-border hover:border-primary hover:text-primary transition-colors"

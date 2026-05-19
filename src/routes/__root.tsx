@@ -72,7 +72,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CryptoClix" },
+      { title: "CryptoClicks" },
       { name: "description", content: "Crypto YouTube influencer marketing agency" },
       { property: "og:type", content: "website" },
     ],

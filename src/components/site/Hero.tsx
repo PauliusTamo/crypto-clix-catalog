@@ -1,10 +1,10 @@
 import { ArrowDown } from "lucide-react";
 
 const FLOATING_CARDS = [
-  { initials: "CV", name: "CryptoVault", subs: "85K subs", price: "$500", color: "#4a6cf7", rotate: "-6deg", top: "8%", right: "2%", scale: 1, blur: false },
-  { initials: "BT", name: "BlockTalk", subs: "62K subs", price: "$450", color: "#e53e3e", rotate: "5deg", top: "35%", right: "18%", scale: 0.88, blur: true },
-  { initials: "W3", name: "Web3Wire", subs: "47K subs", price: "$400", color: "#10b981", rotate: "-3deg", top: "60%", right: "4%", scale: 0.95, blur: false },
-  { initials: "AS", name: "AltSignals", subs: "29K subs", price: "$350", color: "#8b5cf6", rotate: "7deg", top: "20%", right: "36%", scale: 0.78, blur: true },
+  { initials: "CS", name: "Crypto Sphere", subs: "191K subs", price: "$900", color: "#f97316", rotate: "-6deg", top: "8%", right: "2%", scale: 1, blur: false },
+  { initials: "LC", name: "Lenny Crypto", subs: "161K subs", price: "$800", color: "#06b6d4", rotate: "5deg", top: "35%", right: "18%", scale: 0.88, blur: true },
+  { initials: "CC", name: "Crypto Christopher", subs: "137K subs", price: "$700", color: "#8b5cf6", rotate: "-3deg", top: "60%", right: "4%", scale: 0.95, blur: false },
+  { initials: "CO", name: "Crypto Octo", subs: "86K subs", price: "$500", color: "#4a6cf7", rotate: "7deg", top: "20%", right: "36%", scale: 0.78, blur: true },
 ];
 
 export function Hero() {
