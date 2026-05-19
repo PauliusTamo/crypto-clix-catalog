@@ -1,16 +1,34 @@
-import { useEffect, useMemo, useState } from "react";
-import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video } from "lucide-react";
-import { ADDON, CHANNELS, HOMEPAGE_PIN_PRICE, SHORTS_PRICES, useCart } from "@/lib/cart";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video, Newspaper } from "lucide-react";
+import { ADDON, CHANNELS, HOMEPAGE_PIN_PRICE, PR_LISTING, SHORTS_PRICES, useCart } from "@/lib/cart";
+import { UpsellOverlay } from "./UpsellOverlay";
+
+type View = "closed" | "upsell" | "checkout";
 
 export function CheckoutFlow() {
-  const [open, setOpen] = useState(false);
-  const { totalItems, shortsQty } = useCart();
+  const [view, setView] = useState<View>("closed");
+  const upsellShownRef = useRef(false);
+  const { totalItems, shortsQty, uniqueChannels, prListingEnabled } = useCart();
   const hasItems = totalItems > 0 || shortsQty > 0;
+
+  const hasUpsellContent =
+    (uniqueChannels > 0 && uniqueChannels < 7) ||
+    !prListingEnabled ||
+    shortsQty === 0;
+
+  const openCart = () => {
+    if (!upsellShownRef.current && hasUpsellContent) {
+      upsellShownRef.current = true;
+      setView("upsell");
+    } else {
+      setView("checkout");
+    }
+  };
 
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
+        onClick={openCart}
         className="fixed bottom-24 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl hover:bg-primary-glow transition-colors md:bottom-28 md:right-8"
         aria-label="Open campaign cart"
       >
@@ -22,7 +40,15 @@ export function CheckoutFlow() {
         )}
       </button>
 
-      {open && <CheckoutModal onClose={() => setOpen(false)} />}
+      {view === "upsell" && (
+        <UpsellOverlay
+          onContinue={() => setView("checkout")}
+          onDismiss={() => setView("closed")}
+        />
+      )}
+      {view === "checkout" && (
+        <CheckoutModal onClose={() => setView("closed")} />
+      )}
     </>
   );
 }
@@ -31,6 +57,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
   const {
     cart, pins, subtotal, bundleActive, channelTotal, savings,
     pinTotal, shortsQty, setShortsQty, shortsTotal,
+    prListingEnabled, setPrListingEnabled, prListingTotal,
     addonEnabled, setAddonEnabled, total, uniqueChannels,
     clearItem, setQty, togglePin,
   } = useCart();
@@ -70,6 +97,11 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
       lines.push(`- ${shortsQty} Short Video Ad${shortsQty > 1 ? "s" : ""} — $${SHORTS_PRICES[shortsQty]}`);
     }
 
+    if (prListingEnabled) {
+      lines.push("", "*Add-Ons:*");
+      lines.push(`- ${PR_LISTING.title} — $${PR_LISTING.price}`);
+    }
+
     lines.push("", "*Financial Summary:*");
     if (selectedItems.length > 0) {
       if (bundleActive) {
@@ -81,11 +113,12 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     }
     if (pinTotal > 0) lines.push(`- Homepage Pin(s): +$${pinTotal}`);
     if (shortsTotal > 0) lines.push(`- Short Video Ads: +$${shortsTotal}`);
+    if (prListingTotal > 0) lines.push(`- PR Listing: +$${prListingTotal}`);
     if (addonEnabled) lines.push(`- Add-On (${ADDON.title}): $${ADDON.price}`);
     lines.push(`- Grand Total: $${total}`);
     lines.push("", "Please confirm availability and next steps. Thank you.");
     return lines.join("\n");
-  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, addonEnabled, total, uniqueChannels]);
+  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, addonEnabled, total, uniqueChannels]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(message);
@@ -122,7 +155,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
           <div>
             <div className="label-eyebrow mb-3">Order Summary</div>
             <div className="rounded-xl border border-border bg-card divide-y divide-border">
-              {selectedItems.length === 0 && shortsQty === 0 && (
+              {selectedItems.length === 0 && shortsQty === 0 && !prListingEnabled && (
                 <div className="p-4 text-sm text-muted-foreground">No items added yet.</div>
               )}
               {selectedItems.map((s) => (
@@ -138,7 +171,6 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                       <div className="font-semibold text-sm">{s.name}</div>
                       <div className="text-xs text-muted-foreground">${s.price}/video</div>
                     </div>
-
                     <div className="flex items-center gap-0.5 rounded-lg border border-[#2a2f45] bg-[#0a0d14] p-0.5">
                       <button onClick={() => setQty(s.id, s.qty - 1)} className="grid h-6 w-6 place-items-center rounded text-muted-foreground hover:text-foreground hover:bg-white/10 transition" aria-label="Decrease">
                         <Minus className="h-3 w-3" />
@@ -148,14 +180,11 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                         <Plus className="h-3 w-3" />
                       </button>
                     </div>
-
                     <div className="font-bold text-sm w-16 text-right">${s.price * s.qty}</div>
-
                     <button onClick={() => clearItem(s.id)} className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0" aria-label={`Remove ${s.name}`}>
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
-
                   {s.pinned && (
                     <div className="flex items-center justify-between px-4 pb-3 pl-[3.75rem]">
                       <span className="text-xs text-amber-400/80">↳ Homepage Pin × 30 days</span>
@@ -170,7 +199,6 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                 </div>
               ))}
 
-              {/* Shorts line item */}
               {shortsQty > 0 && (
                 <div className="flex items-center gap-3 px-4 py-3">
                   <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary/20 text-primary">
@@ -186,6 +214,22 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                   </button>
                 </div>
               )}
+
+              {prListingEnabled && (
+                <div className="flex items-center gap-3 px-4 py-3">
+                  <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary/20 text-primary">
+                    <Newspaper className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-sm">{PR_LISTING.title}</div>
+                    <div className="text-xs text-muted-foreground">50+ crypto publications</div>
+                  </div>
+                  <div className="font-bold text-sm w-16 text-right">${PR_LISTING.price}</div>
+                  <button onClick={() => setPrListingEnabled(false)} className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0" aria-label="Remove PR listing">
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Pricing summary */}
@@ -194,7 +238,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                 <>
                   {bundleActive ? (
                     <>
-                      <Row label={`Channel Subtotal`} value={`$${subtotal}`} valueClass="text-muted-foreground line-through" />
+                      <Row label="Channel Subtotal" value={`$${subtotal}`} valueClass="text-muted-foreground line-through" />
                       <Row label={`${uniqueChannels}-Channel Bundle Rate`} value={`$${channelTotal}`} valueClass="text-primary font-bold" />
                       {savings > 0 && <Row label="Bundle Savings" value={`−$${savings}`} valueClass="text-emerald-500" />}
                     </>
@@ -205,6 +249,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
               )}
               {pinTotal > 0 && <Row label="Homepage Pin(s)" value={`+$${pinTotal}`} valueClass="text-amber-400" />}
               {shortsTotal > 0 && <Row label="Short Video Ads" value={`+$${shortsTotal}`} />}
+              {prListingTotal > 0 && <Row label="PR Listing" value={`+$${prListingTotal}`} />}
               {addonEnabled && <Row label={`Add-on — ${ADDON.title}`} value={`+$${ADDON.price}`} />}
             </div>
             <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">

@@ -49,6 +49,12 @@ export const ADDON = {
   price: 250,
 };
 
+export const PR_LISTING = {
+  title: "PR Listing & Press Coverage",
+  description: "Get your project featured in 50+ top crypto publications and news outlets. Includes press release distribution, editorial placement, and a post-campaign coverage report.",
+  price: 350,
+};
+
 export const HOMEPAGE_PIN_PRICE = 150;
 
 type CartState = Record<string, number>;
@@ -60,6 +66,8 @@ type CartContextType = {
   pins: PinState;
   shortsQty: ShortsQty;
   setShortsQty: (qty: ShortsQty) => void;
+  prListingEnabled: boolean;
+  setPrListingEnabled: (v: boolean) => void;
   add: (id: string) => void;
   remove: (id: string) => void;
   clearItem: (id: string) => void;
@@ -74,6 +82,7 @@ type CartContextType = {
   savings: number;
   pinTotal: number;
   shortsTotal: number;
+  prListingTotal: number;
   addonEnabled: boolean;
   setAddonEnabled: (v: boolean) => void;
   total: number;
@@ -87,6 +96,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [pins, setPins] = useState<PinState>({});
   const [addonEnabled, setAddonEnabled] = useState(false);
   const [shortsQty, setShortsQty] = useState<ShortsQty>(0);
+  const [prListingEnabled, setPrListingEnabled] = useState(false);
 
   const add = useCallback((id: string) =>
     setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 })), []);
@@ -125,6 +135,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setPins({});
     setAddonEnabled(false);
     setShortsQty(0);
+    setPrListingEnabled(false);
   }, []);
 
   const computed = useMemo(() => {
@@ -148,17 +159,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return sum + (on && cart[id] ? HOMEPAGE_PIN_PRICE : 0);
     }, 0);
     const shortsTotal = shortsQty > 0 ? (SHORTS_PRICES[shortsQty] ?? 0) : 0;
-    const total = channelTotal + pinTotal + (addonEnabled ? ADDON.price : 0) + shortsTotal;
+    const prListingTotal = prListingEnabled ? PR_LISTING.price : 0;
+    const total = channelTotal + pinTotal + (addonEnabled ? ADDON.price : 0) + shortsTotal + prListingTotal;
 
-    return { uniqueChannels, totalItems, totalReach, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsTotal, total };
-  }, [cart, pins, addonEnabled, shortsQty]);
+    return { uniqueChannels, totalItems, totalReach, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsTotal, prListingTotal, total };
+  }, [cart, pins, addonEnabled, shortsQty, prListingEnabled]);
 
   const api = useMemo<CartContextType>(() => ({
-    cart, pins, shortsQty, setShortsQty,
+    cart, pins, shortsQty, setShortsQty, prListingEnabled, setPrListingEnabled,
     add, remove, clearItem, setQty, togglePin,
     addonEnabled, setAddonEnabled, clear,
     ...computed,
-  }), [cart, pins, shortsQty, add, remove, clearItem, setQty, togglePin, addonEnabled, clear, computed]);
+  }), [cart, pins, shortsQty, prListingEnabled, add, remove, clearItem, setQty, togglePin, addonEnabled, clear, computed]);
 
   return <CartContext.Provider value={api}>{children}</CartContext.Provider>;
 }
