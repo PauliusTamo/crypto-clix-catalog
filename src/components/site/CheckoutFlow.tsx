@@ -157,22 +157,25 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
           {/* Message */}
           <div>
             <div className="label-eyebrow mb-3">Pre-Written Message</div>
-            <pre className="whitespace-pre-wrap rounded-xl border border-border bg-background/60 p-4 text-xs leading-relaxed text-foreground/90 font-mono max-h-64 overflow-y-auto">
+            <pre
+              className="whitespace-pre-wrap rounded-xl border border-border bg-black/40 p-4 text-xs leading-relaxed text-foreground/90 max-h-64 overflow-y-auto"
+              style={{ fontFamily: "var(--font-mono)" }}
+            >
 {message}
             </pre>
           </div>
 
-          <div className="grid gap-2.5 md:grid-cols-3 pb-2">
+          <div className="grid grid-cols-12 gap-2.5 pb-2 items-stretch">
             <button
               onClick={copy}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-surface-elevated h-11 text-sm font-semibold hover:border-primary transition"
+              className="col-span-12 md:col-span-3 inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-transparent h-10 text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary transition"
             >
               {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
               {copied ? "Copied!" : "Copy Text"}
             </button>
             <a
               href={mailto}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-surface-elevated h-11 text-sm font-semibold hover:border-primary transition"
+              className="col-span-12 md:col-span-4 inline-flex items-center justify-center gap-2 rounded-xl bg-surface-elevated h-11 text-sm font-semibold text-foreground hover:bg-[#222a3d] transition"
             >
               <Mail className="h-4 w-4" /> Email
             </a>
@@ -180,7 +183,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
               href={tg}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-11 text-sm font-bold hover:bg-primary-glow transition"
+              className="col-span-12 md:col-span-5 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-12 text-base font-bold hover:bg-primary-glow transition shadow-lg shadow-primary/20"
             >
               <Send className="h-4 w-4" /> Telegram
             </a>
