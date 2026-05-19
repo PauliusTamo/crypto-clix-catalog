@@ -75,14 +75,16 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-end md:items-center justify-center animate-in fade-in duration-200"
+      style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)" }}
       onClick={onClose}
     >
       <div
-        className="relative w-full md:max-w-2xl h-[92vh] md:h-auto md:max-h-[90vh] overflow-y-auto rounded-t-3xl md:rounded-2xl border border-border bg-background animate-in slide-in-from-bottom-4 duration-300"
+        className="relative w-full md:max-w-2xl h-[92vh] md:h-auto md:max-h-[90vh] overflow-y-auto rounded-t-3xl md:rounded-2xl border border-border bg-[#0f1319] animate-in slide-in-from-bottom-4 duration-300"
+        style={{ borderLeft: "4px solid #4a6cf7" }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-background/95 backdrop-blur px-6 py-4">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-[#0f1319]/95 backdrop-blur px-6 py-4">
           <div className="flex items-center gap-2.5">
             <Send className="h-4 w-4 text-primary" />
             <h2 className="font-black tracking-tighter text-xl">CAMPAIGN READY</h2>
