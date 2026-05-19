@@ -2,7 +2,7 @@ import { useCart } from "@/lib/cart";
 import { ArrowRight } from "lucide-react";
 
 export function UpsellBanner() {
-  const { uniqueChannels } = useCart();
+  const { uniqueChannels, total } = useCart();
   if (uniqueChannels < 1) return null;
 
   let text = "";
@@ -15,9 +15,7 @@ export function UpsellBanner() {
     text = "⚡ One more channel to unlock bundle pricing!";
   } else if (uniqueChannels === 3 || uniqueChannels === 4) {
     success = true;
-    text = `🎉 Bundle unlocked! Add ${
-      5 - uniqueChannels
-    } more to reach the 5-channel deal and save an extra $150`;
+    text = `🎉 Bundle unlocked! Add ${5 - uniqueChannels} more to reach the 5-channel deal and save an extra $150`;
     cta = "UPGRADE";
   } else {
     success = true;
@@ -36,7 +34,13 @@ export function UpsellBanner() {
         style={{ backdropFilter: "blur(12px)" }}
       >
         <div className="mx-auto max-w-7xl px-6 py-3.5 flex items-center justify-between gap-4">
-          <p className="font-medium text-sm md:text-base text-foreground">{text}</p>
+          <div className="flex items-center gap-4 min-w-0">
+            <span className="shrink-0 font-black text-white text-lg md:text-xl tracking-tighter">
+              ${total.toLocaleString()}
+            </span>
+            <span className="hidden sm:block w-px h-5 bg-white/20 shrink-0" />
+            <p className="font-medium text-sm md:text-base text-foreground truncate">{text}</p>
+          </div>
           {cta && (
             <a
               href="#channels"

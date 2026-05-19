@@ -1,0 +1,66 @@
+This is a final polish pass. Keep all functionality intact. Fix the bugs listed at the bottom, then apply the visual refinements throughout.
+
+Visual Polish
+Hero
+
+The right half of the hero is completely empty — fill it with something. Add a dark-tinted abstract visual element: a large faded grid/mesh pattern (opacity: 0.06) that fades out left, with 3–4 floating channel-stat "cards" scattered on the right side like they're hovering in space. Each mini card shows a fake channel avatar initial, a channel name, subscriber count, and a small price tag. Slightly rotated, different sizes, blur the ones further back (filter: blur(1px)). This fills the dead space and shows the product visually without needing a real image
+The "BROWSE CHANNELS" scroll indicator — animate the arrow with a gentle up-down loop, translateY(4px) every 1.2s, ease in out
+
+Channel Cards
+
+The cards are still too uniform and boxy. Add a thin left-side accent bar on each card, 3px wide, full card height, in a unique color per channel — use these: CryptoVault #4a6cf7 (blue), BlockTalk #e53e3e (red), Web3Wire #10b981 (green), ChainReview #f59e0b (amber), AltSignals #8b5cf6 (purple), TokenWatch #06b6d4 (cyan), DefiDaily #f97316 (orange)
+Each card: add a very subtle tag below the channel name — small pill, muted background, grey text — showing the content type. Use these: CryptoVault → "Market Analysis", BlockTalk → "News & Trends", Web3Wire → "Web3 Education", ChainReview → "Project Reviews", AltSignals → "Trading Signals", TokenWatch → "Token Tracking", DefiDaily → "DeFi Coverage"
+When a card is selected/added: the left accent bar glows (same color, add box-shadow: 0 0 12px currentColor), and a small checkmark appears in the top-right corner in that card's accent color
+Card hover: lift translateY(-3px), transition 200ms ease
+
+Bundle Pricing
+
+The gap between the bundle heading and the cards is too large — tighten it
+Add a thin horizontal rule 1px solid #1e2535 above the bundle section to separate it from the channel grid without a massive gap
+The Pro card's vertical blue left-border accent — make it a gradient: linear-gradient(180deg, #4a6cf7, #7c3aed) — adds depth
+Below the 3 bundle cards, add a small reassurance line centered: "All bundles include full script control, review before publishing, and a post-campaign performance report." — small, muted, italic
+
+How It Works
+
+The giant faded 01 02 03 numbers are great but the section below them feels empty. Add a thin dashed connector line between the 3 steps, positioned at the vertical midpoint of the numbers, spanning full width — gives it a timeline feel
+Each step: add a small blue pill tag above the title — "Step 01", "Step 02", "Step 03" — in #4a6cf7 background, small white text, rounded
+
+General Spacing & Finish
+
+There's too much dead vertical space between the How It Works section and FAQ — cut the padding in half there
+The FAQ heading "Everything you need to know." is wrapping awkwardly — constrain it to max-width: 600px so it reads as two intentional lines max
+Add a very subtle top gradient on the page: from #0d1117 at the very top fading to #0a0d14 within the first 200px — makes the navbar feel grounded
+Sticky upsell banner: add the current cart total on the left side before the message text, in white bold — e.g. "$500" then the nudge text. Always visible regardless of state
+
+
+Bug Fixes
+1. Sticky upsell banner — always show current total
+The banner must always display the running cart total prominently. Format:
+
+Left side: current total in white bold large — e.g. "Current total: $500"
+Then the nudge message
+Right side: the action button
+
+When no channels are selected, banner is hidden. When 1+ channels selected, it shows immediately with the total. The nudge message updates per tier as before, but the total is always visible and updates live as channels are added/removed.
+2. Cart modal — add remove option
+Inside the cart/checkout modal, each channel line item must have:
+
+A "−" button or a trash icon on the right side of each line item
+Clicking it removes that channel from the cart entirely (sets quantity to 0)
+The channel card in the grid should revert to "Add +" state when removed from the modal
+Quantity stepper should still work for adjusting count up/down without full removal
+
+3. Add "Homepage Pin" upsell per channel
+On each channel card, below the subscriber count tag and above the price/Add row, add a small toggle row:
+
+Label: "📌 Homepage Pin — 30 days" in small text
+Price: "+$150" in muted text to the right
+A small toggle switch (off by default)
+When toggled on: the card gets a subtle gold/amber top border flash, the +$150 turns white and bold, and the cart total updates to include it
+In the checkout modal, pinned channels should show as a sub-line under that channel: "↳ Homepage Pin × 30 days — +$150"
+In the auto-generated message text, include it as: [Channel Name] + Homepage Pin (30 days): +$150
+
+4. Email and Telegram routing
+
+Email button: opens mailto:hello@cryptoclicks.io with subject CryptoClix Campaign Request and the full pre-generated message as the email body (URI-encoded)
+Telegram button: opens https://t.me/cryptoclicksio?text= followed by the URI-encoded pre-generated message

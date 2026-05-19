@@ -12,9 +12,12 @@ const FAQS = [
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section className="mx-auto max-w-3xl px-6 py-28">
+    <section className="mx-auto max-w-3xl px-6 pt-14 pb-28">
       <div className="label-eyebrow mb-3">FAQ</div>
-      <h2 className="font-black tracking-tighter text-4xl md:text-5xl mb-12 leading-[0.95]">
+      <h2
+        className="font-black tracking-tighter text-4xl md:text-5xl mb-12 leading-[0.95]"
+        style={{ maxWidth: 600 }}
+      >
         Everything you need
         <br />
         to know.
@@ -52,7 +55,7 @@ export function Faq() {
       <p className="mt-8 text-sm text-muted-foreground">
         Still have questions?{" "}
         <a
-          href="https://t.me/YOUR_HANDLE"
+          href="https://t.me/cryptoclicksio"
           target="_blank"
           rel="noreferrer"
           className="text-primary hover:text-primary-glow transition-colors font-semibold"

@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { ShoppingCart, X, Copy, Mail, Send, Check } from "lucide-react";
-import { ADDON, CHANNELS, useCart } from "@/lib/cart";
-
-const TELEGRAM_HANDLE = "YOUR_HANDLE";
+import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2 } from "lucide-react";
+import { ADDON, CHANNELS, HOMEPAGE_PIN_PRICE, useCart } from "@/lib/cart";
 
 export function CheckoutFlow() {
   const [open, setOpen] = useState(false);
@@ -29,7 +27,7 @@ export function CheckoutFlow() {
 }
 
 function CheckoutModal({ onClose }: { onClose: () => void }) {
-  const { cart, subtotal, discount, addonEnabled, setAddonEnabled, total, uniqueChannels } = useCart();
+  const { cart, pins, subtotal, discount, pinTotal, addonEnabled, setAddonEnabled, total, uniqueChannels, clearItem } = useCart();
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -43,10 +41,10 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
       Object.entries(cart)
         .map(([id, qty]) => {
           const ch = CHANNELS.find((c) => c.id === id)!;
-          return { ...ch, qty };
+          return { ...ch, qty, pinned: pins[id] ?? false };
         })
         .filter(Boolean),
-    [cart]
+    [cart, pins]
   );
 
   const message = useMemo(() => {
@@ -54,15 +52,19 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     lines.push("*CryptoClix Campaign Request*", "");
     lines.push("*Selected Channels:*");
     if (selectedItems.length === 0) lines.push("- (none selected)");
-    selectedItems.forEach((s) => lines.push(`- ${s.name} × ${s.qty} ($${s.price * s.qty})`));
+    selectedItems.forEach((s) => {
+      lines.push(`- ${s.name} × ${s.qty} ($${s.price * s.qty})`);
+      if (s.pinned) lines.push(`  ↳ Homepage Pin × 30 days — +$${HOMEPAGE_PIN_PRICE}`);
+    });
     lines.push("", "*Financial Summary:*");
     lines.push(`- Base Total: $${subtotal}`);
     if (discount > 0) lines.push(`- Bundle Discount: −$${discount}`);
+    if (pinTotal > 0) lines.push(`- Homepage Pin(s): +$${pinTotal}`);
     if (addonEnabled) lines.push(`- Add-On (${ADDON.title}): $${ADDON.price}`);
     lines.push(`- Grand Total: $${total}`);
     lines.push("", "Please confirm availability and next steps. Thank you.");
     return lines.join("\n");
-  }, [selectedItems, subtotal, discount, addonEnabled, total]);
+  }, [selectedItems, subtotal, discount, pinTotal, addonEnabled, total]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(message);
@@ -70,8 +72,8 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     setTimeout(() => setCopied(false), 1800);
   };
 
-  const mailto = `mailto:?subject=${encodeURIComponent("CryptoClix Campaign Request")}&body=${encodeURIComponent(message)}`;
-  const tg = `https://t.me/${TELEGRAM_HANDLE}?text=${encodeURIComponent(message)}`;
+  const mailto = `mailto:hello@cryptoclicks.io?subject=${encodeURIComponent("CryptoClix Campaign Request")}&body=${encodeURIComponent(message)}`;
+  const tg = `https://t.me/cryptoclicksio?text=${encodeURIComponent(message)}`;
 
   return (
     <div
@@ -102,17 +104,37 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                 <div className="p-4 text-sm text-muted-foreground">No channels added yet.</div>
               )}
               {selectedItems.map((s) => (
-                <div key={s.id} className="flex items-center justify-between p-4">
-                  <div className="flex items-center gap-3">
-                    <span className="grid h-8 w-8 place-items-center rounded-full text-xs font-black text-white" style={{ backgroundColor: s.color }}>
-                      {s.name.slice(0, 2).toUpperCase()}
-                    </span>
-                    <div>
-                      <div className="font-semibold text-sm">{s.name}</div>
-                      <div className="text-xs text-muted-foreground">Qty {s.qty} · ${s.price} each</div>
+                <div key={s.id}>
+                  <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="grid h-8 w-8 place-items-center rounded-full text-xs font-black text-white shrink-0"
+                        style={{ backgroundColor: s.color }}
+                      >
+                        {s.name.slice(0, 2).toUpperCase()}
+                      </span>
+                      <div>
+                        <div className="font-semibold text-sm">{s.name}</div>
+                        <div className="text-xs text-muted-foreground">Qty {s.qty} · ${s.price} each</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="font-bold">${s.price * s.qty}</div>
+                      <button
+                        onClick={() => clearItem(s.id)}
+                        className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        aria-label={`Remove ${s.name}`}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                   </div>
-                  <div className="font-bold">${s.price * s.qty}</div>
+                  {s.pinned && (
+                    <div className="flex items-center justify-between px-4 pb-3 pl-[4.25rem]">
+                      <span className="text-xs text-amber-400/80">↳ Homepage Pin × 30 days</span>
+                      <span className="text-xs font-semibold text-amber-400">+${HOMEPAGE_PIN_PRICE}</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -125,6 +147,9 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                   value={`−$${discount}`}
                   valueClass="text-emerald-500"
                 />
+              )}
+              {pinTotal > 0 && (
+                <Row label="Homepage Pin(s)" value={`+$${pinTotal}`} valueClass="text-amber-400" />
               )}
               {addonEnabled && <Row label={`Add-on — ${ADDON.title}`} value={`+$${ADDON.price}`} />}
             </div>

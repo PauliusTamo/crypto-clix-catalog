@@ -101,6 +101,18 @@
     position: relative;
   }
 
+  /* Subtle top gradient — grounds the navbar */
+  body::after {
+    content: "";
+    position: fixed;
+    inset-x: 0;
+    top: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 0;
+    background: linear-gradient(180deg, #0d1117 0%, transparent 100%);
+  }
+
   /* Subtle grain overlay */
   body::before {
     content: "";
@@ -150,9 +162,11 @@
     box-shadow: 0 0 0 1px #4a6cf7;
   }
 
-  @keyframes bounce-down {
-    0%, 100% { transform: translateY(0); opacity: 0.6; }
-    50% { transform: translateY(6px); opacity: 1; }
+  @keyframes scroll-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
   }
-  .scroll-arrow { animation: bounce-down 2s ease-in-out infinite; }
+  .scroll-arrow {
+    animation: scroll-bounce 1.2s ease-in-out infinite;
+  }
 }

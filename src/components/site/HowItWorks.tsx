@@ -6,13 +6,14 @@ const STEPS = [
 
 export function HowItWorks() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-28">
+    <section className="mx-auto max-w-7xl px-6 pt-28 pb-14">
       <div className="label-eyebrow mb-10">How It Works</div>
 
       <div className="relative grid gap-12 md:gap-6 md:grid-cols-3">
-        {/* Connecting dashed line */}
+        {/* Connecting dashed line at vertical midpoint of numbers */}
         <div
-          className="hidden md:block absolute top-[3.5rem] left-[10%] right-[10%] border-t border-dashed border-[#2a2f45] pointer-events-none"
+          className="hidden md:block absolute left-[10%] right-[10%] border-t border-dashed border-[#2a2f45] pointer-events-none"
+          style={{ top: "3.2rem" }}
           aria-hidden
         />
         {STEPS.map((s, i) => (
@@ -25,6 +26,13 @@ export function HowItWorks() {
               0{i + 1}
             </span>
             <div className="relative pt-20 md:pt-24 md:pl-2">
+              {/* Step pill tag */}
+              <span
+                className="inline-block mb-3 rounded-full px-2.5 py-1 text-[11px] font-bold text-white tracking-wide"
+                style={{ backgroundColor: "#4a6cf7" }}
+              >
+                Step 0{i + 1}
+              </span>
               <h3 className="font-black text-2xl tracking-tight">{s.title}</h3>
               <p className="mt-3 text-sm text-muted-foreground leading-relaxed max-w-xs">
                 {s.desc}

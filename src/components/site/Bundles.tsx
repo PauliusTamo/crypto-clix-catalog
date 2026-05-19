@@ -27,8 +27,11 @@ function CircleCheck({ className = "" }: { className?: string }) {
 
 export function Bundles() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-28">
-      <div className="mb-12 max-w-2xl">
+    <section className="mx-auto max-w-7xl px-6 pb-28">
+      {/* Separator */}
+      <div className="border-t border-[#1e2535] mb-10" />
+
+      <div className="mb-6 max-w-2xl">
         <div className="label-eyebrow mb-3">Pricing</div>
         <h2 className="font-black tracking-tighter text-5xl md:text-6xl leading-[0.95]">
           BUNDLE
@@ -51,7 +54,10 @@ export function Bundles() {
             >
               {b.featured && (
                 <span
-                  className="absolute left-0 top-0 bottom-0 w-1 bg-primary"
+                  className="absolute left-0 top-0 bottom-0 w-1 pointer-events-none"
+                  style={{
+                    background: "linear-gradient(180deg, #4a6cf7, #7c3aed)",
+                  }}
                   aria-hidden
                 />
               )}
@@ -77,6 +83,11 @@ export function Bundles() {
           );
         })}
       </div>
+
+      {/* Reassurance line */}
+      <p className="mt-8 text-center text-xs text-muted-foreground italic">
+        All bundles include full script control, review before publishing, and a post-campaign performance report.
+      </p>
     </section>
   );
 }
