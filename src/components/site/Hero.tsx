@@ -1,10 +1,14 @@
 import { ArrowDown } from "lucide-react";
+import chrisImg from "@assets/chris_2025_profilepic_1779222064968.jpg";
+import octoImg from "@assets/crrypto_octopus_profile_pic_1779222086456.jpg";
+import lennyImg from "@assets/Lenny_profile_pic2025_1779222101316.jpg";
+import sphereImg from "@assets/sphere_profile_pic_(2)_1779222134900.jpg";
 
 const FLOATING_CARDS = [
-  { initials: "CS", name: "Crypto Sphere", subs: "191K subs", price: "$900", color: "#f97316", rotate: "-6deg", top: "8%", right: "2%", scale: 1, blur: false },
-  { initials: "LC", name: "Lenny Crypto", subs: "161K subs", price: "$800", color: "#06b6d4", rotate: "5deg", top: "35%", right: "18%", scale: 0.88, blur: true },
-  { initials: "CC", name: "Crypto Christopher", subs: "137K subs", price: "$700", color: "#8b5cf6", rotate: "-3deg", top: "60%", right: "4%", scale: 0.95, blur: false },
-  { initials: "CO", name: "Crypto Octo", subs: "86K subs", price: "$500", color: "#4a6cf7", rotate: "7deg", top: "20%", right: "36%", scale: 0.78, blur: true },
+  { image: sphereImg, name: "Crypto Sphere", subs: "191K subs", price: "$400", color: "#f97316", rotate: "-6deg", top: "8%", right: "2%", scale: 1, blur: false },
+  { image: lennyImg, name: "Lenny Crypto", subs: "161K subs", price: "$400", color: "#06b6d4", rotate: "5deg", top: "35%", right: "18%", scale: 0.88, blur: true },
+  { image: chrisImg, name: "Crypto Christopher", subs: "137K subs", price: "$350", color: "#8b5cf6", rotate: "-3deg", top: "60%", right: "4%", scale: 0.95, blur: false },
+  { image: octoImg, name: "Crypto Octo", subs: "86K subs", price: "$250", color: "#4a6cf7", rotate: "7deg", top: "20%", right: "36%", scale: 0.78, blur: true },
 ];
 
 export function Hero() {
@@ -12,7 +16,6 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="hero-blob" aria-hidden />
 
-      {/* Top page gradient */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 z-0"
         style={{ height: 200, background: "linear-gradient(180deg, #0d1117 0%, #0a0d14 100%)" }}
@@ -20,7 +23,6 @@ export function Hero() {
       />
 
       <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-2 gap-8 items-center">
-        {/* Left content */}
         <div>
           <h1
             className="font-black tracking-tighter leading-[0.92] max-w-5xl"
@@ -39,7 +41,7 @@ export function Hero() {
           <div className="mt-12 flex items-stretch gap-6 md:gap-10">
             <Stat value="7" label="Active Channels" />
             <Divider />
-            <Stat value="2M+" label="Total Subscribers" />
+            <Stat value="900K+" label="Total Subscribers" />
             <Divider />
             <Stat value="100+" label="Campaigns Delivered" />
           </div>
@@ -53,9 +55,7 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Right side — floating channel cards */}
         <div className="relative hidden md:block h-[420px]" aria-hidden>
-          {/* Grid mesh pattern */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -80,19 +80,19 @@ export function Hero() {
               }}
             >
               <div className="flex items-center gap-3">
-                <div
-                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-xs font-black text-white"
-                  style={{ backgroundColor: card.color }}
-                >
-                  {card.initials}
-                </div>
+                <img
+                  src={card.image}
+                  alt={card.name}
+                  className="h-9 w-9 shrink-0 rounded-full object-cover"
+                  style={{ border: `2px solid ${card.color}55` }}
+                />
                 <div className="min-w-0">
                   <div className="text-sm font-bold text-white truncate">{card.name}</div>
                   <div className="text-xs text-white/50">{card.subs}</div>
                 </div>
               </div>
               <div
-                className="mt-2.5 inline-block rounded-full px-2.5 py-0.5 text-xs font-black text-white"
+                className="mt-2.5 inline-block rounded-full px-2.5 py-0.5 text-xs font-black"
                 style={{ backgroundColor: card.color + "33", color: card.color, border: `1px solid ${card.color}55` }}
               >
                 {card.price}/video

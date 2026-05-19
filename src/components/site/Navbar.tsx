@@ -1,16 +1,12 @@
 import { Send } from "lucide-react";
+import logoImg from "@assets/cryptoclicks-low-resolution-logo-white-on-transparent-backgrou_1779222416737.png";
 
 export function Navbar() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80">
       <div className="mx-auto max-w-7xl px-6 h-12 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-gradient-to-br from-primary to-primary-glow text-primary-foreground font-black text-sm">
-            C
-          </span>
-          <span className="font-black text-base tracking-tight">
-            Crypto<span className="text-primary">Clicks</span>
-          </span>
+        <a href="#" className="flex items-center">
+          <img src={logoImg} alt="CryptoClicks" className="h-7 w-auto" />
         </a>
         <a
           href="https://t.me/crypoclicksio"

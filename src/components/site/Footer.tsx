@@ -1,4 +1,5 @@
 import { Send } from "lucide-react";
+import logoImg from "@assets/cryptoclicks-low-resolution-logo-white-on-transparent-backgrou_1779222416737.png";
 
 export function Footer() {
   return (
@@ -8,9 +9,7 @@ export function Footer() {
           Built for crypto projects that want real reach.
         </p>
         <div className="flex items-center justify-between text-sm">
-          <span className="font-black tracking-tight">
-            Crypto<span className="text-primary">Clicks</span>
-          </span>
+          <img src={logoImg} alt="CryptoClicks" className="h-6 w-auto" />
           <span className="text-muted-foreground hidden md:block">
             © 2026 CryptoClicks. All rights reserved.
           </span>

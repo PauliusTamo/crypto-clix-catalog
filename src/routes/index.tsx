@@ -9,6 +9,7 @@ import { HowItWorks } from "@/components/site/HowItWorks";
 import { Faq } from "@/components/site/Faq";
 import { Footer } from "@/components/site/Footer";
 import { CheckoutFlow } from "@/components/site/CheckoutFlow";
+import { Shorts } from "@/components/site/Shorts";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,6 +40,7 @@ function Index() {
           <div id="channels" />
           <Channels />
           <Bundles />
+          <Shorts />
           <HowItWorks />
           <Faq />
         </main>

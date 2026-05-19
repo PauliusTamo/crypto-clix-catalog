@@ -62,7 +62,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
 
   const message = useMemo(() => {
     const lines: string[] = [];
-    lines.push("*CryptoClix Campaign Request*", "");
+    lines.push("*CryptoClicks Campaign Request*", "");
     lines.push("*Selected Channels:*");
     if (selectedItems.length === 0) lines.push("- (none selected)");
     selectedItems.forEach((s) => {
@@ -85,8 +85,8 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     setTimeout(() => setCopied(false), 1800);
   };
 
-  const mailto = `mailto:hello@cryptoclicks.io?subject=${encodeURIComponent("CryptoClix Campaign Request")}&body=${encodeURIComponent(message)}`;
-  const tg = `https://t.me/cryptoclicksio?text=${encodeURIComponent(message)}`;
+  const mailto = `mailto:hello@cryptoclicks.io?subject=${encodeURIComponent("CryptoClicks Campaign Request")}&body=${encodeURIComponent(message)}`;
+  const tg = `https://t.me/crypoclicksio?text=${encodeURIComponent(message)}`;
 
   return (
     <div
@@ -118,20 +118,18 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
               )}
               {selectedItems.map((s) => (
                 <div key={s.id}>
-                  {/* Main line item */}
                   <div className="flex items-center gap-3 px-4 py-3">
-                    <span
-                      className="grid h-8 w-8 place-items-center rounded-full text-xs font-black text-white shrink-0"
-                      style={{ backgroundColor: s.color }}
-                    >
-                      {s.name.slice(0, 2).toUpperCase()}
-                    </span>
+                    <img
+                      src={s.image}
+                      alt={s.name}
+                      className="h-8 w-8 rounded-full object-cover shrink-0"
+                      style={{ border: `2px solid ${s.color}55` }}
+                    />
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-sm">{s.name}</div>
                       <div className="text-xs text-muted-foreground">${s.price}/video</div>
                     </div>
 
-                    {/* Inline quantity stepper */}
                     <div className="flex items-center gap-0.5 rounded-lg border border-[#2a2f45] bg-[#0a0d14] p-0.5">
                       <button
                         onClick={() => setQty(s.id, s.qty - 1)}
@@ -161,7 +159,6 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                     </button>
                   </div>
 
-                  {/* Homepage Pin sub-line */}
                   {s.pinned && (
                     <div className="flex items-center justify-between px-4 pb-3 pl-[3.75rem]">
                       <span className="text-xs text-amber-400/80">↳ Homepage Pin × 30 days</span>
@@ -201,7 +198,6 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          {/* Add-on */}
           <div className="rounded-xl border border-border bg-card p-5">
             <div className="label-eyebrow mb-2">Add-On Service</div>
             <div className="flex items-start justify-between gap-4">
@@ -221,7 +217,6 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          {/* Message */}
           <div>
             <div className="label-eyebrow mb-3">Pre-Written Message</div>
             <pre

@@ -1,7 +1,7 @@
 const BUNDLES = [
-  { name: "Starter", channels: "3 channels", channelCount: 3, price: 1200, featured: false },
-  { name: "Growth", channels: "5 channels", channelCount: 5, price: 1900, featured: false },
-  { name: "Pro", channels: "7 channels", channelCount: 7, price: 2500, featured: true },
+  { name: "Starter", channels: "3 channels", channelCount: 3, originalPrice: 900, price: 800, savings: 100, featured: false },
+  { name: "Growth", channels: "5 channels", channelCount: 5, originalPrice: 1600, price: 1350, savings: 250, featured: false },
+  { name: "Pro", channels: "7 channels", channelCount: 7, originalPrice: 2400, price: 1750, savings: 650, featured: true },
 ];
 
 const INCLUDED = [
@@ -28,7 +28,6 @@ function CircleCheck({ className = "" }: { className?: string }) {
 export function Bundles() {
   return (
     <section className="mx-auto max-w-7xl px-6 pb-28">
-      {/* Separator */}
       <div className="border-t border-[#1e2535] mb-10" />
 
       <div className="mb-6 max-w-2xl">
@@ -42,7 +41,7 @@ export function Bundles() {
 
       <div className="grid gap-5 md:grid-cols-3 items-end">
         {BUNDLES.map((b) => {
-          const per = Math.round(b.price / b.channelCount);
+          const reach = b.channelCount === 3 ? "300K+" : b.channelCount === 5 ? "550K+" : "900K+";
           return (
             <div
               key={b.name}
@@ -55,21 +54,23 @@ export function Bundles() {
               {b.featured && (
                 <span
                   className="absolute left-0 top-0 bottom-0 w-1 pointer-events-none"
-                  style={{
-                    background: "linear-gradient(180deg, #4a6cf7, #7c3aed)",
-                  }}
+                  style={{ background: "linear-gradient(180deg, #4a6cf7, #7c3aed)" }}
                   aria-hidden
                 />
               )}
               <div className="label-eyebrow">{b.name}</div>
               <div className="mt-2 text-muted-foreground">{b.channels}</div>
-              <div className="mt-6 flex items-baseline gap-1.5">
+              <div className="mt-6 flex items-baseline gap-2">
                 <span className="font-black text-5xl tracking-tighter">
                   ${b.price.toLocaleString()}
                 </span>
+                <span className="text-muted-foreground line-through text-lg">
+                  ${b.originalPrice.toLocaleString()}
+                </span>
               </div>
-              <div className="mt-1.5 text-xs text-muted-foreground">
-                ~${per}/channel
+              <div className="mt-1.5 flex items-center gap-2">
+                <span className="text-xs text-emerald-500 font-bold">Save ${b.savings}</span>
+                <span className="text-xs text-muted-foreground">· {reach} reach</span>
               </div>
               <ul className="mt-7 space-y-3">
                 {INCLUDED.map((i) => (
@@ -84,7 +85,6 @@ export function Bundles() {
         })}
       </div>
 
-      {/* Reassurance line */}
       <p className="mt-8 text-center text-xs text-muted-foreground italic">
         All bundles include full script control, review before publishing, and a post-campaign performance report.
       </p>

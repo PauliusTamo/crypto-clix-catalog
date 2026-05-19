@@ -3,9 +3,6 @@ import { Check, ExternalLink, Minus, Plus, Users } from "lucide-react";
 import { CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
 
 export function Channels() {
-  const main = CHANNELS.filter((c) => c.id !== "defidaily");
-  const featured = CHANNELS.find((c) => c.id === "defidaily");
-
   return (
     <section className="relative mx-auto max-w-7xl px-6 pb-28">
       <div className="label-eyebrow mb-4">Available Channels</div>
@@ -17,12 +14,9 @@ export function Channels() {
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {main.map((c) => (
+        {CHANNELS.map((c) => (
           <ChannelCard key={c.id} channel={c} />
         ))}
-        {featured && (
-          <ChannelCard channel={featured} className="md:col-span-2" bestValue />
-        )}
       </div>
     </section>
   );
@@ -31,11 +25,9 @@ export function Channels() {
 function ChannelCard({
   channel,
   className = "",
-  bestValue = false,
 }: {
   channel: Channel;
   className?: string;
-  bestValue?: boolean;
 }) {
   const { cart, pins, add, remove, setQty, togglePin } = useCart();
   const qty = cart[channel.id] ?? 0;
@@ -72,7 +64,6 @@ function ChannelCard({
         (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
       }}
     >
-      {/* Left accent bar */}
       <span
         className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl pointer-events-none z-10"
         style={{
@@ -84,11 +75,6 @@ function ChannelCard({
       />
 
       <div className="pl-4 pr-5 pt-5 pb-5">
-        {bestValue && !selected && (
-          <span className="absolute top-4 right-4 rounded-full bg-primary/15 text-primary border border-primary/30 px-2.5 py-1 text-[10px] font-black tracking-widest">
-            BEST VALUE
-          </span>
-        )}
         {selected && (
           <span
             className="absolute top-3 right-3 grid h-6 w-6 place-items-center rounded-full text-white"
@@ -99,18 +85,19 @@ function ChannelCard({
         )}
 
         <div className="flex items-center gap-4">
-          <div
-            className="grid h-12 w-12 shrink-0 place-items-center rounded-full font-black text-base text-white"
-            style={{ backgroundColor: channel.color }}
-            aria-hidden
-          >
-            {channel.name.slice(0, 2).toUpperCase()}
-          </div>
+          <img
+            src={channel.image}
+            alt={channel.name}
+            className="h-12 w-12 shrink-0 rounded-full object-cover"
+            style={{ border: `2px solid ${channel.color}55` }}
+          />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-foreground truncate">{channel.name}</h3>
               <a
                 href={channel.link}
+                target="_blank"
+                rel="noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors"
                 aria-label={`Open ${channel.name}`}
               >
@@ -124,14 +111,12 @@ function ChannelCard({
           </div>
         </div>
 
-        {/* Content type tag */}
         <div className="mt-3">
           <span className="inline-block rounded-full bg-[#1e2535] text-[#8892a4] px-2.5 py-0.5 text-[11px] font-medium">
             {channel.contentType}
           </span>
         </div>
 
-        {/* Homepage Pin toggle */}
         <div
           className={`mt-4 flex items-center justify-between transition-all duration-200 ${
             pinned ? "rounded-lg border px-3 py-2" : ""
@@ -171,12 +156,8 @@ function ChannelCard({
           </div>
         </div>
 
-        {/* Inline pin error */}
         {pinError && (
-          <p
-            className="mt-1.5 text-xs"
-            style={{ color: "#e53e3e" }}
-          >
+          <p className="mt-1.5 text-xs" style={{ color: "#e53e3e" }}>
             Add this channel first to include a Homepage Pin.
           </p>
         )}
