@@ -27,8 +27,8 @@ export function UpsellBanner() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 pointer-events-none">
       <div
-        className="pointer-events-auto border-t border-white/10 backdrop-blur-xl bg-[#0a0d14]/90"
-        style={{ backdropFilter: "blur(16px)" }}
+        className="pointer-events-auto border-t border-white/10 bg-[#08090f]"
+        style={{ transform: "translateZ(0)" }}
       >
         <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between gap-6">
 

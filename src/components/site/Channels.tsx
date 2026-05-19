@@ -13,7 +13,7 @@ function BundleSavingsBar() {
 
   if (uniqueChannels === 0) {
     return (
-      <div className="mx-2 rounded-xl border border-border bg-surface/85 backdrop-blur-xl px-4 py-3 text-sm text-muted-foreground">
+      <div className="mx-2 rounded-xl border border-border bg-[#0f1319] px-4 py-3 text-sm text-muted-foreground">
         <span className="text-foreground font-semibold">💰 Bundle pricing</span>{" "}
         unlocks automatically at 3, 5, or 7 channels — save up to $650.
       </div>
@@ -26,7 +26,7 @@ function BundleSavingsBar() {
   if (bundleActive) {
     const tierName = BUNDLE_TIERS.find((t) => t.count === uniqueChannels)?.name ?? "";
     return (
-      <div className="mx-2 rounded-xl border border-emerald-500/30 bg-emerald-500/8 backdrop-blur-xl px-4 py-3">
+      <div className="mx-2 rounded-xl border border-emerald-500/30 bg-emerald-500/8 px-4 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Check className="h-4 w-4 text-emerald-400 shrink-0" strokeWidth={2.5} />
@@ -55,7 +55,7 @@ function BundleSavingsBar() {
 
   // Not at a tier — show progress toward next
   return (
-    <div className="mx-2 rounded-xl border border-border bg-surface/85 backdrop-blur-xl px-4 py-3">
+    <div className="mx-2 rounded-xl border border-border bg-[#0f1319] px-4 py-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 text-sm">
           <span className="text-foreground font-semibold">

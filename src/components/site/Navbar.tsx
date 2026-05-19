@@ -3,7 +3,7 @@ import logoImg from "@assets/cryptoclicks-low-resolution-logo-white-on-transpare
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80">
+    <header className="sticky top-0 z-40 bg-[#0a0d14] border-b border-white/5" style={{ transform: "translateZ(0)" }}>
       <div className="mx-auto max-w-7xl px-6 h-12 flex items-center justify-between">
         <a href="#" className="flex items-center">
           <img src={logoImg} alt="CryptoClicks" className="h-7 w-auto" />
