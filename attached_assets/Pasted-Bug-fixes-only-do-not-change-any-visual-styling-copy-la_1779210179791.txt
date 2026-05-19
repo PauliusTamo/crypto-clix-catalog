@@ -1,0 +1,23 @@
+Bug fixes only — do not change any visual styling, copy, layout, or functionality beyond what is listed below.
+
+1. "Maximum bundle active" banner threshold
+The green "🏆 Maximum bundle active — you're getting our best rate." banner currently triggers at 5 channels. Change the trigger to 7 total videos (sum of all quantities across all channels, including multiple videos of the same channel). The full banner progression based on total video count:
+
+1 video: "🎯 Add 2 more to unlock the 3-video bundle — save $200"
+2 videos: "⚡ One more video to unlock bundle pricing!"
+3–4 videos: "🎉 Bundle unlocked! Add 2 more to reach the 5-video deal and save an extra $150"
+5–6 videos: "🚀 Almost there — add more to unlock the full 7-channel Pro bundle"
+7+ videos: "🏆 Maximum bundle active — you're getting our best rate."
+
+2. Homepage Pin toggle — require channel to be added first
+If a user toggles the Homepage Pin on a channel card where the channel has NOT been added to the cart (i.e. quantity is 0 / still showing "+ Add"), immediately snap the toggle back to off and show a small inline error message directly below the toggle row on that card. Message: "Add this channel first to include a Homepage Pin." in red #e53e3e, small text, fades out after 3 seconds. Do not show a modal or alert dialog — inline only.
+3. Homepage Pin toggle UI — fix toggle direction
+The toggle thumb currently moves outward (away from center) when activated. Fix it so the thumb moves inward correctly — off state: thumb left, on state: thumb right. This is standard toggle behavior. Ensure the toggle background also transitions correctly: off = #2a2f45, on = #f59e0b (amber, matching the pin accent color).
+4. Bundle discount counts total videos, not unique channels
+The bundle discount logic currently only counts distinct channels selected. Change it so it counts the total number of videos across all channels — i.e. if one channel has quantity 3, that counts as 3 toward the bundle threshold. This applies to: the sticky bottom banner thresholds, the bundle pricing section highlighting the active tier, the discount calculation in the cart modal, and the pre-written message financial summary.
+5. Cart modal — Homepage Pin deselect + quantity editing
+Inside the "CAMPAIGN READY" modal order summary, for each line item:
+
+Homepage Pin: Add a small × or trash icon next to the "↳ Homepage Pin × 30 days — +$150" sub-line. Clicking it removes the pin for that channel, updates the grand total immediately, and reverts the toggle on that channel's card back to off.
+Quantity editing: Next to each channel line item in the modal, add an inline quantity stepper − [N] + (same style as the card steppers). Changing quantity here must: update the channel card's quantity stepper to match, recalculate subtotal and grand total live, update the pre-written message text live, and re-evaluate which bundle tier is active.
+If quantity is reduced to 0 via the modal stepper, remove that channel from the cart entirely, revert its card to "+ Add" state, and remove the Homepage Pin sub-line if it was active for that channel.

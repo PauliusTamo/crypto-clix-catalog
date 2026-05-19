@@ -106,7 +106,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const ch = CHANNELS.find((c) => c.id === id);
       return sum + (ch ? ch.price * qty : 0);
     }, 0);
-    const discount = BUNDLE_DISCOUNTS[uniqueChannels] ?? 0;
+    const discountKey = Math.min(totalItems, 7);
+    const discount = BUNDLE_DISCOUNTS[discountKey] ?? 0;
     const pinTotal = Object.entries(pins).reduce((sum, [id, on]) => {
       return sum + (on && cart[id] ? HOMEPAGE_PIN_PRICE : 0);
     }, 0);

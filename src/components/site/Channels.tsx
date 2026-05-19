@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Check, ExternalLink, Minus, Plus, Users } from "lucide-react";
 import { CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
 
@@ -40,6 +41,21 @@ function ChannelCard({
   const qty = cart[channel.id] ?? 0;
   const selected = qty > 0;
   const pinned = pins[channel.id] ?? false;
+  const [pinError, setPinError] = useState(false);
+
+  useEffect(() => {
+    if (!pinError) return;
+    const t = setTimeout(() => setPinError(false), 3000);
+    return () => clearTimeout(t);
+  }, [pinError]);
+
+  const handlePinToggle = () => {
+    if (!selected) {
+      setPinError(true);
+      return;
+    }
+    togglePin(channel.id);
+  };
 
   return (
     <article
@@ -48,9 +64,7 @@ function ChannelCard({
           ? "card-selected"
           : "bg-[#0f1319] border-[#1e2535] card-hover-ring"
       } ${className}`}
-      style={{
-        transform: selected ? "translateY(0)" : undefined,
-      }}
+      style={{ transition: "transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease" }}
       onMouseEnter={(e) => {
         if (!selected) (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
       }}
@@ -127,7 +141,7 @@ function ChannelCard({
           <span className="text-xs text-muted-foreground">📌 Homepage Pin — 30 days</span>
           <div className="flex items-center gap-2">
             <span
-              className="text-xs font-medium transition-all"
+              className="text-xs transition-all"
               style={{ color: pinned ? "#f59e0b" : undefined, fontWeight: pinned ? 700 : 400 }}
             >
               +${HOMEPAGE_PIN_PRICE}
@@ -135,19 +149,35 @@ function ChannelCard({
             <button
               role="switch"
               aria-checked={pinned}
-              onClick={() => togglePin(channel.id)}
-              className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                pinned ? "bg-amber-500" : "bg-[#2a2f45] border border-[#3a4055]"
-              }`}
+              onClick={handlePinToggle}
+              className="relative shrink-0 rounded-full transition-colors"
+              style={{
+                width: 36,
+                height: 20,
+                backgroundColor: pinned ? "#f59e0b" : "#2a2f45",
+                border: pinned ? "none" : "1px solid #3a4055",
+              }}
             >
               <span
-                className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${
-                  pinned ? "translate-x-4" : "translate-x-0.5"
-                }`}
+                className="absolute top-0.5 h-4 w-4 rounded-full bg-white"
+                style={{
+                  transition: "transform 150ms ease",
+                  transform: pinned ? "translateX(18px)" : "translateX(2px)",
+                }}
               />
             </button>
           </div>
         </div>
+
+        {/* Inline pin error */}
+        {pinError && (
+          <p
+            className="mt-1.5 text-xs"
+            style={{ color: "#e53e3e" }}
+          >
+            Add this channel first to include a Homepage Pin.
+          </p>
+        )}
 
         <div className="mt-4 pt-4 border-t border-[#1e2535] flex items-center justify-between">
           <div className="font-black text-2xl text-foreground">
@@ -162,7 +192,10 @@ function ChannelCard({
               <Plus className="h-4 w-4" /> Add
             </button>
           ) : (
-            <div className="flex items-center gap-1 rounded-lg border p-1" style={{ borderColor: channel.color, backgroundColor: channel.color + "1a" }}>
+            <div
+              className="flex items-center gap-1 rounded-lg border p-1"
+              style={{ borderColor: channel.color, backgroundColor: channel.color + "1a" }}
+            >
               <button
                 onClick={() => remove(channel.id)}
                 className="grid h-7 w-7 place-items-center rounded-md text-foreground hover:bg-white/10 transition"

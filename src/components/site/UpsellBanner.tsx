@@ -2,20 +2,24 @@ import { useCart } from "@/lib/cart";
 import { ArrowRight } from "lucide-react";
 
 export function UpsellBanner() {
-  const { uniqueChannels, total } = useCart();
-  if (uniqueChannels < 1) return null;
+  const { totalItems, total } = useCart();
+  if (totalItems < 1) return null;
 
   let text = "";
   let cta: string | null = "ADD MORE";
   let success = false;
 
-  if (uniqueChannels === 1) {
-    text = "🎯 Add 2 more channels and unlock the 3-channel bundle — save $200";
-  } else if (uniqueChannels === 2) {
-    text = "⚡ One more channel to unlock bundle pricing!";
-  } else if (uniqueChannels === 3 || uniqueChannels === 4) {
+  if (totalItems === 1) {
+    text = "🎯 Add 2 more to unlock the 3-video bundle — save $200";
+  } else if (totalItems === 2) {
+    text = "⚡ One more video to unlock bundle pricing!";
+  } else if (totalItems === 3 || totalItems === 4) {
     success = true;
-    text = `🎉 Bundle unlocked! Add ${5 - uniqueChannels} more to reach the 5-channel deal and save an extra $150`;
+    text = "🎉 Bundle unlocked! Add 2 more to reach the 5-video deal and save an extra $150";
+    cta = "UPGRADE";
+  } else if (totalItems === 5 || totalItems === 6) {
+    success = true;
+    text = "🚀 Almost there — add more to unlock the full 7-channel Pro bundle";
     cta = "UPGRADE";
   } else {
     success = true;

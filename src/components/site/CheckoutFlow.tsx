@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2 } from "lucide-react";
+import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus } from "lucide-react";
 import { ADDON, CHANNELS, HOMEPAGE_PIN_PRICE, useCart } from "@/lib/cart";
 
 export function CheckoutFlow() {
@@ -27,7 +27,20 @@ export function CheckoutFlow() {
 }
 
 function CheckoutModal({ onClose }: { onClose: () => void }) {
-  const { cart, pins, subtotal, discount, pinTotal, addonEnabled, setAddonEnabled, total, uniqueChannels, clearItem } = useCart();
+  const {
+    cart,
+    pins,
+    subtotal,
+    discount,
+    pinTotal,
+    addonEnabled,
+    setAddonEnabled,
+    total,
+    uniqueChannels,
+    clearItem,
+    setQty,
+    togglePin,
+  } = useCart();
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -105,34 +118,63 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
               )}
               {selectedItems.map((s) => (
                 <div key={s.id}>
-                  <div className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="grid h-8 w-8 place-items-center rounded-full text-xs font-black text-white shrink-0"
-                        style={{ backgroundColor: s.color }}
-                      >
-                        {s.name.slice(0, 2).toUpperCase()}
-                      </span>
-                      <div>
-                        <div className="font-semibold text-sm">{s.name}</div>
-                        <div className="text-xs text-muted-foreground">Qty {s.qty} · ${s.price} each</div>
-                      </div>
+                  {/* Main line item */}
+                  <div className="flex items-center gap-3 px-4 py-3">
+                    <span
+                      className="grid h-8 w-8 place-items-center rounded-full text-xs font-black text-white shrink-0"
+                      style={{ backgroundColor: s.color }}
+                    >
+                      {s.name.slice(0, 2).toUpperCase()}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm">{s.name}</div>
+                      <div className="text-xs text-muted-foreground">${s.price}/video</div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="font-bold">${s.price * s.qty}</div>
+
+                    {/* Inline quantity stepper */}
+                    <div className="flex items-center gap-0.5 rounded-lg border border-[#2a2f45] bg-[#0a0d14] p-0.5">
                       <button
-                        onClick={() => clearItem(s.id)}
-                        className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                        aria-label={`Remove ${s.name}`}
+                        onClick={() => setQty(s.id, s.qty - 1)}
+                        className="grid h-6 w-6 place-items-center rounded text-muted-foreground hover:text-foreground hover:bg-white/10 transition"
+                        aria-label="Decrease"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        <Minus className="h-3 w-3" />
+                      </button>
+                      <span className="w-6 text-center text-sm font-bold text-foreground">{s.qty}</span>
+                      <button
+                        onClick={() => setQty(s.id, s.qty + 1)}
+                        className="grid h-6 w-6 place-items-center rounded text-muted-foreground hover:text-foreground hover:bg-white/10 transition"
+                        aria-label="Increase"
+                      >
+                        <Plus className="h-3 w-3" />
                       </button>
                     </div>
+
+                    <div className="font-bold text-sm w-16 text-right">${s.price * s.qty}</div>
+
+                    <button
+                      onClick={() => clearItem(s.id)}
+                      className="grid h-7 w-7 place-items-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors shrink-0"
+                      aria-label={`Remove ${s.name}`}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
                   </div>
+
+                  {/* Homepage Pin sub-line */}
                   {s.pinned && (
-                    <div className="flex items-center justify-between px-4 pb-3 pl-[4.25rem]">
+                    <div className="flex items-center justify-between px-4 pb-3 pl-[3.75rem]">
                       <span className="text-xs text-amber-400/80">↳ Homepage Pin × 30 days</span>
-                      <span className="text-xs font-semibold text-amber-400">+${HOMEPAGE_PIN_PRICE}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-amber-400">+${HOMEPAGE_PIN_PRICE}</span>
+                        <button
+                          onClick={() => togglePin(s.id)}
+                          className="grid h-5 w-5 place-items-center rounded text-amber-400/60 hover:text-destructive hover:bg-destructive/10 transition-colors"
+                          aria-label="Remove homepage pin"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
