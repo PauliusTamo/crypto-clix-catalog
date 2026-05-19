@@ -18,11 +18,33 @@ export function CheckoutFlow() {
 
   const openCart = () => {
     if (!upsellShownRef.current && hasUpsellContent) {
-      upsellShownRef.current = true;
       setView("upsell");
     } else {
       setView("checkout");
     }
+  };
+
+  const handleUpsellContinue = () => {
+    upsellShownRef.current = true;
+    setView("checkout");
+  };
+
+  const handleUpsellNoThanks = () => {
+    upsellShownRef.current = true;
+    setView("checkout");
+  };
+
+  const handleUpsellAddChannels = () => {
+    // Don't mark shown — upsell appears again when user re-opens cart
+    setView("closed");
+    setTimeout(() => {
+      document.getElementById("channels")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
+  const handleUpsellDismiss = () => {
+    upsellShownRef.current = true;
+    setView("closed");
   };
 
   return (
@@ -42,8 +64,10 @@ export function CheckoutFlow() {
 
       {view === "upsell" && (
         <UpsellOverlay
-          onContinue={() => setView("checkout")}
-          onDismiss={() => setView("closed")}
+          onContinue={handleUpsellContinue}
+          onNoThanks={handleUpsellNoThanks}
+          onAddChannels={handleUpsellAddChannels}
+          onDismiss={handleUpsellDismiss}
         />
       )}
       {view === "checkout" && (

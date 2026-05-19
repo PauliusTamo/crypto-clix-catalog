@@ -1,16 +1,96 @@
 import { useEffect, useState } from "react";
-import { Check, ExternalLink, Minus, Plus, Users } from "lucide-react";
-import { CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
+import { Check, ExternalLink, Minus, Plus, Tag, Users } from "lucide-react";
+import { BUNDLE_PRICES, CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
+
+const BUNDLE_TIERS = [
+  { count: 3, name: "Starter", price: 900  },
+  { count: 5, name: "Growth",  price: 1400 },
+  { count: 7, name: "Pro",     price: 1850 },
+];
+
+function BundleSavingsBar() {
+  const { uniqueChannels, subtotal, bundleActive, channelTotal } = useCart();
+
+  if (uniqueChannels === 0) {
+    return (
+      <div className="mx-2 rounded-xl border border-border bg-surface/85 backdrop-blur-xl px-4 py-3 text-sm text-muted-foreground">
+        <span className="text-foreground font-semibold">💰 Bundle pricing</span>{" "}
+        unlocks automatically at 3, 5, or 7 channels — save up to $650.
+      </div>
+    );
+  }
+
+  const actualSavings = subtotal - channelTotal;
+  const nextTier = BUNDLE_TIERS.find((t) => t.count > uniqueChannels);
+
+  if (bundleActive) {
+    const tierName = BUNDLE_TIERS.find((t) => t.count === uniqueChannels)?.name ?? "";
+    return (
+      <div className="mx-2 rounded-xl border border-emerald-500/30 bg-emerald-500/8 backdrop-blur-xl px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <Check className="h-4 w-4 text-emerald-400 shrink-0" strokeWidth={2.5} />
+            <span className="text-sm font-bold text-emerald-300">
+              {tierName} Bundle active — {uniqueChannels} channels
+            </span>
+          </div>
+          <div className="flex items-center gap-4 text-sm">
+            <span className="text-muted-foreground line-through">${subtotal.toLocaleString()}</span>
+            <span className="font-black text-emerald-300">${channelTotal.toLocaleString()}</span>
+            {actualSavings > 0 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 px-2.5 py-0.5 text-xs font-black">
+                <Tag className="h-2.5 w-2.5" /> Save ${actualSavings.toLocaleString()}
+              </span>
+            )}
+          </div>
+        </div>
+        {nextTier && (
+          <p className="mt-2 text-xs text-muted-foreground">
+            Add {nextTier.count - uniqueChannels} more channel{nextTier.count - uniqueChannels > 1 ? "s" : ""} to upgrade to the {nextTier.name} Bundle (${nextTier.price.toLocaleString()}).
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  // Not at a tier — show progress toward next
+  return (
+    <div className="mx-2 rounded-xl border border-border bg-surface/85 backdrop-blur-xl px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 text-sm">
+          <span className="text-foreground font-semibold">
+            {uniqueChannels} channel{uniqueChannels > 1 ? "s" : ""} selected
+          </span>
+          <span className="text-muted-foreground">${subtotal.toLocaleString()} at individual rates</span>
+        </div>
+        {nextTier && (
+          <div className="text-xs text-muted-foreground">
+            Add{" "}
+            <strong className="text-foreground">
+              {nextTier.count - uniqueChannels} more
+            </strong>{" "}
+            →{" "}
+            <span className="text-primary font-semibold">
+              {nextTier.name} Bundle ${nextTier.price.toLocaleString()}
+            </span>
+            {subtotal > nextTier.price && (
+              <span className="ml-1 text-emerald-400 font-semibold">
+                (save ${subtotal + (nextTier.price - subtotal)})
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export function Channels() {
   return (
     <section className="relative mx-auto max-w-7xl px-6 pb-28">
       <div className="label-eyebrow mb-4">Available Channels</div>
       <div className="sticky top-12 z-30 -mx-2 mb-8">
-        <div className="mx-2 rounded-xl border border-border bg-surface/85 backdrop-blur-xl px-4 py-3 text-sm text-muted-foreground">
-          <span className="text-foreground font-semibold">💰 Bundle discount</span>{" "}
-          unlocks automatically as you add more channels.
-        </div>
+        <BundleSavingsBar />
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
