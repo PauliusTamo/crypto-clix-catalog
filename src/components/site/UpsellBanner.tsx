@@ -5,37 +5,42 @@ export function UpsellBanner() {
   const { uniqueChannels } = useCart();
   if (uniqueChannels < 1) return null;
 
-  let bg = "bg-primary";
   let text = "";
   let cta: string | null = "ADD MORE";
+  let success = false;
 
   if (uniqueChannels === 1) {
     text = "🎯 Add 2 more channels and unlock the 3-channel bundle — save $200";
   } else if (uniqueChannels === 2) {
     text = "⚡ One more channel to unlock bundle pricing!";
   } else if (uniqueChannels === 3 || uniqueChannels === 4) {
-    bg = "bg-emerald-500";
+    success = true;
     text = `🎉 Bundle unlocked! Add ${
       5 - uniqueChannels
     } more to reach the 5-channel deal and save an extra $150`;
     cta = "UPGRADE";
   } else {
-    bg = "bg-emerald-500";
+    success = true;
     text = "🏆 Maximum bundle active — you're getting our best rate.";
     cta = null;
   }
 
+  const bg = success
+    ? "bg-emerald-500/15 border-emerald-400/30"
+    : "bg-[rgba(74,108,247,0.15)] border-[rgba(74,108,247,0.3)]";
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-30 pointer-events-none animate-in slide-in-from-bottom-4 duration-300">
-      <div className="mx-auto max-w-5xl px-4 pb-4 md:pb-6">
-        <div
-          className={`pointer-events-auto flex items-center justify-between gap-4 rounded-2xl ${bg} px-5 py-4 text-white shadow-2xl transition-colors duration-500`}
-        >
-          <p className="font-semibold text-sm md:text-base">{text}</p>
+    <div className="fixed inset-x-0 bottom-0 z-30 pointer-events-none">
+      <div
+        className={`pointer-events-auto border-t backdrop-blur-xl ${bg} transition-colors duration-500`}
+        style={{ backdropFilter: "blur(12px)" }}
+      >
+        <div className="mx-auto max-w-7xl px-6 py-3.5 flex items-center justify-between gap-4">
+          <p className="font-medium text-sm md:text-base text-foreground">{text}</p>
           {cta && (
             <a
               href="#channels"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-black/30 hover:bg-black/50 transition-colors px-3.5 h-9 text-xs font-bold tracking-wider"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-primary hover:bg-primary-glow text-primary-foreground transition-colors px-3.5 h-9 text-xs font-bold tracking-wider"
             >
               {cta} <ArrowRight className="h-3.5 w-3.5" />
             </a>
