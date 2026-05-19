@@ -162,7 +162,7 @@ function ChannelCard({
                 className="absolute top-0.5 h-4 w-4 rounded-full bg-white"
                 style={{
                   transition: "transform 150ms ease",
-                  transform: pinned ? "translateX(18px)" : "translateX(2px)",
+                  transform: pinned ? "translateX(2px)" : "translateX(18px)",
                 }}
               />
             </button>

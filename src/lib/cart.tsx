@@ -50,6 +50,7 @@ type CartContextType = {
   togglePin: (id: string) => void;
   totalItems: number;
   uniqueChannels: number;
+  totalReach: number;
   subtotal: number;
   discount: number;
   pinTotal: number;
@@ -106,6 +107,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const ch = CHANNELS.find((c) => c.id === id);
       return sum + (ch ? ch.price * qty : 0);
     }, 0);
+    const totalReach = Object.keys(cart).reduce((sum, id) => {
+      const ch = CHANNELS.find((c) => c.id === id);
+      return sum + (ch ? ch.subsNum : 0);
+    }, 0);
     const discountKey = Math.min(totalItems, 7);
     const discount = BUNDLE_DISCOUNTS[discountKey] ?? 0;
     const pinTotal = Object.entries(pins).reduce((sum, [id, on]) => {
@@ -123,6 +128,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       togglePin,
       totalItems,
       uniqueChannels,
+      totalReach,
       subtotal,
       discount,
       pinTotal,

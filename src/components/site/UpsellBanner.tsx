@@ -1,8 +1,14 @@
 import { useCart } from "@/lib/cart";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Users } from "lucide-react";
+
+function formatReach(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+  if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
+  return String(n);
+}
 
 export function UpsellBanner() {
-  const { totalItems, total } = useCart();
+  const { totalItems, total, totalReach } = useCart();
   if (totalItems < 1) return null;
 
   let text = "";
@@ -37,14 +43,28 @@ export function UpsellBanner() {
         className={`pointer-events-auto border-t backdrop-blur-xl ${bg} transition-colors duration-500`}
         style={{ backdropFilter: "blur(12px)" }}
       >
-        <div className="mx-auto max-w-7xl px-6 py-3.5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0">
-            <span className="shrink-0 font-black text-white text-lg md:text-xl tracking-tighter">
-              ${total.toLocaleString()}
-            </span>
-            <span className="hidden sm:block w-px h-5 bg-white/20 shrink-0" />
-            <p className="font-medium text-sm md:text-base text-foreground truncate">{text}</p>
+        <div className="mx-auto max-w-7xl px-6 py-3 flex items-center justify-between gap-4">
+          {/* Left: total + reach */}
+          <div className="flex items-center gap-5 shrink-0">
+            <div className="flex flex-col leading-tight">
+              <span className="font-black text-white text-lg tracking-tighter">${total.toLocaleString()}</span>
+              <span className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Total</span>
+            </div>
+            <span className="hidden sm:block w-px h-8 bg-white/10" />
+            <div className="hidden sm:flex items-center gap-1.5 flex-col leading-tight">
+              <span className="font-black text-white text-lg tracking-tighter flex items-center gap-1.5">
+                <Users className="h-3.5 w-3.5 text-white/50" />
+                {formatReach(totalReach)}
+              </span>
+              <span className="text-[10px] text-white/40 font-medium uppercase tracking-wider">Reach</span>
+            </div>
           </div>
+
+          <span className="hidden sm:block w-px h-5 bg-white/20 shrink-0" />
+
+          {/* Middle: nudge text */}
+          <p className="font-medium text-sm md:text-base text-foreground truncate min-w-0">{text}</p>
+
           {cta && (
             <a
               href="#channels"
