@@ -21,21 +21,26 @@ export type Channel = {
 };
 
 export const CHANNELS: Channel[] = [
-  { id: "cryptoocto", name: "Crypto Octo", subs: "86K", subsNum: 86000, price: 250, color: "#4a6cf7", link: "https://www.youtube.com/@CryptoOcto", contentType: "Market Analysis", image: octoImg },
-  { id: "cryptonautic", name: "Crypto Nautic", subs: "100K", subsNum: 100000, price: 300, color: "#e53e3e", link: "https://www.youtube.com/@CryptoNautic", contentType: "News & Trends", image: nauticImg },
-  { id: "freddiefinance", name: "Freddie Finance", subs: "112K", subsNum: 112000, price: 300, color: "#10b981", link: "https://www.youtube.com/@FreddieInFinance", contentType: "Web3 Education", image: freddieImg },
-  { id: "cypherdefi", name: "Cypher DeFi", subs: "114K", subsNum: 114000, price: 350, color: "#f59e0b", link: "https://www.youtube.com/@cypherdefi", contentType: "DeFi Coverage", image: cypherImg },
-  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 350, color: "#8b5cf6", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews", image: chrisImg },
-  { id: "lennycrypto", name: "Lenny Crypto", subs: "161K", subsNum: 161000, price: 400, color: "#06b6d4", link: "https://www.youtube.com/@LennyCrypto", contentType: "Trading Signals", image: lennyImg },
-  { id: "cryptosphere", name: "Crypto Sphere", subs: "191K", subsNum: 191000, price: 400, color: "#f97316", link: "https://www.youtube.com/@CryptoSphereDaily", contentType: "Token Tracking", image: sphereImg },
+  { id: "cryptoocto",    name: "Crypto Octo",       subs: "86K",  subsNum: 86000,  price: 250, color: "#6366f1", link: "https://www.youtube.com/@CryptoOcto",         contentType: "Market Analysis", image: octoImg   },
+  { id: "cryptonautic",  name: "Crypto Nautic",      subs: "100K", subsNum: 100000, price: 300, color: "#0ea5e9", link: "https://www.youtube.com/@CryptoNautic",        contentType: "News & Trends",   image: nauticImg },
+  { id: "freddiefinance",name: "Freddie Finance",    subs: "112K", subsNum: 112000, price: 300, color: "#7c3aed", link: "https://www.youtube.com/@FreddieInFinance",    contentType: "Web3 Education",  image: freddieImg},
+  { id: "cypherdefi",    name: "Cypher DeFi",        subs: "114K", subsNum: 114000, price: 350, color: "#2563eb", link: "https://www.youtube.com/@cypherdefi",          contentType: "DeFi Coverage",   image: cypherImg },
+  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 350, color: "#ef4444", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews", image: chrisImg  },
+  { id: "lennycrypto",   name: "Lenny Crypto",       subs: "161K", subsNum: 161000, price: 400, color: "#a855f7", link: "https://www.youtube.com/@LennyCrypto",         contentType: "Trading Signals", image: lennyImg  },
+  { id: "cryptosphere",  name: "Crypto Sphere",      subs: "191K", subsNum: 191000, price: 400, color: "#9333ea", link: "https://www.youtube.com/@CryptoSphereDaily",   contentType: "Token Tracking",  image: sphereImg },
 ];
 
-export const BUNDLE_DISCOUNTS: Record<number, number> = {
-  3: 100,
-  4: 100,
-  5: 250,
-  6: 250,
-  7: 650,
+// Fixed flat price when exactly 3, 5, or 7 unique channels are selected
+export const BUNDLE_PRICES: Record<number, number> = {
+  3: 900,
+  5: 1400,
+  7: 1850,
+};
+
+export const SHORTS_PRICES: Record<number, number> = {
+  1: 200,
+  5: 900,
+  10: 1600,
 };
 
 export const ADDON = {
@@ -48,10 +53,13 @@ export const HOMEPAGE_PIN_PRICE = 150;
 
 type CartState = Record<string, number>;
 type PinState = Record<string, boolean>;
+export type ShortsQty = 0 | 1 | 5 | 10;
 
 type CartContextType = {
   cart: CartState;
   pins: PinState;
+  shortsQty: ShortsQty;
+  setShortsQty: (qty: ShortsQty) => void;
   add: (id: string) => void;
   remove: (id: string) => void;
   clearItem: (id: string) => void;
@@ -61,8 +69,11 @@ type CartContextType = {
   uniqueChannels: number;
   totalReach: number;
   subtotal: number;
-  discount: number;
+  bundleActive: boolean;
+  channelTotal: number;
+  savings: number;
   pinTotal: number;
+  shortsTotal: number;
   addonEnabled: boolean;
   setAddonEnabled: (v: boolean) => void;
   total: number;
@@ -75,6 +86,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartState>({});
   const [pins, setPins] = useState<PinState>({});
   const [addonEnabled, setAddonEnabled] = useState(false);
+  const [shortsQty, setShortsQty] = useState<ShortsQty>(0);
 
   const add = useCallback((id: string) =>
     setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 })), []);
@@ -112,6 +124,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCart({});
     setPins({});
     setAddonEnabled(false);
+    setShortsQty(0);
   }, []);
 
   const computed = useMemo(() => {
@@ -125,28 +138,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const ch = CHANNELS.find((c) => c.id === id);
       return sum + (ch ? ch.price * qty : 0);
     }, 0);
-    const discountKey = Math.min(totalItems, 7);
-    const discount = BUNDLE_DISCOUNTS[discountKey] ?? 0;
+
+    const bundlePrice = BUNDLE_PRICES[uniqueChannels];
+    const bundleActive = bundlePrice !== undefined;
+    const channelTotal = bundleActive ? bundlePrice : subtotal;
+    const savings = bundleActive ? Math.max(0, subtotal - bundlePrice) : 0;
+
     const pinTotal = Object.entries(pins).reduce((sum, [id, on]) => {
       return sum + (on && cart[id] ? HOMEPAGE_PIN_PRICE : 0);
     }, 0);
-    const total = Math.max(0, subtotal - discount) + pinTotal + (addonEnabled ? ADDON.price : 0);
-    return { uniqueChannels, totalItems, totalReach, subtotal, discount, pinTotal, total };
-  }, [cart, pins, addonEnabled]);
+    const shortsTotal = shortsQty > 0 ? (SHORTS_PRICES[shortsQty] ?? 0) : 0;
+    const total = channelTotal + pinTotal + (addonEnabled ? ADDON.price : 0) + shortsTotal;
+
+    return { uniqueChannels, totalItems, totalReach, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsTotal, total };
+  }, [cart, pins, addonEnabled, shortsQty]);
 
   const api = useMemo<CartContextType>(() => ({
-    cart,
-    pins,
-    add,
-    remove,
-    clearItem,
-    setQty,
-    togglePin,
-    addonEnabled,
-    setAddonEnabled,
-    clear,
+    cart, pins, shortsQty, setShortsQty,
+    add, remove, clearItem, setQty, togglePin,
+    addonEnabled, setAddonEnabled, clear,
     ...computed,
-  }), [cart, pins, add, remove, clearItem, setQty, togglePin, addonEnabled, clear, computed]);
+  }), [cart, pins, shortsQty, add, remove, clearItem, setQty, togglePin, addonEnabled, clear, computed]);
 
   return <CartContext.Provider value={api}>{children}</CartContext.Provider>;
 }
