@@ -24,6 +24,16 @@ export function CheckoutFlow() {
     }
   };
 
+  // Stable ref so the event listener always calls the latest openCart
+  const openCartRef = useRef(openCart);
+  openCartRef.current = openCart;
+
+  useEffect(() => {
+    const handler = () => openCartRef.current();
+    window.addEventListener("open-cart", handler);
+    return () => window.removeEventListener("open-cart", handler);
+  }, []);
+
   const handleUpsellContinue = () => {
     upsellShownRef.current = true;
     setView("checkout");

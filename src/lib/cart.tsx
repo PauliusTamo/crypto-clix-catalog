@@ -150,10 +150,44 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return sum + (ch ? ch.price * qty : 0);
     }, 0);
 
-    const bundlePrice = BUNDLE_PRICES[uniqueChannels];
-    const bundleActive = bundlePrice !== undefined;
-    const channelTotal = bundleActive ? bundlePrice : subtotal;
-    const savings = bundleActive ? Math.max(0, subtotal - bundlePrice) : 0;
+    // Find highest bundle tier that fits within the selected unique channels
+    const bestTierCount = ([7, 5, 3] as const).find((t) => uniqueChannels >= t);
+    let channelTotal: number;
+    let bundleActive: boolean;
+    let savings: number;
+
+    if (bestTierCount !== undefined) {
+      const bundlePrice = BUNDLE_PRICES[bestTierCount];
+      // Sort channels descending by price: most expensive go into the bundle slot,
+      // cheapest extras pay individual prices — giving the user the best deal.
+      const channelEntries = Object.entries(cart)
+        .map(([id, qty]) => {
+          const ch = CHANNELS.find((c) => c.id === id)!;
+          return { price: ch.price, qty };
+        })
+        .sort((a, b) => b.price - a.price);
+
+      let bundleSlots = bestTierCount;
+      let extraTotal = 0;
+      for (const { price, qty } of channelEntries) {
+        if (bundleSlots > 0) {
+          bundleSlots--;
+          // First copy of this channel is covered by the bundle;
+          // any extra copies beyond qty=1 pay individual price
+          if (qty > 1) extraTotal += price * (qty - 1);
+        } else {
+          extraTotal += price * qty;
+        }
+      }
+
+      channelTotal = bundlePrice + extraTotal;
+      bundleActive = true;
+      savings = Math.max(0, subtotal - channelTotal);
+    } else {
+      channelTotal = subtotal;
+      bundleActive = false;
+      savings = 0;
+    }
 
     const pinTotal = Object.entries(pins).reduce((sum, [id, on]) => {
       return sum + (on && cart[id] ? HOMEPAGE_PIN_PRICE : 0);
