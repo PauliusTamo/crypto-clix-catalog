@@ -150,19 +150,21 @@ function ChannelCard({
               role="switch"
               aria-checked={pinned}
               onClick={handlePinToggle}
-              className="relative shrink-0 rounded-full transition-colors"
+              className="relative shrink-0 rounded-full"
               style={{
-                width: 36,
-                height: 20,
+                width: 44,
+                height: 24,
                 backgroundColor: pinned ? "#f59e0b" : "#2a2f45",
-                border: pinned ? "none" : "1px solid #3a4055",
+                transition: "background-color 150ms ease",
               }}
             >
               <span
-                className="absolute top-0.5 h-4 w-4 rounded-full bg-white"
+                className="absolute h-5 w-5 rounded-full bg-white"
                 style={{
+                  top: 2,
+                  left: 2,
                   transition: "transform 150ms ease",
-                  transform: pinned ? "translateX(2px)" : "translateX(18px)",
+                  transform: pinned ? "translateX(0px)" : "translateX(20px)",
                 }}
               />
             </button>

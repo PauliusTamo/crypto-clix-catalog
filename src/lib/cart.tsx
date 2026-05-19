@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, ReactNode } from "react";
 
 export type Channel = {
   id: string;
@@ -67,49 +67,57 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [pins, setPins] = useState<PinState>({});
   const [addonEnabled, setAddonEnabled] = useState(false);
 
-  const api = useMemo<CartContextType>(() => {
-    const add = (id: string) =>
-      setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 }));
-    const remove = (id: string) =>
-      setCart((c) => {
-        const next = { ...c };
-        const v = (next[id] ?? 0) - 1;
-        if (v <= 0) {
-          delete next[id];
-          setPins((p) => { const np = { ...p }; delete np[id]; return np; });
-        } else next[id] = v;
-        return next;
-      });
-    const clearItem = (id: string) => {
-      setCart((c) => { const next = { ...c }; delete next[id]; return next; });
-      setPins((p) => { const next = { ...p }; delete next[id]; return next; });
-    };
-    const setQty = (id: string, qty: number) =>
-      setCart((c) => {
-        const next = { ...c };
-        if (qty <= 0) {
-          delete next[id];
-          setPins((p) => { const np = { ...p }; delete np[id]; return np; });
-        } else next[id] = qty;
-        return next;
-      });
-    const togglePin = (id: string) =>
-      setPins((p) => ({ ...p, [id]: !p[id] }));
-    const clear = () => {
-      setCart({});
-      setPins({});
-      setAddonEnabled(false);
-    };
+  // Stable mutation functions — never recreated, so consumers using these
+  // don't re-render just because unrelated cart state changed.
+  const add = useCallback((id: string) =>
+    setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 })), []);
 
+  const remove = useCallback((id: string) =>
+    setCart((c) => {
+      const next = { ...c };
+      const v = (next[id] ?? 0) - 1;
+      if (v <= 0) {
+        delete next[id];
+        setPins((p) => { const np = { ...p }; delete np[id]; return np; });
+      } else next[id] = v;
+      return next;
+    }), []);
+
+  const clearItem = useCallback((id: string) => {
+    setCart((c) => { const next = { ...c }; delete next[id]; return next; });
+    setPins((p) => { const next = { ...p }; delete next[id]; return next; });
+  }, []);
+
+  const setQty = useCallback((id: string, qty: number) =>
+    setCart((c) => {
+      const next = { ...c };
+      if (qty <= 0) {
+        delete next[id];
+        setPins((p) => { const np = { ...p }; delete np[id]; return np; });
+      } else next[id] = qty;
+      return next;
+    }), []);
+
+  const togglePin = useCallback((id: string) =>
+    setPins((p) => ({ ...p, [id]: !p[id] })), []);
+
+  const clear = useCallback(() => {
+    setCart({});
+    setPins({});
+    setAddonEnabled(false);
+  }, []);
+
+  // Derived values — only recompute when state actually changes.
+  const computed = useMemo(() => {
     const uniqueChannels = Object.keys(cart).length;
     const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
-    const subtotal = Object.entries(cart).reduce((sum, [id, qty]) => {
-      const ch = CHANNELS.find((c) => c.id === id);
-      return sum + (ch ? ch.price * qty : 0);
-    }, 0);
     const totalReach = Object.keys(cart).reduce((sum, id) => {
       const ch = CHANNELS.find((c) => c.id === id);
       return sum + (ch ? ch.subsNum : 0);
+    }, 0);
+    const subtotal = Object.entries(cart).reduce((sum, [id, qty]) => {
+      const ch = CHANNELS.find((c) => c.id === id);
+      return sum + (ch ? ch.price * qty : 0);
     }, 0);
     const discountKey = Math.min(totalItems, 7);
     const discount = BUNDLE_DISCOUNTS[discountKey] ?? 0;
@@ -117,27 +125,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return sum + (on && cart[id] ? HOMEPAGE_PIN_PRICE : 0);
     }, 0);
     const total = Math.max(0, subtotal - discount) + pinTotal + (addonEnabled ? ADDON.price : 0);
-
-    return {
-      cart,
-      pins,
-      add,
-      remove,
-      clearItem,
-      setQty,
-      togglePin,
-      totalItems,
-      uniqueChannels,
-      totalReach,
-      subtotal,
-      discount,
-      pinTotal,
-      addonEnabled,
-      setAddonEnabled,
-      total,
-      clear,
-    };
+    return { uniqueChannels, totalItems, totalReach, subtotal, discount, pinTotal, total };
   }, [cart, pins, addonEnabled]);
+
+  // Context object — stable function refs mean this only changes when
+  // cart/pins/addonEnabled values actually change.
+  const api = useMemo<CartContextType>(() => ({
+    cart,
+    pins,
+    add,
+    remove,
+    clearItem,
+    setQty,
+    togglePin,
+    addonEnabled,
+    setAddonEnabled,
+    clear,
+    ...computed,
+  }), [cart, pins, add, remove, clearItem, setQty, togglePin, addonEnabled, clear, computed]);
 
   return <CartContext.Provider value={api}>{children}</CartContext.Provider>;
 }
