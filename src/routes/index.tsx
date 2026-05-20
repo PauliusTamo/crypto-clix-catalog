@@ -10,7 +10,6 @@ import { Faq } from "@/components/site/Faq";
 import { Footer } from "@/components/site/Footer";
 import { CheckoutFlow } from "@/components/site/CheckoutFlow";
 import { Shorts } from "@/components/site/Shorts";
-import { ExitIntent } from "@/components/site/ExitIntent";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,7 +47,6 @@ function Index() {
         <Footer />
         <CheckoutFlow />
         <UpsellBanner />
-        <ExitIntent />
       </div>
     </CartProvider>
   );

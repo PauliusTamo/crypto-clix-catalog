@@ -194,7 +194,7 @@ function ChannelCard({
 
   return (
     <article
-      className="relative rounded-2xl border overflow-hidden transition-all duration-200"
+      className="relative rounded-2xl border overflow-hidden"
       style={
         selected
           ? {
@@ -203,8 +203,14 @@ function ChannelCard({
               borderWidth: 2,
               boxShadow: `0 0 0 1px ${channel.color}30, 0 8px 32px ${channel.color}18`,
               transform: "translateY(0)",
+              transition: "transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease",
             }
-          : { background: "#0f1319", borderColor: "#1e2535", borderWidth: 1 }
+          : {
+              background: "#0f1319",
+              borderColor: "#1e2535",
+              borderWidth: 1,
+              transition: "transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease",
+            }
       }
       onMouseEnter={(e) => {
         if (!selected) (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
@@ -432,6 +438,65 @@ function ChannelCard({
   );
 }
 
+function CompareChannelCard({ ch, inCart, onAdd }: { ch: Channel; inCart: boolean; onAdd: () => void }) {
+  return (
+    <div className="flex-1 min-w-0 flex flex-col px-5 py-4 gap-3 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <img
+          src={ch.image}
+          alt={ch.name}
+          width={44}
+          height={44}
+          className="h-11 w-11 rounded-full object-cover shrink-0"
+          style={{ border: `2px solid ${ch.color}` }}
+        />
+        <div className="min-w-0">
+          <div className="font-black text-base truncate" style={{ color: ch.color }}>{ch.name}</div>
+          <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+            <Users className="h-3 w-3 shrink-0" /> {ch.subs} subscribers
+          </div>
+        </div>
+      </div>
+
+      {/* Stats grid */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
+        {([
+          { label: "Avg Views",   value: ch.avgViews,       cls: "text-foreground" },
+          { label: "Engagement",  value: ch.engagementRate, cls: "text-emerald-400 font-bold" },
+          { label: "Price/Video", value: `$${ch.price}`,    cls: "text-foreground" },
+          { label: "Audience",    value: ch.audienceDesc,   cls: "text-muted-foreground", truncate: true },
+        ] as { label: string; value: string; cls: string; truncate?: boolean }[]).map(({ label, value, cls, truncate }) => (
+          <div key={label} className="flex flex-col gap-0.5">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">{label}</span>
+            <span className={`${cls} font-semibold leading-tight ${truncate ? "truncate italic text-[10px]" : ""}`}>{value}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <button
+        onClick={onAdd}
+        disabled={inCart}
+        className="mt-auto w-full inline-flex items-center justify-center gap-2 rounded-xl font-bold text-sm transition-colors"
+        style={{
+          minHeight: 48,
+          backgroundColor: inCart ? "rgba(34,197,94,0.15)" : "#4a6cf7",
+          color: inCart ? "#4ade80" : "#ffffff",
+          border: inCart ? "1px solid rgba(34,197,94,0.35)" : "none",
+          cursor: inCart ? "default" : "pointer",
+        }}
+      >
+        {inCart ? (
+          <><Check className="h-4 w-4" strokeWidth={2.5} /> In Campaign</>
+        ) : (
+          <><Plus className="h-4 w-4" /> Add to Campaign</>
+        )}
+      </button>
+    </div>
+  );
+}
+
 function CompareDrawer({
   compareIds,
   onClose,
@@ -443,141 +508,95 @@ function CompareDrawer({
   const channels = compareIds.map((id) => CHANNELS.find((c) => c.id === id)!).filter(Boolean);
   const show = channels.length >= 2;
 
-  useEffect(() => {
-    if (!show) return;
-  }, [show]);
-
   if (!show) return null;
 
-  const channelRows = (
-    <div className="flex flex-col md:flex-row h-full divide-y divide-[#1e2535] md:divide-y-0 md:divide-x md:divide-[#1e2535]" style={{ minWidth: 0 }}>
-      {channels.map((ch) => {
-        const inCart = (cart[ch.id] ?? 0) > 0;
-        return (
-          <div key={ch.id} className="flex-1 min-w-0 md:min-w-[220px] px-5 py-4 flex flex-col gap-2 overflow-hidden">
-            <div className="flex items-center gap-2.5">
-              <img
-                src={ch.image}
-                alt={ch.name}
-                className="h-8 w-8 rounded-full object-cover shrink-0"
-                style={{ border: `2px solid ${ch.color}55` }}
-              />
-              <span className="font-bold text-sm truncate" style={{ color: ch.color }}>{ch.name}</span>
-            </div>
-            <div className="flex flex-col gap-1.5 text-xs">
-              {([
-                { label: "Subscribers", value: ch.subs, cls: "" },
-                { label: "Avg Views", value: ch.avgViews, cls: "" },
-                { label: "Engagement", value: ch.engagementRate, cls: "text-emerald-400" },
-                { label: "Price", value: `$${ch.price}/video`, cls: "" },
-              ] as { label: string; value: string; cls: string }[]).map(({ label, value, cls }) => (
-                <div key={label} className="flex items-center gap-2" style={{ minHeight: 18 }}>
-                  <span className="text-muted-foreground shrink-0" style={{ width: 72 }}>{label}</span>
-                  <span className={`font-semibold text-foreground ${cls}`}>{value}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-[10px] italic leading-relaxed overflow-hidden" style={{ color: "rgba(136,146,164,0.6)" }}>
-              "{ch.audienceDesc}"
-            </p>
-            <button
-              onClick={() => !inCart && add(ch.id)}
-              className={`mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg h-11 md:h-8 text-xs font-semibold transition-colors ${
-                inCart
-                  ? "border border-emerald-500/30 text-emerald-400 cursor-default"
-                  : "border border-[#2a2f45] hover:border-primary hover:text-primary text-foreground"
-              }`}
-            >
-              {inCart ? (
-                <><Check className="h-3 w-3" /> In campaign</>
-              ) : (
-                <><Plus className="h-3 w-3" /> Add to Campaign</>
-              )}
-            </button>
-          </div>
-        );
-      })}
-    </div>
-  );
+  const PANEL_BG   = "#111827";
+  const PANEL_BORDER = "#4a6cf7";
+  const DIVIDER    = "#1e2535";
 
   return (
     <>
       {/* Mobile: full-screen modal */}
       <div
         className="md:hidden fixed inset-0 z-50 flex flex-col"
-        style={{ backgroundColor: "#0f1319" }}
+        style={{ backgroundColor: PANEL_BG, borderTop: `4px solid ${PANEL_BORDER}` }}
       >
         <div
-          className="flex items-center justify-between px-4 py-3 border-b border-[#1e2535] shrink-0"
-          style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}
+          className="flex items-center justify-between px-4 py-3 border-b shrink-0"
+          style={{ borderColor: DIVIDER, paddingTop: "max(12px, env(safe-area-inset-top))" }}
         >
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-            Comparing {channels.length} channel{channels.length !== 1 ? "s" : ""}
-          </span>
+          <div>
+            <div className="label-eyebrow">Channel Compare</div>
+            <div className="text-xs text-muted-foreground mt-0.5">{channels.length} channels selected</div>
+          </div>
           <button
             onClick={onClose}
-            className="grid h-11 w-11 place-items-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-elevated transition"
+            className="grid h-11 w-11 place-items-center rounded-xl text-muted-foreground hover:text-foreground transition"
+            style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
             aria-label="Close compare"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto">
-          {channelRows}
+        <div className="flex-1 overflow-y-auto divide-y" style={{ divideColor: DIVIDER }}>
+          {channels.map((ch) => (
+            <CompareChannelCard
+              key={ch.id}
+              ch={ch}
+              inCart={(cart[ch.id] ?? 0) > 0}
+              onAdd={() => add(ch.id)}
+            />
+          ))}
         </div>
       </div>
 
       {/* Desktop: bottom drawer */}
       <div
         className="hidden md:flex fixed bottom-0 left-0 right-0 z-50 flex-col"
-        style={{ height: "280px", backgroundColor: "#0f1319", borderTop: "1px solid #1e2535" }}
+        style={{ height: 340, backgroundColor: PANEL_BG, borderTop: `4px solid ${PANEL_BORDER}` }}
       >
-        <div className="flex items-center justify-between px-6 py-3 border-b border-[#1e2535] shrink-0">
-          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-            Comparing {channels.length} channel{channels.length !== 1 ? "s" : ""}
-          </span>
+        {/* Header */}
+        <div
+          className="flex items-center justify-between px-6 py-3 border-b shrink-0"
+          style={{ borderColor: DIVIDER }}
+        >
+          <div className="flex items-center gap-4">
+            <div>
+              <div className="label-eyebrow">Channel Compare</div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {channels.length} channel{channels.length !== 1 ? "s" : ""} selected — pick the best fit for your campaign
+              </div>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="grid h-8 w-8 place-items-center rounded-lg hover:bg-surface-elevated text-muted-foreground hover:text-foreground transition"
+            className="grid h-9 w-9 place-items-center rounded-xl text-muted-foreground hover:text-foreground transition"
+            style={{ backgroundColor: "rgba(255,255,255,0.05)" }}
+            aria-label="Close compare"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
+
+        {/* Channel columns */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
-          <div className="flex h-full divide-x divide-[#1e2535]" style={{ minWidth: channels.length * 240 }}>
-            {channels.map((ch) => {
-              const inCart = (cart[ch.id] ?? 0) > 0;
-              return (
-                <div key={ch.id} className="flex-1 min-w-[220px] px-5 py-4 flex flex-col gap-2 overflow-hidden">
-                  <div className="flex items-center gap-2.5">
-                    <img src={ch.image} alt={ch.name} className="h-8 w-8 rounded-full object-cover shrink-0" style={{ border: `2px solid ${ch.color}55` }} />
-                    <span className="font-bold text-sm truncate" style={{ color: ch.color }}>{ch.name}</span>
-                  </div>
-                  <div className="flex flex-col gap-1.5 text-xs">
-                    {([
-                      { label: "Subscribers", value: ch.subs, cls: "" },
-                      { label: "Avg Views", value: ch.avgViews, cls: "" },
-                      { label: "Engagement", value: ch.engagementRate, cls: "text-emerald-400" },
-                      { label: "Price", value: `$${ch.price}/video`, cls: "" },
-                    ] as { label: string; value: string; cls: string }[]).map(({ label, value, cls }) => (
-                      <div key={label} className="flex items-center gap-2" style={{ minHeight: 18 }}>
-                        <span className="text-muted-foreground shrink-0" style={{ width: 72 }}>{label}</span>
-                        <span className={`font-semibold text-foreground ${cls}`}>{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-[10px] italic leading-relaxed" style={{ color: "rgba(136,146,164,0.6)", minHeight: 40 }}>"{ch.audienceDesc}"</p>
-                  <button
-                    onClick={() => !inCart && add(ch.id)}
-                    className={`mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg h-8 text-xs font-semibold transition-colors ${
-                      inCart ? "border border-emerald-500/30 text-emerald-400 cursor-default" : "border border-[#2a2f45] hover:border-primary hover:text-primary text-foreground"
-                    }`}
-                  >
-                    {inCart ? <><Check className="h-3 w-3" /> In campaign</> : <><Plus className="h-3 w-3" /> Add to Campaign</>}
-                  </button>
-                </div>
-              );
-            })}
+          <div
+            className="flex h-full"
+            style={{ minWidth: channels.length * 260 }}
+          >
+            {channels.map((ch, i) => (
+              <div
+                key={ch.id}
+                className="flex-1 flex min-w-[240px]"
+                style={{ borderRight: i < channels.length - 1 ? `1px solid ${DIVIDER}` : "none" }}
+              >
+                <CompareChannelCard
+                  ch={ch}
+                  inCart={(cart[ch.id] ?? 0) > 0}
+                  onAdd={() => add(ch.id)}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

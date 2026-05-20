@@ -63,15 +63,28 @@ export function Hero() {
             <a
               key={card.name}
               href="#channels"
-              className="absolute rounded-xl border border-white/10 bg-[#0f1319] px-5 py-4 hover:border-white/25 hover:scale-105 transition-all duration-200 group cursor-pointer"
+              className="absolute rounded-xl border bg-[#0f1319] px-5 py-4 cursor-pointer"
               style={{
                 top: card.top,
                 right: card.right,
                 transform: `rotate(${card.rotate}) scale(${card.scale})`,
                 width: 250,
                 boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+                borderColor: "rgba(255,255,255,0.10)",
+                willChange: "transform",
+                transition: "transform 200ms ease, border-color 200ms ease",
               }}
               aria-label={`View ${card.name}`}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = `rotate(${card.rotate}) scale(${card.scale * 1.06})`;
+                el.style.borderColor = "rgba(255,255,255,0.28)";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = `rotate(${card.rotate}) scale(${card.scale})`;
+                el.style.borderColor = "rgba(255,255,255,0.10)";
+              }}
             >
               <div className="flex items-center gap-3">
                 <img

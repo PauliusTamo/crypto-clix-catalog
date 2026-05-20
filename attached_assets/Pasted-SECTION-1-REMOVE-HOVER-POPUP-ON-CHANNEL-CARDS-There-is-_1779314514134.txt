@@ -1,0 +1,21 @@
+SECTION 1 — REMOVE HOVER POPUP ON CHANNEL CARDS
+
+There is currently a popup or tooltip that triggers when the user selects a channel and then moves their mouse toward the browser tab or away from the card. This popup prompts the user to confirm their booking or proceed to order. Remove this entirely. It is disruptive during normal catalogue browsing and serves no useful purpose given the cart button already handles checkout initiation. No popup should appear on channel card hover, mouse-leave, or any cursor movement event.
+
+SECTION 3 — HERO SECTION LAG
+
+The hero section is still lagging. Do the following. Identify every CSS animation, JavaScript animation loop, requestAnimationFrame call, and setInterval running in the hero section and audit whether each is necessary. For any floating card animations or movement effects in the hero visual, switch from JavaScript-driven animation to pure CSS animation using transform and opacity only — these are GPU-composited and will not cause layout reflow. Ensure no scroll event listeners are attached to hero elements that recalculate positions on every scroll tick. If any hero elements are listening to mousemove for parallax or cursor-following effects, remove those listeners entirely as they are a significant performance drain.
+
+SECTION 4 — COMPARE PANEL REDESIGN
+
+Redesign the compare panel that slides up from the bottom when channels are selected for comparison. The current design is too plain and the add to campaign buttons are too small. Apply the following changes.
+
+Increase the height of the compare panel to give the content more breathing room. Display each channel being compared in a proper card layout within the panel rather than a plain text list — each card should show the channel avatar, name, subscriber count, engagement rate, avg views, price per video, and audience descriptor. Make the two channel cards sit side by side with a clear visual divider between them.
+
+Make the Add to Campaign buttons full-width within each channel's column in the panel, with a minimum height of 48px. Style them with a solid accent color fill rather than an outline — they are the primary action and should look like it. If a channel is already in the campaign, the button should show a filled confirmed state with a checkmark rather than the add label.
+
+Give the panel a slightly elevated background — one shade lighter than the page background — with a strong top border accent in the brand color to make it feel like a distinct surface rather than a floating toolbar.
+
+SECTION 5 — FINAL PERFORMANCE PASS
+
+After implementing all sections above, do a final sweep for the following. Confirm no orphaned event listeners remain from the removed hover popup. Confirm no animation loops are running for the ticker which was previously removed. Confirm the compare panel open and close does not trigger page reflow. Run through the full user journey — land on page, use quiz, browse channels, compare two, add to cart, open checkout, copy message — and identify any remaining jank or layout shift and fix it.
