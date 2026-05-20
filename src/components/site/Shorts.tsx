@@ -17,7 +17,6 @@ export function Shorts() {
       <div className="border-t border-[#1e2535] mb-10" />
 
       <div className="mb-6 max-w-2xl">
-        <div className="label-eyebrow mb-3">Short-Form Content</div>
         <h2 className="font-black tracking-tighter text-5xl md:text-6xl leading-[0.95]">
           SHORT VIDEO<br />ADS.
         </h2>

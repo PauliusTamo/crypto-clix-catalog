@@ -5,10 +5,10 @@ import lennyImg from "@assets/Lenny_profile_pic2025_1779222101316.jpg";
 import sphereImg from "@assets/sphere_profile_pic_(2)_1779222134900.jpg";
 
 const FLOATING_CARDS = [
-  { image: sphereImg, name: "Crypto Sphere", subs: "191K subs", price: "$400", color: "#f97316", rotate: "-6deg", top: "8%", right: "2%", scale: 1, blur: false },
-  { image: lennyImg, name: "Lenny Crypto", subs: "161K subs", price: "$400", color: "#06b6d4", rotate: "5deg", top: "35%", right: "18%", scale: 0.88, blur: true },
-  { image: chrisImg, name: "Crypto Christopher", subs: "137K subs", price: "$350", color: "#8b5cf6", rotate: "-3deg", top: "60%", right: "4%", scale: 0.95, blur: false },
-  { image: octoImg, name: "Crypto Octo", subs: "86K subs", price: "$250", color: "#4a6cf7", rotate: "7deg", top: "20%", right: "36%", scale: 0.78, blur: true },
+  { image: sphereImg, name: "Crypto Sphere", subs: "191K subs", price: "$400", color: "#9333ea", rotate: "-6deg", top: "8%",  right: "2%",  scale: 1,    id: "cryptosphere"  },
+  { image: lennyImg,  name: "Lenny Crypto",  subs: "161K subs", price: "$400", color: "#a855f7", rotate: "5deg",  top: "35%", right: "18%", scale: 0.88, id: "lennycrypto"   },
+  { image: chrisImg,  name: "Crypto Christopher", subs: "137K subs", price: "$350", color: "#ef4444", rotate: "-3deg", top: "60%", right: "4%",  scale: 0.95, id: "cryptochristo" },
+  { image: octoImg,   name: "Crypto Octo",   subs: "86K subs",  price: "$250", color: "#6366f1", rotate: "7deg",  top: "20%", right: "36%", scale: 0.78, id: "cryptoocto"    },
 ];
 
 export function Hero() {
@@ -16,34 +16,27 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="hero-blob" aria-hidden />
 
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0"
-        style={{ height: 200, background: "linear-gradient(180deg, #0d1117 0%, #0a0d14 100%)" }}
-        aria-hidden
-      />
-
-      <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-20 md:pt-24 md:pb-28 grid md:grid-cols-2 gap-8 items-center">
+      <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-24 md:pt-24 md:pb-32 grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h1
             className="font-black tracking-tighter leading-[0.92] max-w-5xl"
             style={{ fontSize: "clamp(48px, 7vw, 104px)" }}
           >
-            <span className="block text-foreground">SELECT YOUR CHANNELS,</span>
+            <span className="block text-foreground">YOUR AD IN FRONT OF</span>
             <span className="block italic font-black text-destructive mt-1 red-glow">
-              BUILD YOUR CAMPAIGN.
+              900K+ CRYPTO INVESTORS.
             </span>
           </h1>
           <p className="mt-8 max-w-xl text-muted-foreground text-lg leading-relaxed">
-            Pick from our crypto-native YouTube channels, bundle them for automatic
-            discounts, and reach thousands of real investors.
+            Pick your channels, stack the bundle discount, send one message. That's the whole process.
           </p>
 
-          <div className="mt-12 flex items-stretch gap-6 md:gap-10">
+          <div className="mt-14 flex items-stretch gap-8 md:gap-12">
             <Stat value="7" label="Active Channels" />
             <Divider />
-            <Stat value="900K+" label="Total Subscribers" />
+            <Stat value="900K+" label="Subscribers" />
             <Divider />
-            <Stat value="100+" label="Campaigns Delivered" />
+            <Stat value="100+" label="Campaigns Run" />
           </div>
 
           <a
@@ -55,11 +48,12 @@ export function Hero() {
           </a>
         </div>
 
+        {/* Interactive channel cards */}
         <div className="relative hidden md:block h-[420px]" aria-hidden>
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              backgroundImage: "linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px)",
+              backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
               backgroundSize: "40px 40px",
               WebkitMaskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,1) 100%)",
               maskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,1) 100%)",
@@ -67,17 +61,18 @@ export function Hero() {
           />
 
           {FLOATING_CARDS.map((card) => (
-            <div
+            <a
               key={card.name}
-              className="absolute rounded-xl border border-white/10 bg-[#0f1319]/90 px-4 py-3 backdrop-blur-sm"
+              href="#channels"
+              className="absolute rounded-xl border border-white/10 bg-[#0f1319] px-4 py-3 hover:border-white/25 hover:scale-105 transition-all duration-200 group cursor-pointer"
               style={{
                 top: card.top,
                 right: card.right,
                 transform: `rotate(${card.rotate}) scale(${card.scale})`,
-                filter: card.blur ? "blur(1px)" : "none",
                 width: 200,
                 boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
               }}
+              aria-label={`View ${card.name}`}
             >
               <div className="flex items-center gap-3">
                 <img
@@ -97,7 +92,7 @@ export function Hero() {
               >
                 {card.price}/video
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
@@ -108,10 +103,10 @@ export function Hero() {
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col">
-      <span className="font-black text-foreground text-3xl md:text-4xl tracking-tighter">
+      <span className="font-black text-foreground tracking-tighter" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}>
         {value}
       </span>
-      <span className="mt-1 text-xs md:text-sm text-muted-foreground">{label}</span>
+      <span className="mt-1 text-sm text-muted-foreground">{label}</span>
     </div>
   );
 }

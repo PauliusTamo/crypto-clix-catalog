@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Check, ExternalLink, Minus, Plus, Tag, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, ExternalLink, Minus, Plus, Tag, TrendingUp, Users } from "lucide-react";
 import { BUNDLE_PRICES, CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
 
 const BUNDLE_TIERS = [
@@ -10,11 +10,25 @@ const BUNDLE_TIERS = [
 
 function BundleSavingsBar() {
   const { uniqueChannels, subtotal, bundleActive, channelTotal } = useCart();
+  const prevTierRef = useRef<number | null>(null);
+  const [animKey, setAnimKey] = useState(0);
+
+  // Fire animation whenever we land exactly on a bundle tier
+  const currentTier = bundleActive
+    ? BUNDLE_TIERS.find((t) => t.count === uniqueChannels)?.count ?? null
+    : null;
+
+  useEffect(() => {
+    if (currentTier !== null && currentTier !== prevTierRef.current) {
+      setAnimKey((k) => k + 1);
+    }
+    prevTierRef.current = currentTier;
+  }, [currentTier]);
 
   if (uniqueChannels === 0) {
     return (
       <div className="mx-2 rounded-xl border border-border bg-[#0f1319] px-4 py-3 text-sm text-muted-foreground">
-        <span className="text-foreground font-semibold">💰 Bundle pricing</span>{" "}
+        <span className="text-foreground font-semibold">Bundle pricing</span>{" "}
         unlocks automatically at 3, 5, or 7 channels — save up to $650.
       </div>
     );
@@ -26,7 +40,10 @@ function BundleSavingsBar() {
   if (bundleActive) {
     const tierName = BUNDLE_TIERS.find((t) => t.count === uniqueChannels)?.name ?? "";
     return (
-      <div className="mx-2 rounded-xl border border-emerald-500/30 bg-emerald-500/8 px-4 py-3">
+      <div
+        key={animKey}
+        className="mx-2 rounded-xl border border-emerald-500/30 bg-emerald-500/8 px-4 py-3 bundle-pop"
+      >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Check className="h-4 w-4 text-emerald-400 shrink-0" strokeWidth={2.5} />
@@ -46,14 +63,13 @@ function BundleSavingsBar() {
         </div>
         {nextTier && (
           <p className="mt-2 text-xs text-muted-foreground">
-            Add {nextTier.count - uniqueChannels} more channel{nextTier.count - uniqueChannels > 1 ? "s" : ""} to upgrade to the {nextTier.name} Bundle (${nextTier.price.toLocaleString()}).
+            Add {nextTier.count - uniqueChannels} more channel{nextTier.count - uniqueChannels > 1 ? "s" : ""} → upgrade to {nextTier.name} Bundle (${nextTier.price.toLocaleString()})
           </p>
         )}
       </div>
     );
   }
 
-  // Not at a tier — show progress toward next
   return (
     <div className="mx-2 rounded-xl border border-border bg-[#0f1319] px-4 py-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -61,7 +77,7 @@ function BundleSavingsBar() {
           <span className="text-foreground font-semibold">
             {uniqueChannels} channel{uniqueChannels > 1 ? "s" : ""} selected
           </span>
-          <span className="text-muted-foreground">${subtotal.toLocaleString()} at individual rates</span>
+          <span className="text-muted-foreground">${channelTotal.toLocaleString()} current total</span>
         </div>
         {nextTier && (
           <div className="text-xs text-muted-foreground">
@@ -73,11 +89,6 @@ function BundleSavingsBar() {
             <span className="text-primary font-semibold">
               {nextTier.name} Bundle ${nextTier.price.toLocaleString()}
             </span>
-            {subtotal > nextTier.price && (
-              <span className="ml-1 text-emerald-400 font-semibold">
-                (save ${subtotal + (nextTier.price - subtotal)})
-              </span>
-            )}
           </div>
         )}
       </div>
@@ -102,13 +113,7 @@ export function Channels() {
   );
 }
 
-function ChannelCard({
-  channel,
-  className = "",
-}: {
-  channel: Channel;
-  className?: string;
-}) {
+function ChannelCard({ channel }: { channel: Channel }) {
   const { cart, pins, add, remove, setQty, togglePin } = useCart();
   const qty = cart[channel.id] ?? 0;
   const selected = qty > 0;
@@ -122,64 +127,90 @@ function ChannelCard({
   }, [pinError]);
 
   const handlePinToggle = () => {
-    if (!selected) {
-      setPinError(true);
-      return;
-    }
+    if (!selected) { setPinError(true); return; }
     togglePin(channel.id);
   };
 
   return (
     <article
-      className={`group relative rounded-2xl border overflow-hidden transition-all duration-200 ${
+      className="relative rounded-2xl border overflow-hidden transition-all duration-200"
+      style={
         selected
-          ? "card-selected"
-          : "bg-[#0f1319] border-[#1e2535] card-hover-ring"
-      } ${className}`}
-      style={{ transition: "transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease" }}
+          ? {
+              background: `linear-gradient(135deg, ${channel.color}10 0%, #111827 100%)`,
+              borderColor: channel.color,
+              borderWidth: 2,
+              boxShadow: `0 0 0 1px ${channel.color}30, 0 8px 32px ${channel.color}18`,
+              transform: "translateY(0)",
+            }
+          : { background: "#0f1319", borderColor: "#1e2535", borderWidth: 1 }
+      }
       onMouseEnter={(e) => {
         if (!selected) (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+        if (!selected) (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
       }}
     >
+      {/* Color stripe */}
       <span
         className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl pointer-events-none z-10"
         style={{
           backgroundColor: channel.color,
-          boxShadow: selected ? `0 0 12px ${channel.color}` : "none",
-          transition: "box-shadow 0.2s ease",
+          boxShadow: selected ? `0 0 20px ${channel.color}` : "none",
+          transition: "box-shadow 0.3s ease",
         }}
         aria-hidden
       />
 
-      <div className="pl-4 pr-5 pt-5 pb-5">
-        {selected && (
+      <div className="pl-5 pr-5 pt-5 pb-5">
+        {/* Badge or selected check */}
+        {selected ? (
           <span
-            className="absolute top-3 right-3 grid h-6 w-6 place-items-center rounded-full text-white"
+            className="absolute top-3 right-3 grid h-6 w-6 place-items-center rounded-full text-white z-10"
             style={{ backgroundColor: channel.color }}
           >
             <Check className="h-3.5 w-3.5" strokeWidth={3} />
           </span>
-        )}
+        ) : channel.badge ? (
+          <span
+            className="absolute top-3 right-3 rounded-full px-2 py-0.5 text-[10px] font-black tracking-wide border z-10"
+            style={{
+              backgroundColor: channel.color + "18",
+              borderColor: channel.color + "40",
+              color: channel.color,
+            }}
+          >
+            {channel.badge}
+          </span>
+        ) : null}
 
+        {/* Header */}
         <div className="flex items-center gap-4">
           <img
             src={channel.image}
             alt={channel.name}
-            className="h-12 w-12 shrink-0 rounded-full object-cover"
-            style={{ border: `2px solid ${channel.color}55` }}
+            className="h-12 w-12 shrink-0 rounded-full object-cover transition-all duration-200"
+            style={{
+              border: selected ? `2px solid ${channel.color}` : `2px solid ${channel.color}55`,
+              boxShadow: selected ? `0 0 10px ${channel.color}55` : "none",
+            }}
           />
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <h3 className="font-bold text-foreground truncate">{channel.name}</h3>
+              <h3
+                className="font-bold truncate transition-colors duration-200"
+                style={{ color: selected ? channel.color : "white" }}
+              >
+                {channel.name}
+              </h3>
               <a
                 href={channel.link}
                 target="_blank"
                 rel="noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground hover:text-primary transition-colors shrink-0"
                 aria-label={`Open ${channel.name}`}
+                onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
@@ -191,12 +222,26 @@ function ChannelCard({
           </div>
         </div>
 
-        <div className="mt-3">
-          <span className="inline-block rounded-full bg-[#1e2535] text-[#8892a4] px-2.5 py-0.5 text-[11px] font-medium">
-            {channel.contentType}
-          </span>
+        {/* Metrics row */}
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-lg bg-black/20 px-3 py-2">
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-0.5">Avg Views</div>
+            <div className="text-sm font-bold text-foreground">{channel.avgViews}</div>
+          </div>
+          <div className="rounded-lg bg-black/20 px-3 py-2">
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-0.5 flex items-center gap-1">
+              <TrendingUp className="h-2.5 w-2.5" /> Engagement
+            </div>
+            <div className="text-sm font-bold text-emerald-400">{channel.engagementRate}</div>
+          </div>
         </div>
 
+        {/* Audience descriptor */}
+        <p className="mt-3 text-xs text-muted-foreground italic leading-relaxed">
+          {channel.audienceDesc}
+        </p>
+
+        {/* Homepage pin toggle */}
         <div
           className={`mt-4 flex items-center justify-between transition-all duration-200 ${
             pinned ? "rounded-lg border px-3 py-2" : ""
@@ -238,13 +283,18 @@ function ChannelCard({
 
         {pinError && (
           <p className="mt-1.5 text-xs" style={{ color: "#e53e3e" }}>
-            Add this channel first to include a Homepage Pin.
+            Add this channel first to enable the Homepage Pin.
           </p>
         )}
 
+        {/* Price + action */}
         <div className="mt-4 pt-4 border-t border-[#1e2535] flex items-center justify-between">
-          <div className="font-black text-2xl text-foreground">
+          <div
+            className="font-black text-2xl tracking-tighter transition-colors duration-200"
+            style={{ color: selected ? channel.color : "white" }}
+          >
             ${channel.price}
+            <span className="text-sm font-normal text-muted-foreground ml-1">/video</span>
           </div>
 
           {!selected ? (
@@ -257,7 +307,7 @@ function ChannelCard({
           ) : (
             <div
               className="flex items-center gap-1 rounded-lg border p-1"
-              style={{ borderColor: channel.color, backgroundColor: channel.color + "1a" }}
+              style={{ borderColor: channel.color, backgroundColor: channel.color + "18" }}
             >
               <button
                 onClick={() => remove(channel.id)}

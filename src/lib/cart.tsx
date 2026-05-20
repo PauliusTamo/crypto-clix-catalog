@@ -18,16 +18,20 @@ export type Channel = {
   link: string;
   contentType: string;
   image: string;
+  avgViews: string;
+  engagementRate: string;
+  audienceDesc: string;
+  badge?: string;
 };
 
 export const CHANNELS: Channel[] = [
-  { id: "cryptoocto",    name: "Crypto Octo",       subs: "86K",  subsNum: 86000,  price: 250, color: "#6366f1", link: "https://www.youtube.com/@CryptoOcto",         contentType: "Market Analysis", image: octoImg   },
-  { id: "cryptonautic",  name: "Crypto Nautic",      subs: "100K", subsNum: 100000, price: 300, color: "#0ea5e9", link: "https://www.youtube.com/@CryptoNautic",        contentType: "News & Trends",   image: nauticImg },
-  { id: "freddiefinance",name: "Freddie Finance",    subs: "112K", subsNum: 112000, price: 300, color: "#7c3aed", link: "https://www.youtube.com/@FreddieInFinance",    contentType: "Web3 Education",  image: freddieImg},
-  { id: "cypherdefi",    name: "Cypher DeFi",        subs: "114K", subsNum: 114000, price: 350, color: "#2563eb", link: "https://www.youtube.com/@cypherdefi",          contentType: "DeFi Coverage",   image: cypherImg },
-  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 350, color: "#ef4444", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews", image: chrisImg  },
-  { id: "lennycrypto",   name: "Lenny Crypto",       subs: "161K", subsNum: 161000, price: 400, color: "#a855f7", link: "https://www.youtube.com/@LennyCrypto",         contentType: "Trading Signals", image: lennyImg  },
-  { id: "cryptosphere",  name: "Crypto Sphere",      subs: "191K", subsNum: 191000, price: 400, color: "#9333ea", link: "https://www.youtube.com/@CryptoSphereDaily",   contentType: "Token Tracking",  image: sphereImg },
+  { id: "cryptoocto",    name: "Crypto Octo",       subs: "86K",  subsNum: 86000,  price: 250, color: "#6366f1", link: "https://www.youtube.com/@CryptoOcto",         contentType: "Market Analysis", image: octoImg,   avgViews: "~8K",  engagementRate: "9.5%", audienceDesc: "US retail-heavy, strong altcoin conviction" },
+  { id: "cryptonautic",  name: "Crypto Nautic",      subs: "100K", subsNum: 100000, price: 300, color: "#0ea5e9", link: "https://www.youtube.com/@CryptoNautic",        contentType: "News & Trends",   image: nauticImg, avgViews: "~12K", engagementRate: "9.2%", audienceDesc: "European audience, macro and DeFi traders" },
+  { id: "freddiefinance",name: "Freddie Finance",    subs: "112K", subsNum: 112000, price: 300, color: "#7c3aed", link: "https://www.youtube.com/@FreddieInFinance",    contentType: "Web3 Education",  image: freddieImg,avgViews: "~15K", engagementRate: "11.3%",audienceDesc: "Beginner-friendly tone, unusually high comment rate", badge: "High Engagement" },
+  { id: "cypherdefi",    name: "Cypher DeFi",        subs: "114K", subsNum: 114000, price: 350, color: "#2563eb", link: "https://www.youtube.com/@cypherdefi",          contentType: "DeFi Coverage",   image: cypherImg, avgViews: "~18K", engagementRate: "10.1%",audienceDesc: "On-chain natives, heavy protocol and DeFi interest" },
+  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 350, color: "#ef4444", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews", image: chrisImg,  avgViews: "~22K", engagementRate: "9.8%", audienceDesc: "Mid/large-cap holders, project-review driven buyers" },
+  { id: "lennycrypto",   name: "Lenny Crypto",       subs: "161K", subsNum: 161000, price: 400, color: "#a855f7", link: "https://www.youtube.com/@LennyCrypto",         contentType: "Trading Signals", image: lennyImg,  avgViews: "~28K", engagementRate: "10.7%",audienceDesc: "High-intent traders, strong repeat buyer behaviour", badge: "Most Picked" },
+  { id: "cryptosphere",  name: "Crypto Sphere",      subs: "191K", subsNum: 191000, price: 400, color: "#9333ea", link: "https://www.youtube.com/@CryptoSphereDaily",   contentType: "Token Tracking",  image: sphereImg, avgViews: "~35K", engagementRate: "10.2%",audienceDesc: "Token and launch trackers, news-reactive buyers" },
 ];
 
 // Fixed flat price when exactly 3, 5, or 7 unique channels are selected

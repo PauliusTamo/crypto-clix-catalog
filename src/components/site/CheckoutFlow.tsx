@@ -312,31 +312,43 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          {/* Message */}
-          <div>
-            <div className="label-eyebrow mb-3">Pre-Written Message</div>
+          {/* Message — conversion centrepiece */}
+          <div className="rounded-2xl border border-primary/25 bg-[#0c1020] overflow-hidden">
+            <div className="px-5 pt-5 pb-4 border-b border-border flex items-center justify-between gap-3">
+              <div>
+                <div className="font-black text-base tracking-tight text-foreground">Your message is ready.</div>
+                <div className="text-xs text-muted-foreground mt-0.5">Copy it and paste it straight into Telegram or email.</div>
+              </div>
+              <button
+                onClick={copy}
+                className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-border-strong bg-transparent h-8 px-3 text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary transition"
+              >
+                {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? "Copied!" : "Copy text"}
+              </button>
+            </div>
             <pre
-              className="whitespace-pre-wrap rounded-xl border border-border bg-black/40 p-4 text-xs leading-relaxed text-foreground/90 max-h-64 overflow-y-auto"
+              className="whitespace-pre-wrap p-5 text-xs leading-relaxed text-foreground/80 max-h-52 overflow-y-auto"
               style={{ fontFamily: "var(--font-mono)" }}
             >
 {message}
             </pre>
-          </div>
-
-          <div className="grid grid-cols-12 gap-2.5 pb-2 items-stretch">
-            <button
-              onClick={copy}
-              className="col-span-12 md:col-span-3 inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-transparent h-10 text-sm font-medium text-muted-foreground hover:text-foreground hover:border-primary transition"
-            >
-              {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-              {copied ? "Copied!" : "Copy Text"}
-            </button>
-            <a href={mailto} className="col-span-12 md:col-span-4 inline-flex items-center justify-center gap-2 rounded-xl bg-surface-elevated h-11 text-sm font-semibold text-foreground hover:bg-[#222a3d] transition">
-              <Mail className="h-4 w-4" /> Email
-            </a>
-            <a href={tg} target="_blank" rel="noreferrer" className="col-span-12 md:col-span-5 inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-12 text-base font-bold hover:bg-primary-glow transition shadow-lg shadow-primary/20">
-              <Send className="h-4 w-4" /> Telegram
-            </a>
+            <div className="px-5 pb-5 pt-1 grid grid-cols-2 gap-3">
+              <a
+                href={mailto}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-surface-elevated h-11 text-sm font-semibold text-foreground hover:bg-[#222a3d] transition"
+              >
+                <Mail className="h-4 w-4" /> Email
+              </a>
+              <a
+                href={tg}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-11 text-sm font-bold hover:bg-primary-glow transition shadow-lg shadow-primary/25"
+              >
+                <Send className="h-4 w-4" /> Send on Telegram
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,24 @@
+Redesign this catalog website with the following goals and constraints. The site is a self-service channel selection tool for crypto marketing campaigns. Users arrive already warm — they know the company, they just need to pick channels, build a bundle, and generate a checkout message for Telegram. The site must feel fast, opinionated, and human-built — not templated.
+Remove or rewrite:
+Delete the "How it works" three-step section entirely. Warm leads don't need it. If you keep it, reduce it to one line of text inline near the channel grid, not its own section.
+Replace "Everything you need to know" with a real headline that has attitude. Something blunt and direct that sounds like a human who knows crypto wrote it.
+Rewrite every FAQ answer to be half the length and twice as direct. Cut any sentence that restates the question.
+Remove decorative section labels like "SHORT-FORM CONTENT" in all-caps — they add visual noise without adding information.
+Channel cards — overhaul:
+Add average views per video and engagement rate to every card. These are the numbers buyers actually care about.
+Add a one-line audience descriptor per channel, e.g. "Skews US retail investors, heavy altcoin interest." Make it feel like insider knowledge, not a category tag.
+Add a subtle "Most picked" or "High engagement" badge to one or two standout channels. Make it feel editorial, not algorithmic.
+Make the selected state of a card feel significantly different — border color change alone is not enough. Consider a checkmark, a background shift, and a change to the add button label.
+Bundle mechanic — make it felt:
+Add a persistent sticky bar or inline counter that shows live bundle progress as the user adds channels. It should say something like "Add 2 more channels — unlock $300 off" and update in real time. The discount should feel earned, not discovered at checkout.
+When a bundle tier is unlocked, give the user a small moment of feedback — a color change, a brief animation, something that rewards the action.
+Checkout message:
+Make the generated checkout message section the most polished part of the site. Show a preview of exactly what will be copied — channel names, services selected, total price with discount applied. Add a single large "Copy to Telegram" button. This is the conversion point, treat it like one.
+Copy and tone:
+Rewrite all body copy to be shorter, more direct, and with a slight edge. The audience is crypto-native and moves fast. They distrust anything that sounds corporate or over-explained.
+Replace "Pick from our crypto-native YouTube channels, bundle them for automatic discounts, and reach thousands of real investors" with something that leads with the outcome, not the process.
+Visual:
+Increase whitespace between the channel cards and the pricing section. The page currently feels compressed.
+Make the homepage stat numbers (7 active channels, 900K+ subscribers, 100+ campaigns) larger and more prominent. These are credibility signals, treat them that way.
+If there is a hero visual with floating channel cards, either make it interactive or remove it. Static decorative UI elements that mimic functionality erode trust.
+Keep the dark theme and red accent color. Do not change the overall color scheme.

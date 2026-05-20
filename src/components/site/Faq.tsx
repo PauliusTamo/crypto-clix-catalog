@@ -2,11 +2,26 @@ import { useState } from "react";
 import { Plus, X } from "lucide-react";
 
 const FAQS = [
-  { q: "How does the ordering process work?", a: "Pick the channels and exact service you need, then head to checkout — you'll get a message you can copy and send straight to our email or Telegram. From there we'll get back to you within a few hours to finalize the payment." },
-  { q: "What is included in a dedicated video?", a: "A dedicated video is a full sponsorship where the entire video is built around your brand or product. This includes a scripted walkthrough, on-screen demonstration, a call-to-action, and a pinned link in the description. You'll receive a preview before it goes live and a performance report afterward." },
-  { q: "How long until my campaign goes live?", a: "Your campaign goes live within 72 hours — guaranteed. If we miss that window, you get an extra video on us." },
-  { q: "Can I pick channels I like the most?", a: "Yes — since we work within the same niche, all our channels are already relevant to your audience. You're free to browse and handpick exactly which channels you want your campaign to run on." },
-  { q: "Do you offer guarantees or performance metrics?", a: "We provide post-campaign reports with views, click-through rates, and engagement data. While we don't guarantee specific view counts, we only place campaigns on channels with verified audience metrics and consistent performance history. Your account manager can share benchmark data before you commit." },
+  {
+    q: "How does ordering work?",
+    a: "Add channels and services, then open the cart. You'll get a pre-written message — copy it and send it to us on Telegram or email. You'll hear back within a few hours.",
+  },
+  {
+    q: "What's included in a dedicated video?",
+    a: "The entire video is built around your brand — scripted walkthrough, on-screen demo, CTA, and a pinned link. You get a preview before it goes live and a performance report after.",
+  },
+  {
+    q: "How fast does my campaign go live?",
+    a: "72 hours, guaranteed. Miss that window and you get a free video.",
+  },
+  {
+    q: "Can I pick specific channels?",
+    a: "Yes. All our channels are crypto-native — browse and pick exactly which ones you want. No mandatory bundles.",
+  },
+  {
+    q: "What guarantees do you offer?",
+    a: "No fake view guarantees. You get real post-campaign data: views, CTR, engagement. Your account manager can share benchmark numbers before you commit.",
+  },
 ];
 
 export function Faq() {
@@ -16,11 +31,11 @@ export function Faq() {
       <div className="label-eyebrow mb-3">FAQ</div>
       <h2
         className="font-black tracking-tighter text-4xl md:text-5xl mb-12 leading-[0.95]"
-        style={{ maxWidth: 600 }}
+        style={{ maxWidth: 520 }}
       >
-        Everything you need
+        No fluff.
         <br />
-        to know.
+        Just answers.
       </h2>
       <div className="space-y-3">
         {FAQS.map((f, i) => {
@@ -38,9 +53,9 @@ export function Faq() {
               >
                 <span className="font-semibold">{f.q}</span>
                 {isOpen ? (
-                  <X className="h-4 w-4 text-primary shrink-0 transition-transform" />
+                  <X className="h-4 w-4 text-primary shrink-0" />
                 ) : (
-                  <Plus className="h-4 w-4 text-muted-foreground shrink-0 transition-transform" />
+                  <Plus className="h-4 w-4 text-muted-foreground shrink-0" />
                 )}
               </button>
               {isOpen && (

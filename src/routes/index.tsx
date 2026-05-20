@@ -5,7 +5,6 @@ import { Hero } from "@/components/site/Hero";
 import { Channels } from "@/components/site/Channels";
 import { UpsellBanner } from "@/components/site/UpsellBanner";
 import { Bundles } from "@/components/site/Bundles";
-import { HowItWorks } from "@/components/site/HowItWorks";
 import { Faq } from "@/components/site/Faq";
 import { Footer } from "@/components/site/Footer";
 import { CheckoutFlow } from "@/components/site/CheckoutFlow";
@@ -41,7 +40,6 @@ function Index() {
           <Channels />
           <Bundles />
           <Shorts />
-          <HowItWorks />
           <Faq />
         </main>
         <Footer />
