@@ -11,6 +11,8 @@ export function CheckoutFlow() {
   const { totalItems, shortsQty, uniqueChannels, prListingEnabled, cart, pins } = useCart();
   const hasItems = totalItems > 0 || shortsQty > 0;
   const [shareCopied, setShareCopied] = useState(false);
+  const [emptyMsg, setEmptyMsg] = useState(false);
+  const emptyMsgTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const hasUpsellContent =
     (uniqueChannels > 0 && uniqueChannels < 7) ||
@@ -18,6 +20,12 @@ export function CheckoutFlow() {
     shortsQty === 0;
 
   const openCart = () => {
+    if (!hasItems) {
+      if (emptyMsgTimerRef.current) clearTimeout(emptyMsgTimerRef.current);
+      setEmptyMsg(true);
+      emptyMsgTimerRef.current = setTimeout(() => setEmptyMsg(false), 2500);
+      return;
+    }
     if (!upsellShownRef.current && hasUpsellContent) {
       setView("upsell");
     } else {
@@ -83,6 +91,14 @@ export function CheckoutFlow() {
           >
             <Share2 className="h-4 w-4" />
           </button>
+        </div>
+      )}
+
+      {emptyMsg && (
+        <div className="fixed bottom-[7.5rem] right-5 z-40 md:bottom-[8.5rem] md:right-8 pointer-events-none">
+          <span className="inline-block rounded-lg bg-[#1a1f2e] border border-border text-muted-foreground text-xs font-medium px-3 py-2 shadow-lg whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 duration-200">
+            Add at least one channel to continue
+          </span>
         </div>
       )}
 
