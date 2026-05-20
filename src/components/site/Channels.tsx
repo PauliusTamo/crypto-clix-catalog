@@ -126,15 +126,15 @@ export function Channels() {
   };
 
   return (
-    <section className="relative mx-auto max-w-7xl px-6 pt-8 pb-28">
+    <section className="relative mx-auto max-w-7xl px-6 pb-28" style={{ paddingTop: 28 }}>
       {/* Quiz entry */}
-      <div className="mb-6">
+      <div style={{ marginBottom: 20 }}>
         <QuizEntryLink onClick={() => setQuizOpen(true)} />
       </div>
 
-      <div className="label-eyebrow mb-4">Available Channels</div>
+      <div className="label-eyebrow" style={{ marginBottom: 12 }}>Available Channels</div>
 
-      <div className="sticky top-12 z-30 -mx-2 mb-8">
+      <div className="-mx-2" style={{ marginBottom: 28 }}>
         <BundleSavingsBar />
       </div>
 
@@ -437,6 +437,22 @@ function CompareDrawer({
   const channels = compareIds.map((id) => CHANNELS.find((c) => c.id === id)!).filter(Boolean);
   const show = channels.length >= 2;
 
+  useEffect(() => {
+    if (!show) return;
+    const scrollY = window.scrollY;
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${scrollY}px`;
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, [show]);
+
   return (
     <div
       className={`fixed z-50 inset-0 md:inset-auto md:bottom-0 md:left-0 md:right-0 transition-transform duration-300 ease-in-out ${
@@ -486,8 +502,8 @@ function CompareDrawer({
                       { label: "Engagement", value: ch.engagementRate, cls: "text-emerald-400" },
                       { label: "Price", value: `$${ch.price}/video`, cls: "" },
                     ] as { label: string; value: string; cls: string }[]).map(({ label, value, cls }) => (
-                      <div key={label} className="flex items-center justify-between gap-2" style={{ minHeight: 18 }}>
-                        <span className="text-muted-foreground">{label}</span>
+                      <div key={label} className="flex items-center gap-2" style={{ minHeight: 18 }}>
+                        <span className="text-muted-foreground shrink-0" style={{ width: 72 }}>{label}</span>
                         <span className={`font-semibold text-foreground ${cls}`}>{value}</span>
                       </div>
                     ))}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { X, Zap, Newspaper, Video, AlertTriangle, ArrowRight, Check, Plus } from "lucide-react";
 import { PR_LISTING, SHORTS_PRICES, useCart, type ShortsQty } from "@/lib/cart";
 
@@ -20,6 +21,21 @@ export function UpsellOverlay({ onContinue, onNoThanks, onAddChannels, onDismiss
     prListingEnabled, setPrListingEnabled,
     shortsQty, setShortsQty,
   } = useCart();
+
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${scrollY}px`;
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
 
   const nextTier     = BUNDLE_TIERS.find((t) => t.count > uniqueChannels);
   const showBundle   = uniqueChannels > 0 && nextTier !== undefined;

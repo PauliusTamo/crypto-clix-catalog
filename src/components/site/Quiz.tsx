@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Check, Plus, X } from "lucide-react";
 import { CHANNELS, useCart } from "@/lib/cart";
 
@@ -53,6 +53,21 @@ export function Quiz({ onClose, onBrowseAll }: QuizProps) {
   const [budget, setBudget] = useState("");
   const [goal, setGoal] = useState("");
   const [audience, setAudience] = useState("");
+
+  useEffect(() => {
+    const scrollY = window.scrollY;
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${scrollY}px`;
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }, []);
 
   const recommendations = step === "results"
     ? getRecommendations(budget, goal, audience)

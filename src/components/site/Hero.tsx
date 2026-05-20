@@ -16,22 +16,22 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="hero-blob" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-24 md:pt-24 md:pb-32 grid md:grid-cols-2 gap-8 items-center">
+      <div className="relative mx-auto max-w-7xl px-6 pt-12 pb-16 md:pt-16 md:pb-20 grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h1
             className="font-black tracking-tighter leading-[0.92] max-w-5xl"
-            style={{ fontSize: "clamp(48px, 7vw, 104px)" }}
+            style={{ fontSize: "clamp(42px, 6vw, 90px)" }}
           >
             <span className="block text-foreground">YOUR AD IN FRONT OF</span>
             <span className="block italic font-black text-destructive mt-1 red-glow">
               900K+ CRYPTO INVESTORS.
             </span>
           </h1>
-          <p className="mt-8 max-w-xl text-muted-foreground text-lg leading-relaxed">
+          <p className="mt-6 max-w-xl text-muted-foreground text-lg leading-relaxed">
             Pick your channels, stack the bundle discount, send one message. That's the whole process.
           </p>
 
-          <div className="mt-14 flex items-stretch gap-8 md:gap-12">
+          <div className="mt-8 flex items-stretch gap-8 md:gap-12">
             <Stat value="7" label="Active Channels" />
             <Divider />
             <Stat value="900K+" label="Subscribers" />
@@ -41,7 +41,7 @@ export function Hero() {
 
           <a
             href="#channels"
-            className="mt-14 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+            className="mt-8 inline-flex items-center gap-2 text-xs font-semibold tracking-[0.18em] uppercase text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowDown className="h-3.5 w-3.5 scroll-arrow" />
             Browse channels
@@ -64,12 +64,12 @@ export function Hero() {
             <a
               key={card.name}
               href="#channels"
-              className="absolute rounded-xl border border-white/10 bg-[#0f1319] px-4 py-3 hover:border-white/25 hover:scale-105 transition-all duration-200 group cursor-pointer"
+              className="absolute rounded-xl border border-white/10 bg-[#0f1319] px-5 py-4 hover:border-white/25 hover:scale-105 transition-all duration-200 group cursor-pointer"
               style={{
                 top: card.top,
                 right: card.right,
                 transform: `rotate(${card.rotate}) scale(${card.scale})`,
-                width: 200,
+                width: 250,
                 boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
               }}
               aria-label={`View ${card.name}`}
@@ -78,16 +78,16 @@ export function Hero() {
                 <img
                   src={card.image}
                   alt={card.name}
-                  className="h-9 w-9 shrink-0 rounded-full object-cover"
+                  className="h-11 w-11 shrink-0 rounded-full object-cover"
                   style={{ border: `2px solid ${card.color}55` }}
                 />
                 <div className="min-w-0">
-                  <div className="text-sm font-bold text-white truncate">{card.name}</div>
-                  <div className="text-xs text-white/50">{card.subs}</div>
+                  <div className="text-base font-bold text-white truncate">{card.name}</div>
+                  <div className="text-sm text-white/50">{card.subs}</div>
                 </div>
               </div>
               <div
-                className="mt-2.5 inline-block rounded-full px-2.5 py-0.5 text-xs font-black"
+                className="mt-3 inline-block rounded-full px-3 py-1 text-sm font-black"
                 style={{ backgroundColor: card.color + "33", color: card.color, border: `1px solid ${card.color}55` }}
               >
                 {card.price}/video
