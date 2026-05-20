@@ -28,12 +28,6 @@ export function CheckoutFlow() {
   const openCartRef = useRef(openCart);
   openCartRef.current = openCart;
 
-  useEffect(() => {
-    const handler = () => openCartRef.current();
-    window.addEventListener("open-cart", handler);
-    return () => window.removeEventListener("open-cart", handler);
-  }, []);
-
   const handleUpsellContinue = () => { upsellShownRef.current = true; setView("checkout"); };
   const handleUpsellNoThanks = () => { upsellShownRef.current = true; setView("checkout"); };
   const handleUpsellAddChannels = () => {
@@ -58,11 +52,25 @@ export function CheckoutFlow() {
     setTimeout(() => setShareCopied(false), 2500);
   };
 
+  const handleShareRef = useRef(handleShare);
+  handleShareRef.current = handleShare;
+
+  useEffect(() => {
+    const handler = () => openCartRef.current();
+    const shareHandler = () => handleShareRef.current();
+    window.addEventListener("open-cart", handler);
+    window.addEventListener("share-campaign", shareHandler);
+    return () => {
+      window.removeEventListener("open-cart", handler);
+      window.removeEventListener("share-campaign", shareHandler);
+    };
+  }, []);
+
   return (
     <>
-      {/* Share button — shown above cart button when cart has items */}
+      {/* Share button — shown above cart button when cart has items (desktop only) */}
       {hasItems && (
-        <div className="fixed bottom-[10.5rem] right-5 z-40 flex items-center gap-2 md:bottom-[11.5rem] md:right-8">
+        <div className="hidden md:flex fixed bottom-[10.5rem] right-5 z-40 items-center gap-2 md:bottom-[11.5rem] md:right-8">
           {shareCopied && (
             <span className="rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold px-2.5 py-1 whitespace-nowrap">
               Campaign link copied!

@@ -16,11 +16,10 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="hero-blob" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-6 pt-12 pb-16 md:pt-16 md:pb-20 grid md:grid-cols-2 gap-8 items-center">
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6 pt-8 pb-10 md:pt-16 md:pb-20 grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h1
-            className="font-black tracking-tighter leading-[0.92] max-w-5xl"
-            style={{ fontSize: "clamp(42px, 6vw, 90px)" }}
+            className="font-black tracking-tighter leading-[0.92] max-w-5xl text-[clamp(36px,10vw,56px)] md:text-[clamp(42px,6vw,90px)]"
           >
             <span className="block text-foreground">YOUR AD IN FRONT OF</span>
             <span className="block italic font-black text-destructive mt-1 red-glow">
@@ -103,10 +102,10 @@ export function Hero() {
 function Stat({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col">
-      <span className="font-black text-foreground tracking-tighter" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}>
+      <span className="font-black text-foreground tracking-tighter text-[clamp(1.75rem,5vw,4rem)] md:text-[clamp(2.5rem,5vw,4rem)]">
         {value}
       </span>
-      <span className="mt-1 text-sm text-muted-foreground">{label}</span>
+      <span className="mt-1 text-xs md:text-sm text-muted-foreground">{label}</span>
     </div>
   );
 }

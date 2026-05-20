@@ -1,0 +1,28 @@
+Mobile and tablet responsiveness fix. No functionality or visual style changes on desktop.
+Compare drawer — fix default state
+The compare drawer is rendering open on mobile even when 0 channels are being compared. Fix: the drawer must be completely hidden (display: none) when fewer than 2 channels have Compare active. It should never show "COMPARING 0 CHANNELS" — if count is 0 or 1, the drawer does not exist in the DOM visually. On mobile specifically, when the drawer is active it should render as a full-screen modal overlay instead of a bottom drawer, with a clearly visible × close button min-size: 44px tap target.
+Mobile hero — fix viewport and layout
+On screens max-width: 768px:
+
+Hide the floating channel preview cards on the right side entirely — display: none
+The hero should be single column, full width, left-aligned
+Reduce headline font size to clamp(36px, 10vw, 56px) so it fits without cropping
+Ensure the full hero content is visible without scrolling: headline, red italic line, subtext, stats row, and "BROWSE CHANNELS" indicator must all be visible within the initial viewport
+Stats row on mobile: stack the 3 stats in a row but reduce font size so they fit on one line, or wrap to 3 separate lines if needed — just don't crop them
+
+Mobile general padding
+On max-width: 768px: set consistent horizontal padding of 16px on all sections. Currently some sections have no side padding causing content to touch the screen edges.
+Mobile share button
+The share campaign button is floating in the wrong position on mobile. On mobile, move it inside the bottom sticky bar — place it as a small icon button to the left of the "View Campaign" button. Remove its standalone floating position on mobile entirely.
+Mobile channel cards
+On max-width: 768px: cards should be single column, full width. Currently they may be trying to render in 2 or 3 columns on some mobile sizes — force grid-template-columns: 1fr on all screen sizes below 640px.
+Tablet channel grid
+On 640px–1024px (iPad range): use 2-column grid for channel cards — this is already working. Fix the card content overflow: ensure text inside cards never clips or overflows — add overflow: hidden and text-overflow: ellipsis where needed, specifically on the audience description line.
+Tablet bundle pricing cards
+On 640px–1024px: the 3 bundle cards are too compressed. Switch to a single column stacked layout on tablet — grid-template-columns: 1fr. Each card full width. The strikethrough price is getting clipped on iPad — ensure the price row has enough width and white-space: nowrap on the price + strikethrough element so it never wraps or clips.
+Bottom sticky bar — ensure visible on all screen sizes
+The bottom sticky bar (showing TOTAL, REACH, and View Campaign button) must be visible and functional on all screen sizes including tablet and mobile. On mobile: simplify to show TOTAL left, View Campaign button right — drop the REACH stat if space is tight. Minimum tap target for the View Campaign button: 44px height. Ensure it sits above any browser chrome on iOS Safari using padding-bottom: env(safe-area-inset-bottom).
+General touch targets
+All interactive elements on mobile must have minimum 44x44px tap targets — this includes the Homepage Pin toggle, the Compare pill, the + Add button, the quantity stepper − and + buttons, and the cart floating button.
+
+No desktop layout changes. Mobile and tablet only.

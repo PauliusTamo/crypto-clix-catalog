@@ -21,7 +21,7 @@ function CircleCheck({ className = "" }: { className?: string }) {
 
 export function Bundles() {
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-28">
+    <section className="mx-auto max-w-7xl px-4 md:px-6 pb-28">
       {/* Section break — blue radial glow */}
       <div className="relative mb-10 h-10 overflow-hidden">
         <div
@@ -41,7 +41,7 @@ export function Bundles() {
         </h2>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3 items-end">
+      <div className="grid gap-5 lg:grid-cols-3 items-end">
         {BUNDLES.map((b) => (
           <div
             key={b.name}
@@ -60,7 +60,7 @@ export function Bundles() {
             )}
             <div className="label-eyebrow">{b.name}</div>
             <div className="mt-2 text-muted-foreground">{b.channels}</div>
-            <div className="mt-6 flex items-baseline gap-2">
+            <div className="mt-6 flex items-baseline gap-2 whitespace-nowrap">
               <span className="font-black text-5xl tracking-tighter">${b.price.toLocaleString()}</span>
               <span className="text-muted-foreground line-through text-lg">${b.originalPrice.toLocaleString()}</span>
             </div>

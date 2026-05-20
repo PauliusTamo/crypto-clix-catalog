@@ -126,7 +126,7 @@ export function Channels() {
   };
 
   return (
-    <section className="relative mx-auto max-w-7xl px-6 pb-28" style={{ paddingTop: 28 }}>
+    <section className="relative mx-auto max-w-7xl px-4 md:px-6 pb-28" style={{ paddingTop: 28 }}>
       {/* Quiz entry */}
       <div style={{ marginBottom: 20 }}>
         <QuizEntryLink onClick={() => setQuizOpen(true)} />
@@ -138,7 +138,7 @@ export function Channels() {
         <BundleSavingsBar />
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {CHANNELS.map((c) => (
           <ChannelCard
             key={c.id}
@@ -303,8 +303,8 @@ function ChannelCard({
         </div>
 
         <p
-          className="mt-2 text-xs italic leading-relaxed"
-          style={{ color: "rgba(136,146,164,0.65)" }}
+          className="mt-2 text-xs italic leading-relaxed overflow-hidden"
+          style={{ color: "rgba(136,146,164,0.65)", display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical" } as React.CSSProperties}
         >
           "{channel.audienceDesc}"
         </p>
@@ -327,23 +327,29 @@ function ChannelCard({
               role="switch"
               aria-checked={pinned}
               onClick={handlePinToggle}
-              className="relative shrink-0 rounded-full"
-              style={{
-                width: 44,
-                height: 24,
-                backgroundColor: pinned ? "#f59e0b" : "#2a2f45",
-                transition: "background-color 150ms ease",
-              }}
+              className="relative shrink-0 rounded-full grid place-items-center"
+              style={{ minWidth: 44, minHeight: 44, backgroundColor: "transparent" }}
             >
               <span
-                className="absolute h-5 w-5 rounded-full bg-white"
+                className="relative rounded-full"
                 style={{
-                  top: 2,
-                  left: 2,
-                  transition: "transform 150ms ease",
-                  transform: pinned ? "translateX(0px)" : "translateX(20px)",
+                  width: 44,
+                  height: 24,
+                  backgroundColor: pinned ? "#f59e0b" : "#2a2f45",
+                  transition: "background-color 150ms ease",
+                  display: "block",
                 }}
-              />
+              >
+                <span
+                  className="absolute h-5 w-5 rounded-full bg-white"
+                  style={{
+                    top: 2,
+                    left: 2,
+                    transition: "transform 150ms ease",
+                    transform: pinned ? "translateX(0px)" : "translateX(20px)",
+                  }}
+                />
+              </span>
             </button>
           </div>
         </div>
@@ -366,7 +372,7 @@ function ChannelCard({
           {!selected ? (
             <button
               onClick={() => add(channel.id)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-[#2a2f45] bg-transparent px-3.5 h-9 text-sm font-semibold text-foreground hover:border-primary hover:text-primary transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[#2a2f45] bg-transparent px-3.5 h-11 md:h-9 text-sm font-semibold text-foreground hover:border-primary hover:text-primary transition-colors"
             >
               <Plus className="h-4 w-4" /> Add
             </button>
@@ -377,7 +383,7 @@ function ChannelCard({
             >
               <button
                 onClick={() => remove(channel.id)}
-                className="grid h-7 w-7 place-items-center rounded-md text-foreground hover:bg-white/10 transition"
+                className="grid h-10 w-10 md:h-7 md:w-7 place-items-center rounded-md text-foreground hover:bg-white/10 transition"
                 aria-label="Decrease"
               >
                 <Minus className="h-3.5 w-3.5" />
@@ -391,7 +397,7 @@ function ChannelCard({
               />
               <button
                 onClick={() => add(channel.id)}
-                className="grid h-7 w-7 place-items-center rounded-md text-foreground hover:bg-white/10 transition"
+                className="grid h-10 w-10 md:h-7 md:w-7 place-items-center rounded-md text-foreground hover:bg-white/10 transition"
                 aria-label="Increase"
               >
                 <Plus className="h-3.5 w-3.5" />
@@ -404,7 +410,7 @@ function ChannelCard({
         <div className="mt-3 flex items-center justify-between">
           <button
             onClick={() => onToggleCompare(channel.id)}
-            className="inline-flex items-center gap-1.5 h-6 rounded-full border text-xs transition-all duration-150 select-none"
+            className="inline-flex items-center gap-1.5 h-11 md:h-6 rounded-full border text-xs transition-all duration-150 select-none"
             style={{
               padding: "0 10px",
               borderColor: isCompared ? "#4a6cf7" : "#2a2f45",
@@ -453,20 +459,90 @@ function CompareDrawer({
     };
   }, [show]);
 
+  if (!show) return null;
+
+  const channelRows = (
+    <div className="flex flex-col md:flex-row h-full divide-y divide-[#1e2535] md:divide-y-0 md:divide-x md:divide-[#1e2535]" style={{ minWidth: 0 }}>
+      {channels.map((ch) => {
+        const inCart = (cart[ch.id] ?? 0) > 0;
+        return (
+          <div key={ch.id} className="flex-1 min-w-0 md:min-w-[220px] px-5 py-4 flex flex-col gap-2 overflow-hidden">
+            <div className="flex items-center gap-2.5">
+              <img
+                src={ch.image}
+                alt={ch.name}
+                className="h-8 w-8 rounded-full object-cover shrink-0"
+                style={{ border: `2px solid ${ch.color}55` }}
+              />
+              <span className="font-bold text-sm truncate" style={{ color: ch.color }}>{ch.name}</span>
+            </div>
+            <div className="flex flex-col gap-1.5 text-xs">
+              {([
+                { label: "Subscribers", value: ch.subs, cls: "" },
+                { label: "Avg Views", value: ch.avgViews, cls: "" },
+                { label: "Engagement", value: ch.engagementRate, cls: "text-emerald-400" },
+                { label: "Price", value: `$${ch.price}/video`, cls: "" },
+              ] as { label: string; value: string; cls: string }[]).map(({ label, value, cls }) => (
+                <div key={label} className="flex items-center gap-2" style={{ minHeight: 18 }}>
+                  <span className="text-muted-foreground shrink-0" style={{ width: 72 }}>{label}</span>
+                  <span className={`font-semibold text-foreground ${cls}`}>{value}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] italic leading-relaxed overflow-hidden" style={{ color: "rgba(136,146,164,0.6)" }}>
+              "{ch.audienceDesc}"
+            </p>
+            <button
+              onClick={() => !inCart && add(ch.id)}
+              className={`mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg h-11 md:h-8 text-xs font-semibold transition-colors ${
+                inCart
+                  ? "border border-emerald-500/30 text-emerald-400 cursor-default"
+                  : "border border-[#2a2f45] hover:border-primary hover:text-primary text-foreground"
+              }`}
+            >
+              {inCart ? (
+                <><Check className="h-3 w-3" /> In campaign</>
+              ) : (
+                <><Plus className="h-3 w-3" /> Add to Campaign</>
+              )}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+
   return (
-    <div
-      className={`fixed z-50 inset-0 md:inset-auto md:bottom-0 md:left-0 md:right-0 transition-transform duration-300 ease-in-out ${
-        show ? "translate-y-0" : "translate-y-full"
-      }`}
-      style={{ height: "280px" }}
-      aria-hidden={!show}
-    >
+    <>
+      {/* Mobile: full-screen modal */}
       <div
-        className="h-full w-full flex flex-col"
-        style={{
-          backgroundColor: "#0f1319",
-          borderTop: "1px solid #1e2535",
-        }}
+        className="md:hidden fixed inset-0 z-50 flex flex-col"
+        style={{ backgroundColor: "#0f1319" }}
+      >
+        <div
+          className="flex items-center justify-between px-4 py-3 border-b border-[#1e2535] shrink-0"
+          style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}
+        >
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            Comparing {channels.length} channel{channels.length !== 1 ? "s" : ""}
+          </span>
+          <button
+            onClick={onClose}
+            className="grid h-11 w-11 place-items-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-surface-elevated transition"
+            aria-label="Close compare"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {channelRows}
+        </div>
+      </div>
+
+      {/* Desktop: bottom drawer */}
+      <div
+        className="hidden md:flex fixed bottom-0 left-0 right-0 z-50 flex-col"
+        style={{ height: "280px", backgroundColor: "#0f1319", borderTop: "1px solid #1e2535" }}
       >
         <div className="flex items-center justify-between px-6 py-3 border-b border-[#1e2535] shrink-0">
           <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -474,12 +550,11 @@ function CompareDrawer({
           </span>
           <button
             onClick={onClose}
-            className="grid h-7 w-7 place-items-center rounded-lg hover:bg-surface-elevated text-muted-foreground hover:text-foreground transition"
+            className="grid h-8 w-8 place-items-center rounded-lg hover:bg-surface-elevated text-muted-foreground hover:text-foreground transition"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
-
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
           <div className="flex h-full divide-x divide-[#1e2535]" style={{ minWidth: channels.length * 240 }}>
             {channels.map((ch) => {
@@ -487,12 +562,7 @@ function CompareDrawer({
               return (
                 <div key={ch.id} className="flex-1 min-w-[220px] px-5 py-4 flex flex-col gap-2 overflow-hidden">
                   <div className="flex items-center gap-2.5">
-                    <img
-                      src={ch.image}
-                      alt={ch.name}
-                      className="h-8 w-8 rounded-full object-cover shrink-0"
-                      style={{ border: `2px solid ${ch.color}55` }}
-                    />
+                    <img src={ch.image} alt={ch.name} className="h-8 w-8 rounded-full object-cover shrink-0" style={{ border: `2px solid ${ch.color}55` }} />
                     <span className="font-bold text-sm truncate" style={{ color: ch.color }}>{ch.name}</span>
                   </div>
                   <div className="flex flex-col gap-1.5 text-xs">
@@ -508,22 +578,14 @@ function CompareDrawer({
                       </div>
                     ))}
                   </div>
-                  <p className="text-[10px] italic leading-relaxed" style={{ color: "rgba(136,146,164,0.6)", minHeight: 40 }}>
-                    "{ch.audienceDesc}"
-                  </p>
+                  <p className="text-[10px] italic leading-relaxed" style={{ color: "rgba(136,146,164,0.6)", minHeight: 40 }}>"{ch.audienceDesc}"</p>
                   <button
                     onClick={() => !inCart && add(ch.id)}
                     className={`mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg h-8 text-xs font-semibold transition-colors ${
-                      inCart
-                        ? "border border-emerald-500/30 text-emerald-400 cursor-default"
-                        : "border border-[#2a2f45] hover:border-primary hover:text-primary text-foreground"
+                      inCart ? "border border-emerald-500/30 text-emerald-400 cursor-default" : "border border-[#2a2f45] hover:border-primary hover:text-primary text-foreground"
                     }`}
                   >
-                    {inCart ? (
-                      <><Check className="h-3 w-3" /> In campaign</>
-                    ) : (
-                      <><Plus className="h-3 w-3" /> Add to Campaign</>
-                    )}
+                    {inCart ? <><Check className="h-3 w-3" /> In campaign</> : <><Plus className="h-3 w-3" /> Add to Campaign</>}
                   </button>
                 </div>
               );
@@ -531,6 +593,6 @@ function CompareDrawer({
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
