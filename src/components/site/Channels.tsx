@@ -126,7 +126,7 @@ export function Channels() {
   };
 
   return (
-    <section className="relative mx-auto max-w-7xl px-6 pb-28">
+    <section className="relative mx-auto max-w-7xl px-6 pt-8 pb-28">
       {/* Quiz entry */}
       <div className="mb-6">
         <QuizEntryLink onClick={() => setQuizOpen(true)} />
@@ -402,24 +402,21 @@ function ChannelCard({
 
         {/* Compare toggle */}
         <div className="mt-3 flex items-center justify-between">
-          <label className="flex items-center gap-2 cursor-pointer group select-none">
-            <div
-              className="h-4 w-4 rounded border flex items-center justify-center transition-colors"
-              style={{
-                borderColor: isCompared ? channel.color : "#2a2f45",
-                backgroundColor: isCompared ? channel.color : "transparent",
-              }}
-              onClick={() => onToggleCompare(channel.id)}
-            >
-              {isCompared && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
-            </div>
-            <span
-              className="text-xs text-muted-foreground group-hover:text-foreground transition-colors"
-              onClick={() => onToggleCompare(channel.id)}
-            >
-              Compare
-            </span>
-          </label>
+          <button
+            onClick={() => onToggleCompare(channel.id)}
+            className="inline-flex items-center gap-1.5 h-6 rounded-full border text-xs transition-all duration-150 select-none"
+            style={{
+              padding: "0 10px",
+              borderColor: isCompared ? "#4a6cf7" : "#2a2f45",
+              backgroundColor: isCompared ? "rgba(74,108,247,0.12)" : "transparent",
+              color: isCompared ? "white" : "rgba(136,146,164,0.8)",
+            }}
+          >
+            {isCompared && (
+              <span style={{ color: "#4a6cf7", fontSize: 10, lineHeight: 1 }}>✓</span>
+            )}
+            Compare
+          </button>
           {showMaxError && (
             <span className="text-[10px] text-amber-400">Max 3 — deselect one first</span>
           )}
@@ -482,17 +479,20 @@ function CompareDrawer({
                     />
                     <span className="font-bold text-sm truncate" style={{ color: ch.color }}>{ch.name}</span>
                   </div>
-                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-                    <span className="text-muted-foreground">Subscribers</span>
-                    <span className="font-semibold">{ch.subs}</span>
-                    <span className="text-muted-foreground">Avg Views</span>
-                    <span className="font-semibold">{ch.avgViews}</span>
-                    <span className="text-muted-foreground">Engagement</span>
-                    <span className="font-semibold text-emerald-400">{ch.engagementRate}</span>
-                    <span className="text-muted-foreground">Price</span>
-                    <span className="font-semibold">${ch.price}/video</span>
+                  <div className="flex flex-col gap-1.5 text-xs">
+                    {([
+                      { label: "Subscribers", value: ch.subs, cls: "" },
+                      { label: "Avg Views", value: ch.avgViews, cls: "" },
+                      { label: "Engagement", value: ch.engagementRate, cls: "text-emerald-400" },
+                      { label: "Price", value: `$${ch.price}/video`, cls: "" },
+                    ] as { label: string; value: string; cls: string }[]).map(({ label, value, cls }) => (
+                      <div key={label} className="flex items-center justify-between gap-2" style={{ minHeight: 18 }}>
+                        <span className="text-muted-foreground">{label}</span>
+                        <span className={`font-semibold text-foreground ${cls}`}>{value}</span>
+                      </div>
+                    ))}
                   </div>
-                  <p className="text-[10px] italic leading-relaxed" style={{ color: "rgba(136,146,164,0.6)" }}>
+                  <p className="text-[10px] italic leading-relaxed" style={{ color: "rgba(136,146,164,0.6)", minHeight: 40 }}>
                     "{ch.audienceDesc}"
                   </p>
                   <button

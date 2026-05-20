@@ -27,7 +27,7 @@ export function ExitIntent() {
   return (
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
+      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
     >
       <div className="w-full max-w-[480px] rounded-2xl border border-border bg-[#0f1319] p-8 animate-in fade-in zoom-in-95 duration-200">
         <div className="label-eyebrow mb-4">Before You Go</div>

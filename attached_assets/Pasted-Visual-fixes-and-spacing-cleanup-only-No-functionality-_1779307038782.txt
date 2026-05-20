@@ -1,0 +1,30 @@
+Visual fixes and spacing cleanup only. No functionality changes.
+Spacing — ticker / quiz link / available channels zone
+The area between the hero stats and the channel grid is too crowded. Fix the spacing and hierarchy:
+
+Add padding-top: 48px above the case study ticker to give it separation from the hero stats
+After the ticker, add margin-bottom: 32px of breathing room before the "Not sure where to start?" quiz link line
+The quiz link line and the "AVAILABLE CHANNELS" label are too close together — add margin-bottom: 24px between them
+The "AVAILABLE CHANNELS" label and the bundle pricing info bar below it are also cramped — add margin-bottom: 16px between them
+Overall the section should feel like: hero → breathe → ticker → breathe → quiz link → breathe → available channels header → bundle bar → grid. Each element should have clear separation, not feel like one block
+
+Quiz modal — fix progress bar and close button
+
+Move the × close button to the top-right corner of the modal, positioned absolutely at top: 16px; right: 16px — completely outside and above the progress bar
+The progress bar should sit below the close button area, full width of the modal with 16px horizontal padding on each side
+The last segment of the progress bar has a squared-off right edge — fix it so all segments have border-radius: 999px. Applies to all 3 segments
+Add gap: 4px between the 3 progress bar segments so they read as distinct steps
+Each segment equal width (1/3 of available space minus gaps). Inactive: background: #2a2f45. Active/completed: background: #4a6cf7
+
+Quiz option rows — add hover state
+Each answer option row: default background: #131720, border 1px solid #1e2535. On hover: background: #1a2035, border 1px solid #4a6cf7, arrow icon shifts 4px right with 150ms ease transition.
+Quiz progress bar animation
+Animate smoothly when advancing steps using CSS transition width 300ms ease. Step 1 = 33%, Step 2 = 66%, Step 3 = 100%, Results = 100%.
+Compare pill button
+Replace the raw HTML checkbox + "Compare" label with a styled pill toggle button. Height 24px, padding 0 10px, border 1px solid #2a2f45, transparent background, muted grey text. When active: border #4a6cf7, background rgba(74,108,247,0.12), white text, small blue checkmark before text. No raw checkbox visible at any point.
+Compare drawer — balance columns
+Equal width columns, thin 1px solid #1e2535 divider between them. Each stat row (Subscribers, Avg Views, Engagement, Price): left-aligned muted label, right-aligned white value — same row height across both columns so values align horizontally. Audience description quote at bottom of each column in muted italic, min-height set so columns don't misalign regardless of text length.
+Exit intent modal backdrop
+Reduce backdrop to rgba(0,0,0,0.55) with backdrop-filter: blur(6px). Should feel frosted, not blacked out.
+
+No other changes.

@@ -76,19 +76,14 @@ export function Quiz({ onClose, onBrowseAll }: QuizProps) {
         </button>
 
         {step !== "results" && (
-          <div className="mb-5 flex items-center gap-2">
+          <div className="mt-6 mb-5 flex items-center gap-1">
             {[1, 2, 3].map((n) => (
               <div
                 key={n}
-                className="h-1.5 flex-1 rounded-full transition-colors duration-300"
+                className="h-1.5 flex-1 transition-all duration-300"
                 style={{
-                  backgroundColor:
-                    step === n
-                      ? "#4a6cf7"
-                      : (step as number) > n
-                      ? "#4a6cf7"
-                      : "#1e2535",
-                  opacity: (step as number) >= n ? 1 : 0.4,
+                  borderRadius: 999,
+                  backgroundColor: (step as number) >= n ? "#4a6cf7" : "#2a2f45",
                 }}
               />
             ))}
@@ -212,10 +207,10 @@ function QuizStep({
           <button
             key={opt.value}
             onClick={() => onSelect(opt.value)}
-            className="flex items-center justify-between rounded-xl border border-border bg-card px-4 h-12 text-sm font-semibold text-foreground hover:border-primary hover:bg-primary/5 transition-colors text-left group"
+            className="flex items-center justify-between rounded-xl border border-[#1e2535] bg-[#131720] hover:bg-[#1a2035] hover:border-[#4a6cf7] px-4 h-12 text-sm font-semibold text-foreground transition-all duration-150 text-left group"
           >
             {opt.label}
-            <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+            <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-150 shrink-0" />
           </button>
         ))}
       </div>
