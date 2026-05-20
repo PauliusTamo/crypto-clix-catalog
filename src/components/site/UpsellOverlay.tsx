@@ -26,9 +26,11 @@ export function UpsellOverlay({ onContinue, onNoThanks, onAddChannels, onDismiss
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.body.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
     return () => {
       document.body.style.paddingRight = "";
       document.body.style.overflow = "";
+      document.body.classList.remove("modal-open");
     };
   }, []);
 

@@ -1,0 +1,10 @@
+Cart message z-index fix:
+The "Add at least one channel to continue" message is still rendering behind or being clipped by the cart button. The message element currently sits in the DOM flow next to or behind the cart button container. Fix this by giving the message element a z-index higher than the cart button, and ensure its parent container does not have overflow hidden or a clipping context applied. The message should appear fully to the left of the cart button with no truncation. Also check that the cart button wrapper itself does not have a stacking context that is trapping the message behind it — if it does, restructure the DOM so the message is a sibling of the cart button container rather than a child of it.
+
+Checkout and hero lag fix:
+The lag in the checkout panel and hero section is almost certainly caused by one or more of the following. Audit and fix each:
+The hero section — if it has any CSS animation, floating card movement, or background effect running continuously, pause or stop those animations when any modal or panel is open. Running animations in the background while a modal is rendering on top is a common source of combined frame budget overflow.
+The checkout panel — check whether the grand total, order summary, or any reactive values are recalculating and re-rendering on every keystroke or state change rather than only when the cart actually changes. Debounce or memoize any calculations that are running too frequently.
+Check whether opening the checkout is triggering a full repaint of the page — for example if backdrop-filter blur is being applied to the background when the modal opens, replace it with a simple semi-transparent dark overlay instead. Backdrop-filter is GPU-expensive and causes significant lag especially on pages with complex backgrounds.
+Check for any forEach loops or DOM queries running inside animation frames or scroll listeners that are iterating over all channel cards on every tick. Move these outside the loop and cache the results.
+If any images in the checkout or hero do not have explicit dimensions set, add width and height attributes to prevent layout recalculation during render.

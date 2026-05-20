@@ -161,6 +161,11 @@
     animation: cart-pulse-anim 1.5s ease-in-out infinite;
   }
 
+  body.modal-open .scroll-arrow,
+  body.modal-open .cart-pulse {
+    animation-play-state: paused;
+  }
+
   @keyframes bundle-pop-anim {
     0%   { transform: scale(1.025); box-shadow: 0 0 0 3px rgba(34,197,94,0.35); }
     60%  { transform: scale(1.005); }

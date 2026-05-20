@@ -95,8 +95,8 @@ export function CheckoutFlow() {
       )}
 
       {emptyMsg && (
-        <div className="fixed bottom-[7.5rem] right-5 z-[60] md:bottom-[8.5rem] md:right-8 pointer-events-none">
-          <span className="inline-block rounded-lg bg-[#1a1f2e] border border-border text-muted-foreground text-xs font-medium px-3 py-2 shadow-lg whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 duration-200">
+        <div className="fixed bottom-24 right-20 z-[60] md:bottom-28 md:right-24 pointer-events-none flex items-center">
+          <span className="inline-block rounded-lg bg-[#1a1f2e] border border-border text-muted-foreground text-xs font-medium px-3 py-2 shadow-lg whitespace-nowrap animate-in fade-in slide-in-from-right-2 duration-200">
             Add at least one channel to continue
           </span>
         </div>
@@ -145,9 +145,11 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.body.style.overflow = "hidden";
+    document.body.classList.add("modal-open");
     return () => {
       document.body.style.paddingRight = "";
       document.body.style.overflow = "";
+      document.body.classList.remove("modal-open");
     };
   }, []);
 
@@ -223,7 +225,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-end md:items-center justify-center animate-in fade-in duration-200"
-      style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)" }}
+      style={{ background: "rgba(0,0,0,0.75)" }}
       onClick={onClose}
     >
       <div
@@ -268,6 +270,8 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                     <img
                       src={s.image}
                       alt={s.name}
+                      width={32}
+                      height={32}
                       className="h-8 w-8 rounded-full object-cover shrink-0"
                       style={{ border: `2px solid ${s.color}55` }}
                     />
