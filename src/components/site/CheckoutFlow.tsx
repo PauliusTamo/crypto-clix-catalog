@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video, Newspaper } from "lucide-react";
+import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video, Newspaper, Share2 } from "lucide-react";
 import { ADDON, CHANNELS, HOMEPAGE_PIN_PRICE, PR_LISTING, SHORTS_PRICES, useCart } from "@/lib/cart";
 import { UpsellOverlay } from "./UpsellOverlay";
 
@@ -8,8 +8,9 @@ type View = "closed" | "upsell" | "checkout";
 export function CheckoutFlow() {
   const [view, setView] = useState<View>("closed");
   const upsellShownRef = useRef(false);
-  const { totalItems, shortsQty, uniqueChannels, prListingEnabled } = useCart();
+  const { totalItems, shortsQty, uniqueChannels, prListingEnabled, cart, pins } = useCart();
   const hasItems = totalItems > 0 || shortsQty > 0;
+  const [shareCopied, setShareCopied] = useState(false);
 
   const hasUpsellContent =
     (uniqueChannels > 0 && uniqueChannels < 7) ||
@@ -24,7 +25,6 @@ export function CheckoutFlow() {
     }
   };
 
-  // Stable ref so the event listener always calls the latest openCart
   const openCartRef = useRef(openCart);
   openCartRef.current = openCart;
 
@@ -34,31 +34,50 @@ export function CheckoutFlow() {
     return () => window.removeEventListener("open-cart", handler);
   }, []);
 
-  const handleUpsellContinue = () => {
-    upsellShownRef.current = true;
-    setView("checkout");
-  };
-
-  const handleUpsellNoThanks = () => {
-    upsellShownRef.current = true;
-    setView("checkout");
-  };
-
+  const handleUpsellContinue = () => { upsellShownRef.current = true; setView("checkout"); };
+  const handleUpsellNoThanks = () => { upsellShownRef.current = true; setView("checkout"); };
   const handleUpsellAddChannels = () => {
-    // Don't mark shown — upsell appears again when user re-opens cart
     setView("closed");
-    setTimeout(() => {
-      document.getElementById("channels")?.scrollIntoView({ behavior: "smooth" });
-    }, 50);
+    setTimeout(() => document.getElementById("channels")?.scrollIntoView({ behavior: "smooth" }), 50);
   };
+  const handleUpsellDismiss = () => { upsellShownRef.current = true; setView("closed"); };
 
-  const handleUpsellDismiss = () => {
-    upsellShownRef.current = true;
-    setView("closed");
+  const handleShare = async () => {
+    const entries = Object.entries(cart);
+    if (!entries.length) return;
+    const cartStr = entries.map(([id, qty]) => {
+      const ch = CHANNELS.find((c) => c.id === id)!;
+      const name = ch.name.replace(/\s+/g, "");
+      const pin = pins[id] ? ":pin" : "";
+      return `${name}:${qty}${pin}`;
+    }).join(",");
+    const url = `${window.location.origin}${window.location.pathname}?cart=${encodeURIComponent(cartStr)}`;
+    window.history.replaceState({}, "", `?cart=${encodeURIComponent(cartStr)}`);
+    await navigator.clipboard.writeText(url);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2500);
   };
 
   return (
     <>
+      {/* Share button — shown above cart button when cart has items */}
+      {hasItems && (
+        <div className="fixed bottom-[10.5rem] right-5 z-40 flex items-center gap-2 md:bottom-[11.5rem] md:right-8">
+          {shareCopied && (
+            <span className="rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold px-2.5 py-1 whitespace-nowrap">
+              Campaign link copied!
+            </span>
+          )}
+          <button
+            onClick={handleShare}
+            className="grid h-10 w-10 place-items-center rounded-full bg-[#1a1f2e] border border-border text-muted-foreground hover:text-primary hover:border-primary transition-colors shadow-lg"
+            aria-label="Share campaign"
+          >
+            <Share2 className="h-4 w-4" />
+          </button>
+        </div>
+      )}
+
       <button
         onClick={openCart}
         className={`fixed bottom-24 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl hover:bg-primary-glow transition-colors md:bottom-28 md:right-8${hasItems ? " cart-pulse" : ""}`}
@@ -96,6 +115,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     clearItem, setQty, togglePin,
   } = useCart();
   const [copied, setCopied] = useState(false);
+  const [projectName, setProjectName] = useState("");
 
   useEffect(() => {
     const scrollY = window.scrollY;
@@ -131,10 +151,14 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
 
   const message = useMemo(() => {
     const lines: string[] = [];
-    lines.push("*CryptoClicks Campaign Request*", "");
+    const header = projectName.trim()
+      ? `*CryptoClicks Campaign Request — ${projectName.trim()}*`
+      : "*CryptoClicks Campaign Request*";
+    lines.push(header, "");
 
     if (selectedItems.length > 0) {
       lines.push("*Selected Channels:*");
+      if (projectName.trim()) lines.push(`*Project:* ${projectName.trim()}`);
       selectedItems.forEach((s) => {
         lines.push(`- ${s.name} × ${s.qty} ($${s.price * s.qty})`);
         if (s.pinned) lines.push(`  ↳ Homepage Pin × 30 days — +$${HOMEPAGE_PIN_PRICE}`);
@@ -167,7 +191,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     lines.push(`- Grand Total: $${total}`);
     lines.push("", "Please confirm availability and next steps. Thank you.");
     return lines.join("\n");
-  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, addonEnabled, total, uniqueChannels]);
+  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, addonEnabled, total, uniqueChannels, projectName]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(message);
@@ -200,6 +224,19 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="p-6 space-y-6">
+          {/* Project name */}
+          <div>
+            <label className="label-eyebrow mb-2 block">Your Project Name</label>
+            <input
+              type="text"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              placeholder="e.g. DeltaSwap, MoonFi, ArcadeToken..."
+              className="w-full rounded-xl border bg-card px-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
+              style={{ borderColor: "#2a2f45" }}
+            />
+          </div>
+
           {/* Channel items */}
           <div>
             <div className="label-eyebrow mb-3">Order Summary</div>

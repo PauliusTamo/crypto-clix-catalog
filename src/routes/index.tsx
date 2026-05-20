@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CartProvider } from "@/lib/cart";
 import { Navbar } from "@/components/site/Navbar";
 import { Hero } from "@/components/site/Hero";
+import { CaseTicker } from "@/components/site/CaseTicker";
 import { Channels } from "@/components/site/Channels";
 import { UpsellBanner } from "@/components/site/UpsellBanner";
 import { Bundles } from "@/components/site/Bundles";
@@ -9,6 +10,7 @@ import { Faq } from "@/components/site/Faq";
 import { Footer } from "@/components/site/Footer";
 import { CheckoutFlow } from "@/components/site/CheckoutFlow";
 import { Shorts } from "@/components/site/Shorts";
+import { ExitIntent } from "@/components/site/ExitIntent";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,6 +38,7 @@ function Index() {
         <Navbar />
         <main>
           <Hero />
+          <CaseTicker />
           <div id="channels" />
           <Channels />
           <Bundles />
@@ -45,6 +48,7 @@ function Index() {
         <Footer />
         <CheckoutFlow />
         <UpsellBanner />
+        <ExitIntent />
       </div>
     </CartProvider>
   );

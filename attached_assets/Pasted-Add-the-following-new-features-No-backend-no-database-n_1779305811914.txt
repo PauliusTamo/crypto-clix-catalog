@@ -1,0 +1,106 @@
+Add the following new features. No backend, no database, no external APIs. All state is frontend only. Do not change any existing visuals, copy, pricing, or functionality unless explicitly stated below.
+
+1. Shareable Campaign URL
+When the cart has at least 1 item, show a small "Share campaign" button next to the floating cart button, or inside the cart modal header area.
+On click, encode the full cart state into the URL as a query string parameter and copy it to clipboard. Format:
+?cart=ChannelName:qty:pin,ChannelName:qty
+Example: ?cart=CryptoVault:2:pin,BlockTalk:1,LennyCrypto:1
+:pin suffix means Homepage Pin is active for that channel.
+On page load, check for a ?cart= parameter. If present, parse it and hydrate the cart state automatically — restore quantities, Homepage Pin toggles, card selected states, sticky banner, and cart badge count. All silently, no modal or announcement.
+After copying, show a small inline toast notification near the button: "Campaign link copied!" in green, fades out after 2.5 seconds. No alert dialogs.
+
+2. Campaign Name Field in Checkout Modal
+At the very top of the "CAMPAIGN READY" modal, before the ORDER SUMMARY section, add a simple input field:
+
+Label above it: "YOUR PROJECT NAME" in small uppercase tracked muted text
+Input placeholder: "e.g. DeltaSwap, MoonFi, ArcadeToken..."
+Style: same dark card background as the rest of the modal, 1px solid #2a2f45 border, white text, rounded, full width
+No validation required — optional field
+
+When filled in, the auto-generated pre-written message should update live to replace the header line:
+Without project name: *CryptoClix Campaign Request*
+With project name: *CryptoClix Campaign Request — [ProjectName]*
+And add a line under Selected Channels: *Project:* [ProjectName]
+
+3. Case Study Ticker
+Between the hero section and the "AVAILABLE CHANNELS" label, add a full-width auto-scrolling horizontal ticker. Infinite loop, smooth, no pause on hover needed.
+Content — 6 items that repeat:
+
+🚀 DeltaSwap · 340K views across 3 channels
+📈 ArcadeToken · 18% engagement rate on dedicated video
+🔥 NovaDEX · Sold out presale within 48hrs of campaign
+💎 ChainVault · 2.1M impressions · 5 channel campaign
+⚡ StratumFi · 127K views · first campaign
+🎯 OrbitalDAO · 94% audience retention on review video
+
+Style: dark background #080b10, text muted white small, each item separated by a thin · divider. The whole strip should be subtle — not a flashy banner, more like a live feed. Height 36px max. No border, just a very subtle 1px solid #1e2535 top and bottom.
+
+4. Exit Intent Overlay
+Trigger when: the user moves their mouse toward the top of the browser (i.e. mouseleave event on the document toward clientY < 10) AND the cart has at least 1 item in it. Only trigger once per session — if dismissed, do not show again until page reload.
+Show a centered modal overlay with:
+
+Backdrop: rgba(0,0,0,0.75) with backdrop-filter: blur(8px)
+Modal: same dark card style as the rest of the site, max-width 480px, centered
+Small label top: "BEFORE YOU GO" in muted uppercase
+Heading: "Your campaign isn't sent yet." bold, large
+Subtext: "You've built a campaign worth [TOTAL]. Send it to us now and we'll confirm availability within a few hours." — [TOTAL] is the live cart grand total
+Two buttons stacked:
+
+Primary full-width blue: "Send on Telegram →" — same Telegram deep link as the checkout modal
+Secondary ghost: "I'll come back later" — dismisses the modal
+
+
+No X close button — only the dismiss button closes it. Forces a conscious choice.
+
+
+5. Compare Channels
+Add a small "Compare" checkbox or toggle on each channel card — bottom left, small, muted. Label: "Compare".
+Rules:
+
+Max 3 channels can be compared at once. If a 4th is selected, show an inline tooltip: "Max 3 channels — deselect one first"
+When 2 or 3 channels have Compare checked, a comparison drawer slides up from the bottom of the screen (above the sticky upsell banner if active). The drawer is 280px tall, full width, dark background #0f1319, with a subtle top border
+Inside the drawer: side-by-side columns for each compared channel showing: avatar + name, subscribers, avg views, engagement %, price per video, audience description, and an "Add to Campaign" button
+A small "×" in the top right of the drawer closes/clears the comparison
+Comparing does not affect the cart — it's purely informational
+On mobile the drawer becomes a full-screen modal instead
+
+
+6. Recommended For You Quiz
+Add a small entry point just below the case study ticker and above the "AVAILABLE CHANNELS" label. A single line:
+"Not sure where to start? → Find your best channels" — the arrow+text is a blue underline link, no button styling.
+Clicking it opens a lightweight modal quiz, 3 steps, no page navigation:
+Step 1 — Budget
+"What's your campaign budget?"
+
+Under $500
+$500–$1,000
+$1,000–$2,500
+$2,500+
+
+Step 2 — Goal
+"What's the main goal?"
+
+Token awareness / presale hype
+Project credibility / review coverage
+Long-term audience building
+Exchange listing / partnership visibility
+
+Step 3 — Audience
+"Who are you targeting?"
+
+Retail investors / holders
+DeFi / on-chain natives
+Traders / high-intent buyers
+General crypto curious
+
+After Step 3, show a results screen inside the same modal:
+
+Heading: "Your recommended channels"
+Show 2–3 channel cards (subset of the full 7) based on hardcoded logic matching budget + goal + audience combinations. Each card has an "Add to Campaign" button that works live
+Small muted text below: "These are our picks based on your answers — you can always browse all channels below."
+A "Browse all" link that closes the modal and scrolls to the channel grid
+
+Hardcode the recommendation logic simply — map answer combinations to channel subsets. No AI, no backend. Just if/else logic.
+
+Deployment note
+Ensure the app builds as a fully static site with no server-side dependencies. All state is in-memory or URL-encoded. Compatible with Netlify static hosting — no serverless functions needed.

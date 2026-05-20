@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, ExternalLink, Minus, Plus, Tag, Users, Zap } from "lucide-react";
+import { ArrowUpRight, Check, ExternalLink, Minus, Plus, Tag, Users, X, Zap } from "lucide-react";
 import { BUNDLE_PRICES, CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
+import { Quiz, QuizEntryLink } from "./Quiz";
 
 const BUNDLE_TIERS = [
   { count: 3, name: "Starter", price: 900  },
@@ -104,23 +105,76 @@ function BundleSavingsBar() {
 }
 
 export function Channels() {
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [compareMaxError, setCompareMaxError] = useState<string | null>(null);
+  const [quizOpen, setQuizOpen] = useState(false);
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) {
+        setCompareMaxError(id);
+        setTimeout(() => setCompareMaxError(null), 2500);
+        return prev;
+      }
+      return [...prev, id];
+    });
+  };
+
+  const browseAll = () => {
+    document.getElementById("channels")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="relative mx-auto max-w-7xl px-6 pb-28">
+      {/* Quiz entry */}
+      <div className="mb-6">
+        <QuizEntryLink onClick={() => setQuizOpen(true)} />
+      </div>
+
       <div className="label-eyebrow mb-4">Available Channels</div>
+
       <div className="sticky top-12 z-30 -mx-2 mb-8">
         <BundleSavingsBar />
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {CHANNELS.map((c) => (
-          <ChannelCard key={c.id} channel={c} />
+          <ChannelCard
+            key={c.id}
+            channel={c}
+            isCompared={compareIds.includes(c.id)}
+            showMaxError={compareMaxError === c.id}
+            onToggleCompare={toggleCompare}
+          />
         ))}
       </div>
+
+      {/* Compare drawer */}
+      <CompareDrawer
+        compareIds={compareIds}
+        onClose={() => setCompareIds([])}
+      />
+
+      {/* Quiz modal */}
+      {quizOpen && (
+        <Quiz onClose={() => setQuizOpen(false)} onBrowseAll={browseAll} />
+      )}
     </section>
   );
 }
 
-function ChannelCard({ channel }: { channel: Channel }) {
+function ChannelCard({
+  channel,
+  isCompared,
+  showMaxError,
+  onToggleCompare,
+}: {
+  channel: Channel;
+  isCompared: boolean;
+  showMaxError: boolean;
+  onToggleCompare: (id: string) => void;
+}) {
   const { cart, pins, add, remove, setQty, togglePin } = useCart();
   const qty = cart[channel.id] ?? 0;
   const selected = qty > 0;
@@ -159,7 +213,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
         if (!selected) (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
       }}
     >
-      {/* Color stripe */}
       <span
         className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl pointer-events-none z-10"
         style={{
@@ -169,8 +222,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
         }}
         aria-hidden
       />
-
-      {/* Inner depth gradient */}
       <div
         className="absolute inset-x-0 bottom-0 h-16 pointer-events-none rounded-b-2xl z-0"
         style={{ background: "linear-gradient(to top, rgba(255,255,255,0.02), transparent)" }}
@@ -178,7 +229,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
       />
 
       <div className="relative z-10 pl-4 pr-4 pt-4 pb-4">
-        {/* Badge or selected check */}
         {selected ? (
           <span
             className="absolute top-3 right-3 grid h-6 w-6 place-items-center rounded-full text-white"
@@ -200,7 +250,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
           </span>
         ) : null}
 
-        {/* Header */}
         <div className="flex items-center gap-3.5">
           <img
             src={channel.image}
@@ -237,7 +286,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
           </div>
         </div>
 
-        {/* Metrics row — engagement is the headline stat */}
         <div className="mt-3.5 flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <ArrowUpRight className="h-4 w-4 text-emerald-400 shrink-0" />
@@ -254,7 +302,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
           </div>
         </div>
 
-        {/* Audience descriptor */}
         <p
           className="mt-2 text-xs italic leading-relaxed"
           style={{ color: "rgba(136,146,164,0.65)" }}
@@ -262,7 +309,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
           "{channel.audienceDesc}"
         </p>
 
-        {/* Homepage pin toggle */}
         <div
           className={`mt-4 flex items-center justify-between transition-all duration-200 ${
             pinned ? "rounded-lg border px-3 py-2" : ""
@@ -308,7 +354,6 @@ function ChannelCard({ channel }: { channel: Channel }) {
           </p>
         )}
 
-        {/* Price + action */}
         <div className="mt-4 pt-4 border-t border-[#1e2535] flex items-center justify-between">
           <div
             className="font-black text-2xl tracking-tighter transition-colors duration-200"
@@ -354,7 +399,122 @@ function ChannelCard({ channel }: { channel: Channel }) {
             </div>
           )}
         </div>
+
+        {/* Compare toggle */}
+        <div className="mt-3 flex items-center justify-between">
+          <label className="flex items-center gap-2 cursor-pointer group select-none">
+            <div
+              className="h-4 w-4 rounded border flex items-center justify-center transition-colors"
+              style={{
+                borderColor: isCompared ? channel.color : "#2a2f45",
+                backgroundColor: isCompared ? channel.color : "transparent",
+              }}
+              onClick={() => onToggleCompare(channel.id)}
+            >
+              {isCompared && <Check className="h-2.5 w-2.5 text-white" strokeWidth={3} />}
+            </div>
+            <span
+              className="text-xs text-muted-foreground group-hover:text-foreground transition-colors"
+              onClick={() => onToggleCompare(channel.id)}
+            >
+              Compare
+            </span>
+          </label>
+          {showMaxError && (
+            <span className="text-[10px] text-amber-400">Max 3 — deselect one first</span>
+          )}
+        </div>
       </div>
     </article>
+  );
+}
+
+function CompareDrawer({
+  compareIds,
+  onClose,
+}: {
+  compareIds: string[];
+  onClose: () => void;
+}) {
+  const { cart, add } = useCart();
+  const channels = compareIds.map((id) => CHANNELS.find((c) => c.id === id)!).filter(Boolean);
+  const show = channels.length >= 2;
+
+  return (
+    <div
+      className={`fixed z-50 inset-0 md:inset-auto md:bottom-0 md:left-0 md:right-0 transition-transform duration-300 ease-in-out ${
+        show ? "translate-y-0" : "translate-y-full"
+      }`}
+      style={{ height: "280px" }}
+      aria-hidden={!show}
+    >
+      <div
+        className="h-full w-full flex flex-col"
+        style={{
+          backgroundColor: "#0f1319",
+          borderTop: "1px solid #1e2535",
+        }}
+      >
+        <div className="flex items-center justify-between px-6 py-3 border-b border-[#1e2535] shrink-0">
+          <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+            Comparing {channels.length} channel{channels.length !== 1 ? "s" : ""}
+          </span>
+          <button
+            onClick={onClose}
+            className="grid h-7 w-7 place-items-center rounded-lg hover:bg-surface-elevated text-muted-foreground hover:text-foreground transition"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-x-auto overflow-y-hidden">
+          <div className="flex h-full divide-x divide-[#1e2535]" style={{ minWidth: channels.length * 240 }}>
+            {channels.map((ch) => {
+              const inCart = (cart[ch.id] ?? 0) > 0;
+              return (
+                <div key={ch.id} className="flex-1 min-w-[220px] px-5 py-4 flex flex-col gap-2 overflow-hidden">
+                  <div className="flex items-center gap-2.5">
+                    <img
+                      src={ch.image}
+                      alt={ch.name}
+                      className="h-8 w-8 rounded-full object-cover shrink-0"
+                      style={{ border: `2px solid ${ch.color}55` }}
+                    />
+                    <span className="font-bold text-sm truncate" style={{ color: ch.color }}>{ch.name}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+                    <span className="text-muted-foreground">Subscribers</span>
+                    <span className="font-semibold">{ch.subs}</span>
+                    <span className="text-muted-foreground">Avg Views</span>
+                    <span className="font-semibold">{ch.avgViews}</span>
+                    <span className="text-muted-foreground">Engagement</span>
+                    <span className="font-semibold text-emerald-400">{ch.engagementRate}</span>
+                    <span className="text-muted-foreground">Price</span>
+                    <span className="font-semibold">${ch.price}/video</span>
+                  </div>
+                  <p className="text-[10px] italic leading-relaxed" style={{ color: "rgba(136,146,164,0.6)" }}>
+                    "{ch.audienceDesc}"
+                  </p>
+                  <button
+                    onClick={() => !inCart && add(ch.id)}
+                    className={`mt-auto inline-flex items-center justify-center gap-1.5 rounded-lg h-8 text-xs font-semibold transition-colors ${
+                      inCart
+                        ? "border border-emerald-500/30 text-emerald-400 cursor-default"
+                        : "border border-[#2a2f45] hover:border-primary hover:text-primary text-foreground"
+                    }`}
+                  >
+                    {inCart ? (
+                      <><Check className="h-3 w-3" /> In campaign</>
+                    ) : (
+                      <><Plus className="h-3 w-3" /> Add to Campaign</>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from "react";
 
 import chrisImg from "@assets/chris_2025_profilepic_1779222064968.jpg";
 import octoImg from "@assets/crrypto_octopus_profile_pic_1779222086456.jpg";
@@ -34,18 +34,8 @@ export const CHANNELS: Channel[] = [
   { id: "cryptosphere",  name: "Crypto Sphere",      subs: "191K", subsNum: 191000, price: 400, color: "#9333ea", link: "https://www.youtube.com/@CryptoSphereDaily",   contentType: "Token Tracking",  image: sphereImg, avgViews: "~35K", engagementRate: "10.2%",audienceDesc: "Token and launch trackers, news-reactive buyers" },
 ];
 
-// Fixed flat price when exactly 3, 5, or 7 unique channels are selected
-export const BUNDLE_PRICES: Record<number, number> = {
-  3: 900,
-  5: 1400,
-  7: 1850,
-};
-
-export const SHORTS_PRICES: Record<number, number> = {
-  1: 200,
-  5: 900,
-  10: 1600,
-};
+export const BUNDLE_PRICES: Record<number, number> = { 3: 900, 5: 1400, 7: 1850 };
+export const SHORTS_PRICES: Record<number, number> = { 1: 200, 5: 900, 10: 1600 };
 
 export const ADDON = {
   title: "Featured Placement Boost",
@@ -102,6 +92,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [shortsQty, setShortsQty] = useState<ShortsQty>(0);
   const [prListingEnabled, setPrListingEnabled] = useState(false);
 
+  // Hydrate from ?cart= URL param on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const cartParam = params.get("cart");
+    if (!cartParam) return;
+    const newCart: CartState = {};
+    const newPins: PinState = {};
+    cartParam.split(",").forEach((seg) => {
+      const parts = seg.trim().split(":");
+      if (!parts[0]) return;
+      const rawName = parts[0].toLowerCase();
+      const qty = parseInt(parts[1] ?? "1");
+      const hasPin = parts.includes("pin");
+      const channel = CHANNELS.find(
+        (c) => c.name.replace(/\s+/g, "").toLowerCase() === rawName
+      );
+      if (channel && qty > 0) {
+        newCart[channel.id] = qty;
+        if (hasPin) newPins[channel.id] = true;
+      }
+    });
+    if (Object.keys(newCart).length > 0) {
+      setCart(newCart);
+      setPins(newPins);
+    }
+  }, []);
+
   const add = useCallback((id: string) =>
     setCart((c) => ({ ...c, [id]: (c[id] ?? 0) + 1 })), []);
 
@@ -154,7 +171,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return sum + (ch ? ch.price * qty : 0);
     }, 0);
 
-    // Find highest bundle tier that fits within the selected unique channels
     const bestTierCount = ([7, 5, 3] as const).find((t) => uniqueChannels >= t);
     let channelTotal: number;
     let bundleActive: boolean;
@@ -162,8 +178,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     if (bestTierCount !== undefined) {
       const bundlePrice = BUNDLE_PRICES[bestTierCount];
-      // Sort channels descending by price: most expensive go into the bundle slot,
-      // cheapest extras pay individual prices — giving the user the best deal.
       const channelEntries = Object.entries(cart)
         .map(([id, qty]) => {
           const ch = CHANNELS.find((c) => c.id === id)!;
@@ -176,8 +190,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       for (const { price, qty } of channelEntries) {
         if (bundleSlots > 0) {
           bundleSlots--;
-          // First copy of this channel is covered by the bundle;
-          // any extra copies beyond qty=1 pay individual price
           if (qty > 1) extraTotal += price * (qty - 1);
         } else {
           extraTotal += price * qty;
