@@ -38,9 +38,7 @@ function Index() {
         <Navbar />
         <main>
           <Hero />
-          <div style={{ paddingTop: 56 }}>
-            <CaseTicker />
-          </div>
+          <CaseTicker />
           <div id="channels" />
           <Channels />
           <Bundles />

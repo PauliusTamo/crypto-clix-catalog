@@ -195,7 +195,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     if (pinTotal > 0) lines.push(`- Homepage Pin(s): +$${pinTotal}`);
     if (shortsTotal > 0) lines.push(`- Short Video Ads: +$${shortsTotal}`);
     if (prListingTotal > 0) lines.push(`- PR Listing: +$${prListingTotal}`);
-    if (addonEnabled) lines.push(`- Add-On (${ADDON.title}): $${ADDON.price}`);
+    if (addonEnabled) lines.push(`- PR Listing & Press Coverage: +$${ADDON.price}`);
     lines.push(`- Grand Total: $${total}`);
     lines.push("", "Please confirm availability and next steps. Thank you.");
     return lines.join("\n");

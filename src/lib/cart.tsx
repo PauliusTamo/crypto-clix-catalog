@@ -25,28 +25,28 @@ export type Channel = {
 };
 
 export const CHANNELS: Channel[] = [
-  { id: "cryptoocto",    name: "Crypto Octo",       subs: "86K",  subsNum: 86000,  price: 250, color: "#6366f1", link: "https://www.youtube.com/@CryptoOcto",         contentType: "Market Analysis", image: octoImg,   avgViews: "~8K",  engagementRate: "9.5%", audienceDesc: "US retail-heavy, strong altcoin conviction" },
-  { id: "cryptonautic",  name: "Crypto Nautic",      subs: "100K", subsNum: 100000, price: 300, color: "#0ea5e9", link: "https://www.youtube.com/@CryptoNautic",        contentType: "News & Trends",   image: nauticImg, avgViews: "~12K", engagementRate: "9.2%", audienceDesc: "European audience, macro and DeFi traders" },
-  { id: "freddiefinance",name: "Freddie Finance",    subs: "112K", subsNum: 112000, price: 300, color: "#7c3aed", link: "https://www.youtube.com/@FreddieInFinance",    contentType: "Web3 Education",  image: freddieImg,avgViews: "~15K", engagementRate: "11.3%",audienceDesc: "Beginner-friendly tone, unusually high comment rate", badge: "High Engagement" },
-  { id: "cypherdefi",    name: "Cypher DeFi",        subs: "114K", subsNum: 114000, price: 350, color: "#2563eb", link: "https://www.youtube.com/@cypherdefi",          contentType: "DeFi Coverage",   image: cypherImg, avgViews: "~18K", engagementRate: "10.1%",audienceDesc: "On-chain natives, heavy protocol and DeFi interest" },
-  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 350, color: "#ef4444", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews", image: chrisImg,  avgViews: "~22K", engagementRate: "9.8%", audienceDesc: "Mid/large-cap holders, project-review driven buyers" },
-  { id: "lennycrypto",   name: "Lenny Crypto",       subs: "161K", subsNum: 161000, price: 400, color: "#a855f7", link: "https://www.youtube.com/@LennyCrypto",         contentType: "Trading Signals", image: lennyImg,  avgViews: "~28K", engagementRate: "10.7%",audienceDesc: "High-intent traders, strong repeat buyer behaviour", badge: "Most Picked" },
-  { id: "cryptosphere",  name: "Crypto Sphere",      subs: "191K", subsNum: 191000, price: 400, color: "#9333ea", link: "https://www.youtube.com/@CryptoSphereDaily",   contentType: "Token Tracking",  image: sphereImg, avgViews: "~35K", engagementRate: "10.2%",audienceDesc: "Token and launch trackers, news-reactive buyers" },
+  { id: "cryptoocto",    name: "Crypto Octo",       subs: "86K",  subsNum: 86000,  price: 250, color: "#6366f1", link: "https://www.youtube.com/@CryptoOcto",         contentType: "Market Analysis", image: octoImg,   avgViews: "~8K",  engagementRate: "9.5%", audienceDesc: "UK-heavy audience, altcoin focus and mid-cap conviction" },
+  { id: "cryptonautic",  name: "Crypto Nautic",      subs: "100K", subsNum: 100000, price: 300, color: "#0ea5e9", link: "https://www.youtube.com/@CryptoNautic",        contentType: "News & Trends",   image: nauticImg, avgViews: "~10K", engagementRate: "9.2%", audienceDesc: "US retail investors, macro analysis and spot traders" },
+  { id: "freddiefinance",name: "Freddie Finance",    subs: "112K", subsNum: 112000, price: 300, color: "#7c3aed", link: "https://www.youtube.com/@FreddieInFinance",    contentType: "Web3 Education",  image: freddieImg,avgViews: "~12K", engagementRate: "11.3%",audienceDesc: "Asian market audience, strong DeFi and token interest", badge: "High Engagement" },
+  { id: "cypherdefi",    name: "Cypher DeFi",        subs: "114K", subsNum: 114000, price: 350, color: "#2563eb", link: "https://www.youtube.com/@cypherdefi",          contentType: "DeFi Coverage",   image: cypherImg, avgViews: "~14K", engagementRate: "10.1%",audienceDesc: "European on-chain natives, heavy protocol and DeFi buyers" },
+  { id: "cryptochristo", name: "Crypto Christopher", subs: "137K", subsNum: 137000, price: 350, color: "#ef4444", link: "https://www.youtube.com/@ChristopherinCrypto", contentType: "Project Reviews", image: chrisImg,  avgViews: "~11K", engagementRate: "9.8%", audienceDesc: "European mid/large-cap holders, project-review driven" },
+  { id: "lennycrypto",   name: "Lenny Crypto",       subs: "161K", subsNum: 161000, price: 400, color: "#a855f7", link: "https://www.youtube.com/@LennyCrypto",         contentType: "Trading Signals", image: lennyImg,  avgViews: "~15K", engagementRate: "10.7%",audienceDesc: "US high-intent traders, strong repeat buyer behaviour", badge: "Most Picked" },
+  { id: "cryptosphere",  name: "Crypto Sphere",      subs: "191K", subsNum: 191000, price: 400, color: "#9333ea", link: "https://www.youtube.com/@CryptoSphereDaily",   contentType: "Token Tracking",  image: sphereImg, avgViews: "~13K", engagementRate: "10.2%",audienceDesc: "Middle East and LATAM buyers, high purchase intent" },
 ];
 
 export const BUNDLE_PRICES: Record<number, number> = { 3: 900, 5: 1400, 7: 1850 };
 export const SHORTS_PRICES: Record<number, number> = { 1: 200, 5: 900, 10: 1600 };
 
 export const ADDON = {
-  title: "Featured Placement Boost",
-  description: "Add a powerful promotional boost to your campaign for maximum visibility.",
-  price: 250,
+  title: "PR Listing & Press Coverage",
+  description: "Get your project featured in 50+ top crypto publications and news outlets including CoinMarketCap, Benzinga, BlockTelegraph, Business Insider, and MSN. Includes press release writing, editorial distribution to 500+ news sites, journalist outreach, AI discoverability on ChatGPT, Gemini, Claude and Perplexity, and a post-campaign coverage report.",
+  price: 1500,
 };
 
 export const PR_LISTING = {
   title: "PR Listing & Press Coverage",
-  description: "Get your project featured in 50+ top crypto publications and news outlets. Includes press release distribution, editorial placement, and a post-campaign coverage report.",
-  price: 350,
+  description: "Get your project featured in 50+ top crypto publications and news outlets including CoinMarketCap, Benzinga, BlockTelegraph, Business Insider, and MSN. Includes press release writing, editorial distribution to 500+ news sites, journalist outreach, AI discoverability on ChatGPT, Gemini, Claude and Perplexity, and a post-campaign coverage report.",
+  price: 1500,
 };
 
 export const HOMEPAGE_PIN_PRICE = 150;

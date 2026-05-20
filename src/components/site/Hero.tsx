@@ -16,7 +16,7 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="hero-blob" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-4 md:px-6 pt-8 pb-10 md:pt-16 md:pb-20 grid md:grid-cols-2 gap-8 items-center">
+      <div className="relative mx-auto max-w-7xl px-4 md:px-6 pt-8 pb-8 md:pt-16 md:pb-8 grid md:grid-cols-2 gap-8 items-center">
         <div>
           <h1
             className="font-black tracking-tighter leading-[0.92] max-w-5xl text-[clamp(36px,10vw,56px)] md:text-[clamp(42px,6vw,90px)]"

@@ -1,0 +1,31 @@
+Content updates, layout fix, and add-on replacement. No structural changes beyond what is listed.
+Channel audience descriptions and avg views — update all
+Update each channel card's audience description italic text and avg views stat to the following. Do not change subscriber counts, engagement rates, prices, or any other data:
+
+Crypto Octo — avg views: ~8K — description: "UK-heavy audience, altcoin focus and mid-cap conviction"
+Crypto Nautic — avg views: ~10K — description: "US retail investors, macro analysis and spot traders"
+Freddie Finance — avg views: ~12K — description: "Asian market audience, strong DeFi and token interest"
+Cypher DeFi — avg views: ~14K — description: "European on-chain natives, heavy protocol and DeFi buyers"
+Crypto Christopher — avg views: ~11K — description: "European mid/large-cap holders, project-review driven"
+Crypto Sphere — avg views: ~13K — description: "Middle East and LATAM buyers, high purchase intent"
+Lenny Crypto — avg views: ~15K — description: "US high-intent traders, strong repeat buyer behaviour"
+
+Replace "Featured Placement Boost" add-on with PR Listing everywhere it appears
+There are two places this add-on appears — the cart modal toggle and the pre-checkout upsell popup. Replace in both locations with the following:
+Label: ADD-ON SERVICE
+Title: "PR Listing & Press Coverage"
+Description: "Get your project featured in 50+ top crypto publications and news outlets including CoinMarketCap, Benzinga, BlockTelegraph, Business Insider, and MSN. Includes press release writing, editorial distribution to 500+ news sites, journalist outreach, AI discoverability on ChatGPT, Gemini, Claude and Perplexity, and a post-campaign coverage report."
+Price: +$1,500
+Toggle: off by default
+In the pre-checkout upsell popup specifically, also add a small row of publication logo names as plain text pills below the description — style as small muted rounded tags: CoinMarketCap · Benzinga · MSN · Business Insider · BlockTelegraph · The Block · Decrypt · Cointelegraph
+In the auto-generated pre-written message, if the PR add-on is toggled on, add this line to the financial summary:
+- PR Listing & Press Coverage: +$1,500
+Spacing fix — hero to channel section transition
+The gap between the "BROWSE CHANNELS" indicator and the case study ticker strip is too large and empty. Fix:
+
+Remove any explicit margin or padding creating dead space between the hero bottom and the ticker strip — the ticker should follow naturally 32px below the "BROWSE CHANNELS" indicator, no more
+The ticker strip, quiz link line, and "AVAILABLE CHANNELS" label are then too compressed together after the ticker — maintain the spacing rules from the previous prompt but eliminate only the dead space above the ticker
+The overall feel should be: hero ends → ticker begins immediately → breathing room → quiz link → breathing room → channel grid. No dead zone.
+
+
+No other changes.

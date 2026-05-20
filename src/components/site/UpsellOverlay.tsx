@@ -120,14 +120,26 @@ export function UpsellOverlay({ onContinue, onNoThanks, onAddChannels, onDismiss
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-3">
-                    <div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground mb-1">Add-On Service</p>
                       <p className="font-bold text-sm">{PR_LISTING.title}</p>
                       <p className="mt-1 text-xs text-muted-foreground leading-snug">
                         {PR_LISTING.description}
                       </p>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {["CoinMarketCap", "Benzinga", "MSN", "Business Insider", "BlockTelegraph", "The Block", "Decrypt", "Cointelegraph"].map((pub) => (
+                          <span
+                            key={pub}
+                            className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                            style={{ backgroundColor: "rgba(255,255,255,0.05)", color: "rgba(136,146,164,0.7)" }}
+                          >
+                            {pub}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                     <span className="font-black text-sm text-primary shrink-0 mt-0.5">
-                      +${PR_LISTING.price}
+                      +${PR_LISTING.price.toLocaleString()}
                     </span>
                   </div>
                   <div className="mt-3">
