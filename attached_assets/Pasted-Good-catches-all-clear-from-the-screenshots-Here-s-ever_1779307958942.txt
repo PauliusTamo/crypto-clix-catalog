@@ -1,0 +1,29 @@
+Good catches — all clear from the screenshots. Here's everything consolidated:
+
+Paste this in Lovable:
+
+Bug fixes and spacing adjustments only. No functionality changes.
+1. Scroll lock for all modals, not just checkout
+Apply the same body scroll lock that exists on the checkout modal to ALL modal/overlay instances on the page — this includes the quiz modal, the exit intent overlay, the compare drawer, and the pre-checkout upsell modal. On any modal open: document.body.style.overflow = 'hidden' and on mobile position: fixed; width: 100%. On any modal close: restore document.body.style.overflow = '' and remove fixed positioning. Every open/close path must restore scroll correctly.
+2. Bundle info bar — make it static, not sticky
+The "Bundle pricing unlocks at 3, 5, or 7 channels" bar with the "Save up to $650" pill is currently sticky and scrolls with the page, bleeding into the channel cards. Remove the sticky/fixed positioning from this bar entirely. Make it static — it should sit in its natural position above the channel grid and stay there when the user scrolls. It should not follow the scroll at any point.
+3. Hero section — fix viewport fit and card sizing
+The hero is not fitting within the viewport on load — the stats row ("7 Active Channels · 900K+ · 100+") is cropping at the bottom. Fix:
+
+Reduce the headline font size slightly — bring it down by 10–15% so the full hero content (headline, subtext, stats, browse indicator) fits within 100vh without cropping on a standard 1080p screen
+The floating channel preview cards on the right side of the hero are too small — increase their size by approximately 25%. Each card should be more legible at a glance: larger avatar, larger channel name, larger price tag. They're a visual sell — they need to be readable without squinting
+
+4. Crowded zone — ticker / quiz link / available channels
+The area between the hero stats and the channel grid is still too tight. Implement this exact spacing:
+
+padding-top: 56px above the case study ticker strip
+margin-top: 28px between the ticker strip and the "Not sure where to start?" quiz link line
+margin-top: 20px between the quiz link line and the "AVAILABLE CHANNELS" label
+margin-top: 12px between the "AVAILABLE CHANNELS" label and the bundle info bar
+margin-top: 28px between the bundle info bar and the first row of channel cards
+Each element needs its own breathing room — they should read as separate distinct elements, not one compressed block.
+
+5. Compare drawer — fix stat alignment
+The stat values (112K, -15K, 11.3%, $300/video) are pushed to the far right edge of each column. Change each stat row to a flex row with label left in muted text and value sitting naturally to the right — not stretched to the column wall. Each column should be calc(50% - 1px) wide. Add a 1px solid #1e2535 vertical divider between the two columns. Audience description quote at the bottom of each column in muted italic with min-height set identically on both sides so columns stay aligned regardless of text length.
+
+No other changes.
