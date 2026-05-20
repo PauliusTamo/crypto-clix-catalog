@@ -7,16 +7,33 @@ const SHORTS_PACKAGES: { qty: ShortsQty; label: string; featured: boolean }[] = 
   { qty: 10, label: "10 Short Video Ads", featured: false },
 ];
 
-const FORMATS = ["YouTube Shorts", "TikTok", "Reels"];
+const PLATFORM_TAGS = [
+  { label: "YouTube Shorts",          dot: "#ef4444" },
+  { label: "TikTok",                  dot: "#ffffff" },
+  { label: "Reels",                   dot: "#a855f7" },
+  { label: "Multiple Faces Available",dot: null      },
+  { label: "Script + Edit Included",  dot: null      },
+];
 
 export function Shorts() {
   const { shortsQty, setShortsQty } = useCart();
 
   return (
     <section className="mx-auto max-w-7xl px-6 pb-28">
-      <div className="border-t border-[#1e2535] mb-10" />
+      {/* Section break — warm radial glow */}
+      <div className="relative mb-10 h-10 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(249,115,22,0.05) 0%, transparent 100%)",
+            filter: "blur(30px)",
+          }}
+          aria-hidden
+        />
+      </div>
 
       <div className="mb-6 max-w-2xl">
+        <div className="label-eyebrow mb-3">Pricing</div>
         <h2 className="font-black tracking-tighter text-5xl md:text-6xl leading-[0.95]">
           SHORT VIDEO<br />ADS.
         </h2>
@@ -26,17 +43,20 @@ export function Shorts() {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-8">
-        {FORMATS.map((f) => (
-          <span key={f} className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
-            {f}
+        {PLATFORM_TAGS.map((t) => (
+          <span
+            key={t.label}
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#2a2f45] bg-card px-3 py-1 text-xs font-semibold text-muted-foreground"
+          >
+            {t.dot && (
+              <span
+                className="h-1.5 w-1.5 rounded-full shrink-0"
+                style={{ backgroundColor: t.dot }}
+              />
+            )}
+            {t.label}
           </span>
         ))}
-        <span className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
-          Multiple Faces Available
-        </span>
-        <span className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
-          Script + Edit Included
-        </span>
       </div>
 
       <div className="grid gap-5 md:grid-cols-3 items-end">
@@ -54,8 +74,13 @@ export function Shorts() {
                   ? "border-2 border-[#2a3568] bg-card"
                   : "border border-border bg-card"
               } ${pkg.featured ? "p-9 md:scale-[1.04] md:-translate-y-1" : "p-7"}`}
+              style={
+                pkg.featured && !selected
+                  ? { boxShadow: "0 0 0 1px #4a6cf7, 0 8px 32px rgba(74,108,247,0.2)" }
+                  : undefined
+              }
             >
-              {pkg.featured && !selected && (
+              {(pkg.featured && !selected) && (
                 <span
                   className="absolute left-0 top-0 bottom-0 w-1 pointer-events-none"
                   style={{ background: "linear-gradient(180deg, #4a6cf7, #7c3aed)" }}
@@ -111,9 +136,13 @@ export function Shorts() {
         })}
       </div>
 
-      <p className="mt-8 text-center text-xs text-muted-foreground italic">
-        72-hour turnaround guaranteed. If we miss the deadline, you get a free video on us.
-      </p>
+      <div className="mt-8 flex items-center justify-center gap-2">
+        <Check className="h-4 w-4 text-emerald-500 shrink-0" strokeWidth={2.5} />
+        <p className="text-sm text-muted-foreground">
+          <strong className="text-foreground font-semibold">72-hour turnaround, guaranteed.</strong>{" "}
+          Miss the deadline and you get a free video.
+        </p>
+      </div>
     </section>
   );
 }

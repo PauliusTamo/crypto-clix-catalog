@@ -1,12 +1,30 @@
 import { Send } from "lucide-react";
+import { useEffect, useState } from "react";
 import logoImg from "@assets/cryptoclicks-low-resolution-logo-white-on-transparent-backgrou_1779222416737.png";
 
 export function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 bg-[#0a0d14] border-b border-white/5" style={{ transform: "translateZ(0)" }}>
-      <div className="mx-auto max-w-7xl px-6 h-12 flex items-center justify-between">
+    <header
+      className="sticky top-0 z-40 transition-all duration-300"
+      style={{
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+        background: scrolled ? "rgba(10,13,20,0.85)" : "transparent",
+        backdropFilter: scrolled ? "blur(12px)" : "none",
+        WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+        transform: "translateZ(0)",
+      }}
+    >
+      <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
         <a href="#" className="flex items-center">
-          <img src={logoImg} alt="CryptoClicks" className="h-7 w-auto" />
+          <img src={logoImg} alt="CryptoClicks" className="h-9 w-auto" />
         </a>
         <a
           href="https://t.me/crypoclicksio"

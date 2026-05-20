@@ -22,7 +22,17 @@ function CircleCheck({ className = "" }: { className?: string }) {
 export function Bundles() {
   return (
     <section className="mx-auto max-w-7xl px-6 pb-28">
-      <div className="border-t border-[#1e2535] mb-10" />
+      {/* Section break — blue radial glow */}
+      <div className="relative mb-10 h-10 overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "radial-gradient(ellipse 80% 100% at 50% 0%, rgba(74,108,247,0.06) 0%, transparent 100%)",
+            filter: "blur(30px)",
+          }}
+          aria-hidden
+        />
+      </div>
 
       <div className="mb-6 max-w-2xl">
         <div className="label-eyebrow mb-3">Pricing</div>

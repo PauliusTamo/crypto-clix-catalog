@@ -1,0 +1,38 @@
+Final visual refinement pass. No functionality changes. No copy changes. No data changes. Visual and layout only.
+Channel Cards — tighten and add depth
+
+Reduce internal card padding by 20% — cards are too tall with too much dead space
+The avg views + engagement row: make engagement percentage larger and more prominent — it's the most compelling stat. Display it as a bigger number with a green upward arrow, and make avg views smaller and muted beside it. Engagement is the sell, not views
+The audience description line (e.g. "US retail-heavy, strong altcoin conviction") — italicise it, slightly more muted, treat it like a quote rather than a label
+Add a very faint bottom gradient inside each card from transparent to rgba(255,255,255,0.02) — gives cards a subtle inner depth
+The "High Engagement" and "Most Picked" badge pills — give these a glow: box-shadow: 0 0 10px rgba(74,108,247,0.4) for blue badges, amber glow for "Best Value"
+
+Info Banner ("Bundle pricing unlocks automatically...")
+
+This looks like a system warning bar. Redesign it: remove the full-width border box. Replace with a simple inline line, left-aligned, with a small lightning bolt emoji or icon, the text in muted white, and a right-side subtle pill showing "Save up to $650" in green #10b981 with a dark green background rgba(16,185,129,0.15). Feels like a feature callout, not a system message
+
+Section separation — add depth between sections
+
+Between the channel grid and bundle pricing: instead of a flat 1px line, add a 40px tall section break with a very subtle radial glow centered, rgba(74,108,247,0.06), blur(60px) — just enough to signal a new section without a hard line
+Between bundle pricing and Short Video Ads: same treatment but with a slightly warmer tint rgba(249,115,22,0.05) since Short Video Ads has a different energy
+
+Short Video Ads section
+
+The heading "SHORT VIDEO ADS." is great but the section feels like it was dropped in from a different website. Tie it in: add the same left-aligned "PRICING" small label above it that the Bundle section has
+The platform tags (YouTube Shorts, TikTok, Reels etc.) — style these more deliberately: dark pill with a 1px solid #2a2f45 border and a tiny platform-colored dot before each label. YouTube = red dot, TikTok = white dot, Reels = purple dot
+The "Best Value" card (Pack — 5 Short Video Ads) — its blue border highlight is good but make it slightly more pronounced: add box-shadow: 0 0 0 1px #4a6cf7, 0 8px 32px rgba(74,108,247,0.2)
+The guarantee line at the bottom ("72-hour turnaround guaranteed...") — add a small green checkmark icon before it and make it slightly larger and more prominent. Right now it reads like fine print; it's actually a strong sell
+
+Navbar
+
+The logo feels too small. Increase the icon size by 30% and make "CRYPTOCLICKS" text slightly bolder and more tracked. The navbar as a whole needs to feel more premium — add backdrop-filter: blur(12px) and background: rgba(10,13,20,0.85) so it has a frosted glass effect when scrolling over content
+Make the navbar sticky with the frosted glass background visible only when scrolled past 50px — at the top of the page it should be fully transparent
+
+Footer
+
+"Built for crypto projects that want real reach." — italicise this, increase font size slightly, give it more breathing room above it
+The Telegram icon in the footer bottom-right — make it slightly larger and add a subtle hover effect: opacity: 1 on hover from 0.6 default
+
+Floating cart button
+
+Add a subtle pulse animation on the cart button when items are in the cart — a slow box-shadow pulse in blue, 1.5s loop, gentle. Stops when the cart is empty. Draws attention without being annoying

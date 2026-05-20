@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, ExternalLink, Minus, Plus, Tag, TrendingUp, Users } from "lucide-react";
+import { ArrowUpRight, Check, ExternalLink, Minus, Plus, Tag, Users, Zap } from "lucide-react";
 import { BUNDLE_PRICES, CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
 
 const BUNDLE_TIERS = [
@@ -13,7 +13,6 @@ function BundleSavingsBar() {
   const prevTierRef = useRef<number | null>(null);
   const [animKey, setAnimKey] = useState(0);
 
-  // Fire animation whenever we land exactly on a bundle tier
   const currentTier = bundleActive
     ? BUNDLE_TIERS.find((t) => t.count === uniqueChannels)?.count ?? null
     : null;
@@ -27,9 +26,17 @@ function BundleSavingsBar() {
 
   if (uniqueChannels === 0) {
     return (
-      <div className="mx-2 rounded-xl border border-border bg-[#0f1319] px-4 py-3 text-sm text-muted-foreground">
-        <span className="text-foreground font-semibold">Bundle pricing</span>{" "}
-        unlocks automatically at 3, 5, or 7 channels — save up to $650.
+      <div className="mx-2 px-4 py-2.5 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Zap className="h-3.5 w-3.5 text-primary shrink-0" />
+          Bundle pricing unlocks at 3, 5, or 7 channels
+        </div>
+        <span
+          className="shrink-0 rounded-full px-2.5 py-0.5 text-xs font-bold"
+          style={{ color: "#10b981", background: "rgba(16,185,129,0.15)" }}
+        >
+          Save up to $650
+        </span>
       </div>
     );
   }
@@ -163,22 +170,30 @@ function ChannelCard({ channel }: { channel: Channel }) {
         aria-hidden
       />
 
-      <div className="pl-5 pr-5 pt-5 pb-5">
+      {/* Inner depth gradient */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-16 pointer-events-none rounded-b-2xl z-0"
+        style={{ background: "linear-gradient(to top, rgba(255,255,255,0.02), transparent)" }}
+        aria-hidden
+      />
+
+      <div className="relative z-10 pl-4 pr-4 pt-4 pb-4">
         {/* Badge or selected check */}
         {selected ? (
           <span
-            className="absolute top-3 right-3 grid h-6 w-6 place-items-center rounded-full text-white z-10"
+            className="absolute top-3 right-3 grid h-6 w-6 place-items-center rounded-full text-white"
             style={{ backgroundColor: channel.color }}
           >
             <Check className="h-3.5 w-3.5" strokeWidth={3} />
           </span>
         ) : channel.badge ? (
           <span
-            className="absolute top-3 right-3 rounded-full px-2 py-0.5 text-[10px] font-black tracking-wide border z-10"
+            className="absolute top-3 right-3 rounded-full px-2 py-0.5 text-[10px] font-black tracking-wide border"
             style={{
               backgroundColor: channel.color + "18",
               borderColor: channel.color + "40",
               color: channel.color,
+              boxShadow: `0 0 10px ${channel.color}55`,
             }}
           >
             {channel.badge}
@@ -186,11 +201,11 @@ function ChannelCard({ channel }: { channel: Channel }) {
         ) : null}
 
         {/* Header */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3.5">
           <img
             src={channel.image}
             alt={channel.name}
-            className="h-12 w-12 shrink-0 rounded-full object-cover transition-all duration-200"
+            className="h-11 w-11 shrink-0 rounded-full object-cover transition-all duration-200"
             style={{
               border: selected ? `2px solid ${channel.color}` : `2px solid ${channel.color}55`,
               boxShadow: selected ? `0 0 10px ${channel.color}55` : "none",
@@ -215,30 +230,36 @@ function ChannelCard({ channel }: { channel: Channel }) {
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
-            <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <div className="mt-0.5 flex items-center gap-1.5 text-sm text-muted-foreground">
               <Users className="h-3.5 w-3.5" />
               {channel.subs} subscribers
             </div>
           </div>
         </div>
 
-        {/* Metrics row */}
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-black/20 px-3 py-2">
-            <div className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-0.5">Avg Views</div>
-            <div className="text-sm font-bold text-foreground">{channel.avgViews}</div>
+        {/* Metrics row — engagement is the headline stat */}
+        <div className="mt-3.5 flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <ArrowUpRight className="h-4 w-4 text-emerald-400 shrink-0" />
+            <span className="text-2xl font-black text-emerald-400 tracking-tight leading-none">
+              {channel.engagementRate}
+            </span>
+            <span className="text-[10px] text-muted-foreground/70 font-medium self-end mb-0.5">
+              engagement
+            </span>
           </div>
-          <div className="rounded-lg bg-black/20 px-3 py-2">
-            <div className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-0.5 flex items-center gap-1">
-              <TrendingUp className="h-2.5 w-2.5" /> Engagement
-            </div>
-            <div className="text-sm font-bold text-emerald-400">{channel.engagementRate}</div>
+          <div className="w-px h-5 bg-white/10 shrink-0" />
+          <div className="text-xs text-muted-foreground/60">
+            <span className="font-semibold text-foreground/50">{channel.avgViews}</span> avg views
           </div>
         </div>
 
         {/* Audience descriptor */}
-        <p className="mt-3 text-xs text-muted-foreground italic leading-relaxed">
-          {channel.audienceDesc}
+        <p
+          className="mt-2 text-xs italic leading-relaxed"
+          style={{ color: "rgba(136,146,164,0.65)" }}
+        >
+          "{channel.audienceDesc}"
         </p>
 
         {/* Homepage pin toggle */}

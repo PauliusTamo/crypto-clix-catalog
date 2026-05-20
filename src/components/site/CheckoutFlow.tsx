@@ -61,7 +61,7 @@ export function CheckoutFlow() {
     <>
       <button
         onClick={openCart}
-        className="fixed bottom-24 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl hover:bg-primary-glow transition-colors md:bottom-28 md:right-8"
+        className={`fixed bottom-24 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-2xl hover:bg-primary-glow transition-colors md:bottom-28 md:right-8${hasItems ? " cart-pulse" : ""}`}
         aria-label="Open campaign cart"
       >
         <ShoppingCart className="h-5 w-5" />
