@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video, Newspaper, Share2 } from "lucide-react";
-import { ADDON, CHANNELS, HOMEPAGE_PIN_PRICE, PR_LISTING, SHORTS_PRICES, useCart } from "@/lib/cart";
+import { CHANNELS, HOMEPAGE_PIN_PRICE, PR_LISTING, SHORTS_PRICES, useCart } from "@/lib/cart";
 import { UpsellOverlay } from "./UpsellOverlay";
 
 type View = "closed" | "upsell" | "checkout";
@@ -95,7 +95,7 @@ export function CheckoutFlow() {
       )}
 
       {emptyMsg && (
-        <div className="fixed bottom-[7.5rem] right-5 z-40 md:bottom-[8.5rem] md:right-8 pointer-events-none">
+        <div className="fixed bottom-[7.5rem] right-5 z-[60] md:bottom-[8.5rem] md:right-8 pointer-events-none">
           <span className="inline-block rounded-lg bg-[#1a1f2e] border border-border text-muted-foreground text-xs font-medium px-3 py-2 shadow-lg whitespace-nowrap animate-in fade-in slide-in-from-bottom-2 duration-200">
             Add at least one channel to continue
           </span>
@@ -135,24 +135,19 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     cart, pins, subtotal, bundleActive, channelTotal, savings,
     pinTotal, shortsQty, setShortsQty, shortsTotal,
     prListingEnabled, setPrListingEnabled, prListingTotal,
-    addonEnabled, setAddonEnabled, total, uniqueChannels,
+    total, uniqueChannels,
     clearItem, setQty, togglePin,
   } = useCart();
   const [copied, setCopied] = useState(false);
   const [projectName, setProjectName] = useState("");
 
   useEffect(() => {
-    const scrollY = window.scrollY;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
     document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.width = "100%";
-    document.body.style.top = `-${scrollY}px`;
     return () => {
+      document.body.style.paddingRight = "";
       document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.width = "";
-      document.body.style.top = "";
-      window.scrollTo(0, scrollY);
     };
   }, []);
 
@@ -196,7 +191,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
 
     if (prListingEnabled) {
       lines.push("", "*Add-Ons:*");
-      lines.push(`- ${PR_LISTING.title} — $${PR_LISTING.price}`);
+      lines.push(`- ${PR_LISTING.title} — $${PR_LISTING.price.toLocaleString()}`);
     }
 
     lines.push("", "*Financial Summary:*");
@@ -210,12 +205,11 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     }
     if (pinTotal > 0) lines.push(`- Homepage Pin(s): +$${pinTotal}`);
     if (shortsTotal > 0) lines.push(`- Short Video Ads: +$${shortsTotal}`);
-    if (prListingTotal > 0) lines.push(`- PR Listing: +$${prListingTotal}`);
-    if (addonEnabled) lines.push(`- PR Listing & Press Coverage: +$${ADDON.price}`);
-    lines.push(`- Grand Total: $${total}`);
+    if (prListingTotal > 0) lines.push(`- PR Listing & Press Coverage: +$${prListingTotal.toLocaleString()}`);
+    lines.push(`- Grand Total: $${total.toLocaleString()}`);
     lines.push("", "Please confirm availability and next steps. Thank you.");
     return lines.join("\n");
-  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, addonEnabled, total, uniqueChannels, projectName]);
+  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, total, uniqueChannels, projectName]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(message);
@@ -359,8 +353,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
               )}
               {pinTotal > 0 && <Row label="Homepage Pin(s)" value={`+$${pinTotal}`} valueClass="text-amber-400" />}
               {shortsTotal > 0 && <Row label="Short Video Ads" value={`+$${shortsTotal}`} />}
-              {prListingTotal > 0 && <Row label="PR Listing" value={`+$${prListingTotal}`} />}
-              {addonEnabled && <Row label={`Add-on — ${ADDON.title}`} value={`+$${ADDON.price}`} />}
+              {prListingTotal > 0 && <Row label="PR Listing & Press Coverage" value={`+$${prListingTotal.toLocaleString()}`} />}
             </div>
             <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
               <span className="text-muted-foreground text-sm">Grand Total</span>
@@ -372,18 +365,18 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
           <div className="rounded-xl border border-border bg-card p-5">
             <div className="label-eyebrow mb-2">Add-On Service</div>
             <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="font-bold">{ADDON.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{ADDON.description}</p>
-                <div className="mt-2 text-destructive font-bold">+${ADDON.price}</div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold">{PR_LISTING.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{PR_LISTING.description}</p>
+                <div className="mt-2 font-bold" style={{ color: "#4a6cf7" }}>+${PR_LISTING.price.toLocaleString()}</div>
               </div>
               <button
-                onClick={() => setAddonEnabled(!addonEnabled)}
+                onClick={() => setPrListingEnabled(!prListingEnabled)}
                 role="switch"
-                aria-checked={addonEnabled}
-                className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${addonEnabled ? "bg-primary" : "bg-surface-elevated border border-border-strong"}`}
+                aria-checked={prListingEnabled}
+                className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${prListingEnabled ? "bg-primary" : "bg-surface-elevated border border-border-strong"}`}
               >
-                <span className={`absolute top-0.5 grid h-6 w-6 place-items-center rounded-full bg-white transition-transform ${addonEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
+                <span className={`absolute top-0.5 grid h-6 w-6 place-items-center rounded-full bg-white transition-transform ${prListingEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
           </div>

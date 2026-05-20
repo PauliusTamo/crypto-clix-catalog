@@ -49,7 +49,7 @@ export const PR_LISTING = {
   price: 1500,
 };
 
-export const HOMEPAGE_PIN_PRICE = 150;
+export const HOMEPAGE_PIN_PRICE = 650;
 
 type CartState = Record<string, number>;
 type PinState = Record<string, boolean>;
@@ -77,8 +77,6 @@ type CartContextType = {
   pinTotal: number;
   shortsTotal: number;
   prListingTotal: number;
-  addonEnabled: boolean;
-  setAddonEnabled: (v: boolean) => void;
   total: number;
   clear: () => void;
 };
@@ -88,7 +86,6 @@ const CartContext = createContext<CartContextType | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartState>({});
   const [pins, setPins] = useState<PinState>({});
-  const [addonEnabled, setAddonEnabled] = useState(false);
   const [shortsQty, setShortsQty] = useState<ShortsQty>(0);
   const [prListingEnabled, setPrListingEnabled] = useState(false);
 
@@ -154,7 +151,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const clear = useCallback(() => {
     setCart({});
     setPins({});
-    setAddonEnabled(false);
     setShortsQty(0);
     setPrListingEnabled(false);
   }, []);
@@ -210,17 +206,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }, 0);
     const shortsTotal = shortsQty > 0 ? (SHORTS_PRICES[shortsQty] ?? 0) : 0;
     const prListingTotal = prListingEnabled ? PR_LISTING.price : 0;
-    const total = channelTotal + pinTotal + (addonEnabled ? ADDON.price : 0) + shortsTotal + prListingTotal;
+    const total = channelTotal + pinTotal + shortsTotal + prListingTotal;
 
     return { uniqueChannels, totalItems, totalReach, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsTotal, prListingTotal, total };
-  }, [cart, pins, addonEnabled, shortsQty, prListingEnabled]);
+  }, [cart, pins, shortsQty, prListingEnabled]);
 
   const api = useMemo<CartContextType>(() => ({
     cart, pins, shortsQty, setShortsQty, prListingEnabled, setPrListingEnabled,
     add, remove, clearItem, setQty, togglePin,
-    addonEnabled, setAddonEnabled, clear,
+    clear,
     ...computed,
-  }), [cart, pins, shortsQty, prListingEnabled, add, remove, clearItem, setQty, togglePin, addonEnabled, clear, computed]);
+  }), [cart, pins, shortsQty, prListingEnabled, add, remove, clearItem, setQty, togglePin, clear, computed]);
 
   return <CartContext.Provider value={api}>{children}</CartContext.Provider>;
 }

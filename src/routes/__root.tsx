@@ -75,6 +75,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "CryptoClicks" },
       { name: "description", content: "Crypto YouTube influencer marketing agency" },
       { property: "og:type", content: "website" },
+      {
+        httpEquiv: "Content-Security-Policy",
+        content: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; base-uri 'self'; form-action 'self' mailto: https://t.me;",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

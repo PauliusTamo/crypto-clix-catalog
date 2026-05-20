@@ -1,33 +1,36 @@
-const ITEMS = [
-  "🚀 DeltaSwap · 340K views across 3 channels",
-  "📈 ArcadeToken · 18% engagement rate on dedicated video",
-  "🔥 NovaDEX · Sold out presale within 48hrs of campaign",
-  "💎 ChainVault · 2.1M impressions · 5 channel campaign",
-  "⚡ StratumFi · 127K views · first campaign",
-  "🎯 OrbitalDAO · 94% audience retention on review video",
+const PROOFS = [
+  "Script approval before every video goes live",
+  "72-hour turnaround on short video ads",
+  "Full campaign report with reach and views breakdown",
 ];
 
 export function CaseTicker() {
   return (
     <div
-      className="w-full overflow-hidden"
+      className="w-full"
       style={{
         backgroundColor: "#080b10",
         borderTop: "1px solid #1e2535",
         borderBottom: "1px solid #1e2535",
-        height: 36,
       }}
     >
-      <div className="ticker-track flex items-center h-full" style={{ width: "max-content" }}>
-        {[...ITEMS, ...ITEMS].map((item, i) => (
-          <span
-            key={i}
-            className="inline-flex items-center text-xs font-medium whitespace-nowrap px-6"
-            style={{ color: "rgba(255,255,255,0.45)" }}
-          >
-            {item}
-            <span className="ml-6 mr-0" style={{ color: "rgba(255,255,255,0.15)" }}>·</span>
-          </span>
+      <div className="mx-auto max-w-7xl px-4 md:px-6 py-3 flex items-center justify-center gap-0 flex-wrap md:flex-nowrap">
+        {PROOFS.map((proof, i) => (
+          <div key={i} className="flex items-center">
+            <span
+              className="text-xs font-medium text-center px-5 py-1 whitespace-nowrap"
+              style={{ color: "rgba(255,255,255,0.5)" }}
+            >
+              {proof}
+            </span>
+            {i < PROOFS.length - 1 && (
+              <span
+                className="hidden md:block shrink-0 w-px h-3.5 self-center"
+                style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
+                aria-hidden
+              />
+            )}
+          </div>
         ))}
       </div>
     </div>
