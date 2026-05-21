@@ -142,7 +142,8 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
   const [projectName, setProjectName] = useState("");
   const [projectLinks, setProjectLinks] = useState("");
   const [messageGenerated, setMessageGenerated] = useState(false);
-  const canGenerate = projectName.trim().length > 0 && projectLinks.trim().length > 0;
+  const projectLinksHasUrl = /https?:\/\//.test(projectLinks);
+  const canGenerate = projectName.trim().length > 0 && projectLinks.trim().length > 0 && projectLinksHasUrl;
 
   useEffect(() => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -274,8 +275,11 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                 onChange={(e) => { setProjectLinks(e.target.value); setMessageGenerated(false); }}
                 placeholder="Website, whitepaper, socials — anything that describes your project."
                 className="w-full rounded-xl border bg-card px-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
-                style={{ borderColor: "#2a2f45" }}
+                style={{ borderColor: projectLinks.trim().length > 0 && !projectLinksHasUrl ? "#ef4444" : "#2a2f45" }}
               />
+              {projectLinks.trim().length > 0 && !projectLinksHasUrl && (
+                <p className="mt-1.5 text-xs text-red-400">Please enter a valid link starting with https://</p>
+              )}
             </div>
           </div>
 
