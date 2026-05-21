@@ -14,7 +14,7 @@ export function Footer() {
             © 2026 CryptoClicks. All rights reserved.
           </span>
           <a
-            href="https://t.me/crypoclicksio"
+            href="https://t.me/cryptoclicksio"
             target="_blank"
             rel="noreferrer"
             className="grid h-9 w-9 place-items-center rounded-lg border border-border hover:border-primary hover:text-primary transition-all"

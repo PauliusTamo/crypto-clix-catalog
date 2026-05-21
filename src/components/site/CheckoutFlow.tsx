@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video, Newspaper, Share2 } from "lucide-react";
-import { CHANNELS, HOMEPAGE_PIN_PRICE, PR_LISTING, SHORTS_PRICES, useCart } from "@/lib/cart";
+import { ShoppingCart, X, Copy, Mail, Send, Check, Trash2, Minus, Plus, Video, Newspaper, Share2, Zap, RefreshCw } from "lucide-react";
+import { CHANNELS, HOMEPAGE_PIN_PRICE, PR_LISTING, SHORTS_PRICES, useCart, type ShortsQty } from "@/lib/cart";
 import { UpsellOverlay } from "./UpsellOverlay";
 
 type View = "closed" | "upsell" | "checkout";
@@ -140,6 +140,9 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
   } = useCart();
   const [copied, setCopied] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const [projectLinks, setProjectLinks] = useState("");
+  const [messageGenerated, setMessageGenerated] = useState(false);
+  const canGenerate = projectName.trim().length > 0 && projectLinks.trim().length > 0;
 
   useEffect(() => {
     const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -176,10 +179,12 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
       ? `*CryptoClicks Campaign Request — ${projectName.trim()}*`
       : "*CryptoClicks Campaign Request*";
     lines.push(header, "");
+    if (projectName.trim()) lines.push(`*Project:* ${projectName.trim()}`);
+    if (projectLinks.trim()) lines.push(`*Links:* ${projectLinks.trim()}`);
+    if (projectName.trim() || projectLinks.trim()) lines.push("");
 
     if (selectedItems.length > 0) {
       lines.push("*Selected Channels:*");
-      if (projectName.trim()) lines.push(`*Project:* ${projectName.trim()}`);
       selectedItems.forEach((s) => {
         lines.push(`- ${s.name} × ${s.qty} ($${s.price * s.qty})`);
         if (s.pinned) lines.push(`  ↳ Homepage Pin × 30 days — +$${HOMEPAGE_PIN_PRICE}`);
@@ -211,7 +216,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
     lines.push(`- Grand Total: $${total.toLocaleString()}`);
     lines.push("", "Please confirm availability and next steps. Thank you.");
     return lines.join("\n");
-  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, total, uniqueChannels, projectName]);
+  }, [selectedItems, subtotal, bundleActive, channelTotal, savings, pinTotal, shortsQty, shortsTotal, prListingEnabled, prListingTotal, total, uniqueChannels, projectName, projectLinks]);
 
   const copy = async () => {
     await navigator.clipboard.writeText(message);
@@ -220,7 +225,7 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
   };
 
   const mailto = `mailto:hello@cryptoclicks.io?subject=${encodeURIComponent("CryptoClicks Campaign Request")}&body=${encodeURIComponent(message)}`;
-  const tg = `https://t.me/crypoclicksio?text=${encodeURIComponent(message)}`;
+  const tg = `https://t.me/cryptoclicksio?text=${encodeURIComponent(message)}`;
 
   return (
     <div
@@ -244,17 +249,34 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="p-6 space-y-6">
-          {/* Project name */}
-          <div>
-            <label className="label-eyebrow mb-2 block">Your Project Name</label>
-            <input
-              type="text"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              placeholder="e.g. DeltaSwap, MoonFi, ArcadeToken..."
-              className="w-full rounded-xl border bg-card px-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
-              style={{ borderColor: "#2a2f45" }}
-            />
+          {/* Required project fields */}
+          <div className="space-y-4">
+            <div>
+              <label className="label-eyebrow mb-2 block">
+                Project Name <span className="text-destructive normal-case tracking-normal text-[10px]">required</span>
+              </label>
+              <input
+                type="text"
+                value={projectName}
+                onChange={(e) => { setProjectName(e.target.value); setMessageGenerated(false); }}
+                placeholder="e.g. DeltaSwap, MoonFi, ArcadeToken..."
+                className="w-full rounded-xl border bg-card px-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
+                style={{ borderColor: "#2a2f45" }}
+              />
+            </div>
+            <div>
+              <label className="label-eyebrow mb-2 block">
+                Project Links <span className="text-destructive normal-case tracking-normal text-[10px]">required</span>
+              </label>
+              <input
+                type="text"
+                value={projectLinks}
+                onChange={(e) => { setProjectLinks(e.target.value); setMessageGenerated(false); }}
+                placeholder="Website, whitepaper, socials — anything that describes your project."
+                className="w-full rounded-xl border bg-card px-4 h-11 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none focus:border-primary transition-colors"
+                style={{ borderColor: "#2a2f45" }}
+              />
+            </div>
           </div>
 
           {/* Channel items */}
@@ -365,9 +387,11 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          {/* Add-on */}
-          <div className="rounded-xl border border-border bg-card p-5">
-            <div className="label-eyebrow mb-2">Add-On Service</div>
+          {/* Add-ons */}
+          <div className="rounded-xl border border-border bg-card p-5 space-y-5">
+            <div className="label-eyebrow">Add-Ons</div>
+
+            {/* PR Listing */}
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold">{PR_LISTING.title}</h3>
@@ -383,45 +407,88 @@ function CheckoutModal({ onClose }: { onClose: () => void }) {
                 <span className={`absolute top-0.5 grid h-6 w-6 place-items-center rounded-full bg-white transition-transform ${prListingEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
-          </div>
 
-          {/* Message — conversion centrepiece */}
-          <div className="rounded-2xl border border-primary/25 bg-[#0c1020] overflow-hidden">
-            <div className="px-5 pt-5 pb-4 border-b border-border flex items-center justify-between gap-3">
-              <div>
-                <div className="font-black text-base tracking-tight text-foreground">Your message is ready.</div>
-                <div className="text-xs text-muted-foreground mt-0.5">Copy it and paste it straight into Telegram or email.</div>
+            <div className="border-t border-border" />
+
+            {/* Short Video Ads */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold">5 Short Video Ads</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Fast, punchy crypto ads across YouTube Shorts, TikTok, and Reels. Script and editing included. 72-hour turnaround guaranteed.</p>
+                <div className="mt-2 font-bold" style={{ color: "#4a6cf7" }}>+${SHORTS_PRICES[5].toLocaleString()}</div>
               </div>
               <button
-                onClick={copy}
-                className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-border-strong bg-transparent h-8 px-3 text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary transition"
+                onClick={() => setShortsQty(shortsQty > 0 ? 0 : 5 as ShortsQty)}
+                role="switch"
+                aria-checked={shortsQty > 0}
+                className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${shortsQty > 0 ? "bg-primary" : "bg-surface-elevated border border-border-strong"}`}
               >
-                {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? "Copied!" : "Copy text"}
+                <span className={`absolute top-0.5 grid h-6 w-6 place-items-center rounded-full bg-white transition-transform ${shortsQty > 0 ? "translate-x-5" : "translate-x-0.5"}`} />
               </button>
             </div>
-            <pre
-              className="whitespace-pre-wrap p-5 text-xs leading-relaxed text-foreground/80 max-h-52 overflow-y-auto"
-              style={{ fontFamily: "var(--font-mono)" }}
+          </div>
+
+          {/* Generate Message */}
+          <div className="space-y-3">
+            <button
+              onClick={() => canGenerate && setMessageGenerated(true)}
+              disabled={!canGenerate}
+              className="w-full flex items-center justify-center gap-2 rounded-xl h-12 text-sm font-bold transition-all"
+              style={{
+                backgroundColor: canGenerate ? "#4a6cf7" : "#131a2e",
+                color: canGenerate ? "#ffffff" : "#4a5568",
+                cursor: canGenerate ? "pointer" : "not-allowed",
+                border: canGenerate ? "none" : "1px solid #2a2f45",
+              }}
             >
+              {!canGenerate ? (
+                "Fill in project details above to generate message"
+              ) : messageGenerated ? (
+                <><RefreshCw className="h-4 w-4" /> Regenerate Message</>
+              ) : (
+                <><Zap className="h-4 w-4" /> Generate Message</>
+              )}
+            </button>
+
+            {messageGenerated && (
+              <div className="rounded-2xl border border-primary/25 bg-[#0c1020] overflow-hidden animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="px-5 pt-5 pb-4 border-b border-border flex items-center justify-between gap-3">
+                  <div>
+                    <div className="font-black text-base tracking-tight text-foreground">Your message is ready.</div>
+                    <div className="text-xs text-muted-foreground mt-0.5">Copy it and paste it straight into Telegram or email.</div>
+                  </div>
+                  <button
+                    onClick={copy}
+                    className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-border-strong bg-transparent h-8 px-3 text-xs font-semibold text-muted-foreground hover:text-foreground hover:border-primary transition"
+                  >
+                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copied ? "Copied!" : "Copy text"}
+                  </button>
+                </div>
+                <pre
+                  className="whitespace-pre-wrap p-5 text-xs leading-relaxed text-foreground/80 max-h-52 overflow-y-auto"
+                  style={{ fontFamily: "var(--font-mono)" }}
+                >
 {message}
-            </pre>
-            <div className="px-5 pb-5 pt-1 grid grid-cols-2 gap-3">
-              <a
-                href={mailto}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-surface-elevated h-11 text-sm font-semibold text-foreground hover:bg-[#222a3d] transition"
-              >
-                <Mail className="h-4 w-4" /> Email
-              </a>
-              <a
-                href={tg}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-11 text-sm font-bold hover:bg-primary-glow transition shadow-lg shadow-primary/25"
-              >
-                <Send className="h-4 w-4" /> Send on Telegram
-              </a>
-            </div>
+                </pre>
+                <div className="px-5 pb-5 pt-1 grid grid-cols-2 gap-3">
+                  <a
+                    href={mailto}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-border-strong bg-surface-elevated h-11 text-sm font-semibold text-foreground hover:bg-[#222a3d] transition"
+                  >
+                    <Mail className="h-4 w-4" /> Email
+                  </a>
+                  <a
+                    href={tg}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-foreground h-11 text-sm font-bold hover:bg-primary-glow transition shadow-lg shadow-primary/25"
+                  >
+                    <Send className="h-4 w-4" /> Send on Telegram
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,0 +1,19 @@
+SECTION 1 — SHORT VIDEO ADS AS ADD-ON IN UPSELL AND CHECKOUT
+
+Add a second add-on service card for Short Video Ads in both the upsell modal that appears before checkout and inside the checkout panel itself, sitting below the PR Listing card. Use the same card format and styling as the PR Listing add-on. The details are: title "5 Short Video Ads", price +$900, description "Fast, punchy crypto ads across YouTube Shorts, TikTok, and Reels. Script and editing included. 72-hour turnaround guaranteed." Apply the same deduplication logic already in place for PR Listing — if added from the upsell modal it should reflect as already enabled in the checkout toggle, never appearing twice in the order summary.
+
+SECTION 2 — TELEGRAM LINK TYPO FIX
+
+The Telegram handle is currently linking to @crypoclicksio on the checkout. Fix it to @cryptoclicksio — note the missing letter T. Apply this fix to every instance on the page including the header Telegram button, the checkout panel contact link, and the FAQ "Message us on Telegram" link at the bottom.
+
+SECTION 3 — CHECKOUT REQUIRED FIELDS AND GENERATE MESSAGE FLOW
+
+In the checkout panel, add two required input fields above the order summary. The first is Project Name, which already exists. The second is a new field labeled "Project Links" with placeholder text "Website, whitepaper, socials — anything that describes your project." Both fields are required. The Generate Message button should replace the current passive message display. It should be styled as a prominent full-width button. It is disabled and visually grayed out until both the project name field and at least one project link have been filled in. When the user clicks Generate Message with both fields completed, the formatted order message renders below the button showing all selected channels, quantities, services, total price, project name, and project links in a clean copyable format. The message should update automatically if the user subsequently adds or removes channels or services without needing to click generate again. The Copy to Telegram button sits below the generated message and copies the full text to clipboard.
+
+SECTION 4 — FAQ HEADLINE
+
+Change the FAQ section headline from "No fluff. Just answers." to "Common questions." Keep the same font size and weight, just replace the text.
+
+SECTION 5 — FAQ GUARANTEES ANSWER
+
+Replace the current answer to "What guarantees do you offer?" with the following: "Every campaign comes with full script approval before anything goes live, unlimited revisions until you're satisfied with the content, and a detailed performance report after the campaign wraps. If we miss an agreed deadline, you get a free video. We don't overpromise on views — we guarantee the quality of the work and full transparency throughout."

@@ -27,7 +27,7 @@ export function Navbar() {
           <img src={logoImg} alt="CryptoClicks" className="h-9 w-auto" />
         </a>
         <a
-          href="https://t.me/crypoclicksio"
+          href="https://t.me/cryptoclicksio"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 rounded-lg bg-primary hover:bg-primary-glow transition-colors px-3.5 h-9 text-sm font-semibold text-primary-foreground"

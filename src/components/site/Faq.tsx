@@ -20,7 +20,7 @@ const FAQS = [
   },
   {
     q: "What guarantees do you offer?",
-    a: "No fake view guarantees. You get real post-campaign data: views, CTR, engagement. Your account manager can share benchmark numbers before you commit.",
+    a: "Every campaign comes with full script approval before anything goes live, unlimited revisions until you're satisfied with the content, and a detailed performance report after the campaign wraps. If we miss an agreed deadline, you get a free video. We don't overpromise on views — we guarantee the quality of the work and full transparency throughout.",
   },
 ];
 
@@ -33,9 +33,7 @@ export function Faq() {
         className="font-black tracking-tighter text-4xl md:text-5xl mb-12 leading-[0.95]"
         style={{ maxWidth: 520 }}
       >
-        No fluff.
-        <br />
-        Just answers.
+        Common questions.
       </h2>
       <div className="space-y-3">
         {FAQS.map((f, i) => {
