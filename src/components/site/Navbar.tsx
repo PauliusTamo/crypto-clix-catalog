@@ -24,7 +24,7 @@ export function Navbar() {
     >
       <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
         <a href="#" className="flex items-center">
-          <img src={logoImg} alt="CryptoClicks" className="h-9 w-auto" />
+          <img src={logoImg} alt="CryptoClicks" width={120} height={36} className="h-9 w-auto" />
         </a>
         <a
           href="https://t.me/cryptoclicksio"

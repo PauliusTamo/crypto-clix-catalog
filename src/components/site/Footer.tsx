@@ -9,7 +9,7 @@ export function Footer() {
           Built for crypto projects that want real reach.
         </p>
         <div className="flex items-center justify-between text-sm">
-          <img src={logoImg} alt="CryptoClicks" className="h-6 w-auto" />
+          <img src={logoImg} alt="CryptoClicks" width={96} height={24} className="h-6 w-auto" />
           <span className="text-muted-foreground hidden md:block">
             © 2026 CryptoClicks. All rights reserved.
           </span>

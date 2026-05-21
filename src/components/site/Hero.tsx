@@ -90,6 +90,8 @@ export function Hero() {
                 <img
                   src={card.image}
                   alt={card.name}
+                  width={44}
+                  height={44}
                   className="h-11 w-11 shrink-0 rounded-full object-cover"
                   style={{ border: `2px solid ${card.color}55` }}
                 />

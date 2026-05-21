@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check, ExternalLink, Minus, Plus, Tag, Users, X, Zap } from "lucide-react";
 import { BUNDLE_PRICES, CHANNELS, HOMEPAGE_PIN_PRICE, useCart, type Channel } from "@/lib/cart";
 import { Quiz, QuizEntryLink } from "./Quiz";
@@ -109,7 +109,7 @@ export function Channels() {
   const [compareMaxError, setCompareMaxError] = useState<string | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
 
-  const toggleCompare = (id: string) => {
+  const toggleCompare = useCallback((id: string) => {
     setCompareIds((prev) => {
       if (prev.includes(id)) return prev.filter((x) => x !== id);
       if (prev.length >= 3) {
@@ -119,11 +119,11 @@ export function Channels() {
       }
       return [...prev, id];
     });
-  };
+  }, []);
 
-  const browseAll = () => {
+  const browseAll = useCallback(() => {
     document.getElementById("channels")?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 md:px-6 pb-28" style={{ paddingTop: 28 }}>
@@ -260,6 +260,9 @@ function ChannelCard({
           <img
             src={channel.image}
             alt={channel.name}
+            width={44}
+            height={44}
+            loading="lazy"
             className="h-11 w-11 shrink-0 rounded-full object-cover transition-all duration-200"
             style={{
               border: selected ? `2px solid ${channel.color}` : `2px solid ${channel.color}55`,
@@ -449,6 +452,7 @@ function CompareChannelCard({ ch, inCart, onAdd }: { ch: Channel; inCart: boolea
           width={44}
           height={44}
           className="h-11 w-11 rounded-full object-cover shrink-0"
+          loading="lazy"
           style={{ border: `2px solid ${ch.color}` }}
         />
         <div className="min-w-0">
@@ -481,7 +485,7 @@ function CompareChannelCard({ ch, inCart, onAdd }: { ch: Channel; inCart: boolea
         className="mt-auto w-full inline-flex items-center justify-center gap-2 rounded-xl font-bold text-sm transition-colors"
         style={{
           minHeight: 48,
-          backgroundColor: inCart ? "rgba(34,197,94,0.15)" : "#4a6cf7",
+          backgroundColor: inCart ? "rgba(34,197,94,0.15)" : ch.color,
           color: inCart ? "#4ade80" : "#ffffff",
           border: inCart ? "1px solid rgba(34,197,94,0.35)" : "none",
           cursor: inCart ? "default" : "pointer",

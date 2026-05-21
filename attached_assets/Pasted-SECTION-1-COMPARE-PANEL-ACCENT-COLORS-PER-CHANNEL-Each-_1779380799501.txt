@@ -1,0 +1,13 @@
+SECTION 1 — COMPARE PANEL ACCENT COLORS PER CHANNEL
+Each channel already has an accent color used for its card border on the main catalogue. Apply those same accent colors to each channel's column in the compare panel. Specifically, the Add to Campaign button for each channel in the compare panel should use that channel's accent color as its background rather than the generic blue. The channel name at the top of each column should also render in that channel's accent color. The rest of the panel remains dark and neutral — only the button and the channel name carry the color. Map the colors exactly as they appear on the catalogue cards so they are consistent throughout the site.
+
+SECTION 2 — FINAL PERFORMANCE OPTIMIZATION
+Do a full audit of the entire codebase and apply the following optimizations with the goal of achieving the smoothest possible runtime performance before the site goes live.
+Identify and remove all unused CSS rules, unused JavaScript functions, and any dead code that is no longer referenced after previous feature removals including the ticker and the hover popup.
+Ensure all event listeners are attached once and only once. Check for any listeners being re-attached on re-renders or state changes and fix them so they are registered once on mount only.
+Wrap all expensive calculations — including cart totals, bundle discount logic, and order message generation — in memoization so they only recalculate when their dependencies actually change.
+Ensure all images across the site have explicit width and height attributes set to prevent layout shift during load.
+Audit all modal and panel open and close sequences — checkout, compare, upsell, quiz — and confirm none of them trigger a full page repaint. Any CSS property changes on open or close that are not transform or opacity should be replaced with transform or opacity equivalents wherever possible.
+Confirm no animation loops, setInterval calls, or requestAnimationFrame loops are running when they have no visible effect — for example during modal open states when the background should be static.
+Lazy load any assets that are not visible on initial page load, including channel avatars below the fold.
+After all optimizations are applied, do a final pass through the complete user journey — page load, quiz, browse, compare, add to cart, checkout, generate message, copy — and confirm there is no jank, layout shift, or dropped frames at any step.

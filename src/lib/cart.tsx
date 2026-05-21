@@ -37,12 +37,6 @@ export const CHANNELS: Channel[] = [
 export const BUNDLE_PRICES: Record<number, number> = { 3: 900, 5: 1400, 7: 1850 };
 export const SHORTS_PRICES: Record<number, number> = { 1: 200, 5: 900, 10: 1600 };
 
-export const ADDON = {
-  title: "PR Listing & Press Coverage",
-  description: "Get your project featured in 50+ top crypto publications and news outlets including CoinMarketCap, Benzinga, BlockTelegraph, Business Insider, and MSN. Includes press release writing, editorial distribution to 500+ news sites, journalist outreach, AI discoverability on ChatGPT, Gemini, Claude and Perplexity, and a post-campaign coverage report.",
-  price: 1500,
-};
-
 export const PR_LISTING = {
   title: "PR Listing & Press Coverage",
   description: "Get your project featured in 50+ top crypto publications and news outlets including CoinMarketCap, Benzinga, BlockTelegraph, Business Insider, and MSN. Includes press release writing, editorial distribution to 500+ news sites, journalist outreach, AI discoverability on ChatGPT, Gemini, Claude and Perplexity, and a post-campaign coverage report.",
