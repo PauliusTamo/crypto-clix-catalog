@@ -11,20 +11,25 @@ import { Footer } from "@/components/site/Footer";
 import { CheckoutFlow } from "@/components/site/CheckoutFlow";
 import { Shorts } from "@/components/site/Shorts";
 
+const OG_TITLE = "CryptoClicks — Build Your Crypto Campaign";
+const OG_DESC = "Pick your YouTube channels, stack your bundle discount, and reach 900K+ crypto investors. Browse the catalogue and launch today.";
+const OG_IMAGE = "https://media.cryptoclicks.io/og-image.png";
+const OG_URL = "https://media.cryptoclicks.io";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CryptoClicks — Crypto YouTube Influencer Campaigns" },
-      {
-        name: "description",
-        content:
-          "Pick from crypto-native YouTube channels, bundle them for automatic discounts, and reach thousands of real investors with CryptoClicks.",
-      },
-      { property: "og:title", content: "CryptoClicks — Crypto YouTube Influencer Campaigns" },
-      {
-        property: "og:description",
-        content: "Bundle crypto-native YouTube channels and launch campaigns that reach real investors.",
-      },
+      { title: OG_TITLE },
+      { name: "description", content: OG_DESC },
+      { property: "og:type",        content: "website" },
+      { property: "og:url",         content: OG_URL },
+      { property: "og:title",       content: OG_TITLE },
+      { property: "og:description", content: OG_DESC },
+      { property: "og:image",       content: OG_IMAGE },
+      { name: "twitter:card",        content: "summary_large_image" },
+      { name: "twitter:title",       content: OG_TITLE },
+      { name: "twitter:description", content: OG_DESC },
+      { name: "twitter:image",       content: OG_IMAGE },
     ],
   }),
   component: Index,
